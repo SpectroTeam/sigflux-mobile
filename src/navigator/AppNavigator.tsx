@@ -40,7 +40,7 @@ function HomeNavigator() {
 
 export function AppNavigator() {
     // const { user, loading } = useAuth();
-    const user = null; // TO-DO: substituir pela autenticação real
+    const user = true; // TO-DO: substituir pela autenticação real (temporariamente true para ver a HomeScreen)
 
     if (false) {
         return null; // TO-DO: tela de loading
