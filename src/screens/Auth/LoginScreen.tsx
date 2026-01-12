@@ -3,16 +3,32 @@ import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platfor
 import { CustomButton } from "../../components/common/CustomButton";
 import { BORDER_RADIUS, COLORS, FONT_SIZES, LOGO_SIZES, SHADOWS, SPACING } from "../../themes/tokens";
 import CustomInput from "../../components/common/CustomInput";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { AuthStackParamList } from "../../types";
+import { useAuth } from "../../contexts/AuthContext";
 
-export default function LoginScreen() {
+type Props = NativeStackScreenProps<AuthStackParamList, "Login">;
+
+export default function LoginScreen({}: Props) {
     const [matricula, setMatricula] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const { login } = useAuth();
 
     const [error, setError] = useState(false);
 
-    function handleLogin() {
-        setError(true);
+    async function handleLogin() {
+        setLoading(true);
+
+        try {
+            await login({ matricula, password });
+        } catch (err) {
+            console.error("Login error:", err);
+            setError(true);
+        } finally {
+            setLoading(false);
+        }
     }
 
     function handleForgotPassword() {
@@ -75,7 +91,7 @@ export default function LoginScreen() {
 
                     {/* Login Button */}
                     <View style={styles.buttonContainer}>
-                        <CustomButton title="Entrar" onPress={handleLogin} style={{ width: "80%" }} />
+                        <CustomButton title="Entrar" onPress={handleLogin} style={{ width: "80%" }} loading={loading} />
                     </View>
                 </View>
             </View>

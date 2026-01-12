@@ -5,13 +5,25 @@ import { MaterialCommunityIcons, Ionicons, FontAwesome5, MaterialIcons } from "@
 import { COLORS, SPACING } from "../../themes/tokens";
 import { HomeHeader } from "../../components/Home/HomeHeader";
 import { MenuOption } from "../../components/Home/MenuOption";
+import { useAuth } from "../../contexts/AuthContext";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { MainStackParamList } from "../../types";
 
-export default function HomeScreen() {
+type Props = NativeStackScreenProps<MainStackParamList, "Home">;
+
+export default function HomeScreen({ navigation }: Props) {
+    const { user } = useAuth();
+
+    if (!user) {
+        navigation.goBack();
+        return;
+    }
+
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
 
-            <HomeHeader userName="Ana Ferreira" />
+            <HomeHeader />
 
             <ScrollView
                 style={styles.scrollView}
@@ -54,7 +66,6 @@ export default function HomeScreen() {
                         icon={<MaterialCommunityIcons name="road-variant" size={80} color={COLORS.surface} />}
                         onPress={() => console.log("Viagens pressed")}
                     />
-
                 </View>
             </ScrollView>
         </View>

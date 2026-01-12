@@ -3,6 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { useFonts } from "./src/hooks/useFonts";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppNavigator } from "./src/navigator/AppNavigator";
+import { AuthProvider } from "./src/contexts/AuthContext";
 
 export default function App() {
     const fontsLoaded = useFonts();
@@ -17,8 +18,10 @@ export default function App() {
 
     return (
         <SafeAreaProvider>
-            <AppNavigator />
-            <StatusBar style="auto" />
+            <AuthProvider>
+                <AppNavigator />
+                <StatusBar style="auto" />
+            </AuthProvider>
         </SafeAreaProvider>
     );
 }

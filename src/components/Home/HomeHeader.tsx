@@ -1,14 +1,19 @@
 import React from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { COLORS, SPACING, SHADOWS, LOGO_SIZES, FONT_SIZES, BORDER_RADIUS } from "../../themes/tokens";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useAuth } from "../../contexts/AuthContext";
 
-interface HomeHeaderProps {
-    userName: string;
-}
+export function HomeHeader() {
+    const { logout, user } = useAuth();
 
-export function HomeHeader({ userName }: HomeHeaderProps) {
+    async function handleLogout() {
+        await logout();
+    }
+
     return (
         <View style={styles.container}>
+
             <Image
                 source={require("../../../assets/icon.png")}
                 width={LOGO_SIZES.sm / 2}
@@ -16,9 +21,15 @@ export function HomeHeader({ userName }: HomeHeaderProps) {
                 style={styles.logo}
                 resizeMode="center"
             />
-            <View style={styles.greetingsContainer}>
-                <Text style={styles.greetingsText}>Olá,</Text>
-                <Text style={styles.userNameText}>{userName}</Text>
+
+            <View style={styles.bottom_styles} >
+                <View style={styles.greetingsContainer}>
+                    <Text style={styles.greetingsText}>Olá,</Text>
+                    <Text style={styles.userNameText}>{user?.nome_completo}</Text>
+                </View>
+                <TouchableOpacity>
+                    <MaterialIcons name="logout" size={32} color={COLORS.error} onPress={handleLogout} />
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -40,9 +51,17 @@ const styles = StyleSheet.create({
         height: LOGO_SIZES.sm / 2,
         alignSelf: "flex-end",
     },
+    bottom_styles: {
+        width: "100%",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+        marginBottom: SPACING.md,
+    },
     greetingsContainer: {
         display: "flex",
-        marginBottom: SPACING.md,
+        width: "80%",
     },
     greetingsText: {
         fontFamily: "Josefin Sans",

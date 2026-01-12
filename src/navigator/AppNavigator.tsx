@@ -7,6 +7,7 @@ import { COLORS } from "../themes/tokens";
 
 import LoginScreen from "../screens/Auth/LoginScreen";
 import HomeScreen from "../screens/Home/HomeScreen";
+import { useAuth } from "../contexts/AuthContext";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const HomeStack = createNativeStackNavigator<MainStackParamList>();
@@ -39,10 +40,9 @@ function HomeNavigator() {
 }
 
 export function AppNavigator() {
-    // const { user, loading } = useAuth();
-    const user = true; // TO-DO: substituir pela autenticação real (temporariamente true para ver a HomeScreen)
+    const { user, loading } = useAuth();
 
-    if (false) {
+    if (loading) {
         return null; // TO-DO: tela de loading
     }
 
