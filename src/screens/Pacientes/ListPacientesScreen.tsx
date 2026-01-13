@@ -8,7 +8,7 @@ import { GenericCard, Patient } from "../../components/common/GenericCard";
 import { CustomButton } from "../../components/common/CustomButton";
 import { ConfirmModal } from "../../components/common/Modal";
 
-export default function PacientesScreen({ navigation }: any) {
+export default function ListPacientesSreen({ navigation }: any) {
     const [searchQuery, setSearchQuery] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedPatient, setSelectedPatient] = useState("");
@@ -46,16 +46,16 @@ export default function PacientesScreen({ navigation }: any) {
             patient.name.toLowerCase().includes(searchQuery.toLowerCase()) || patient.cpf.includes(searchQuery),
     );
 
-    function handleNewPatient() {
-        Alert.alert("TO-DO", "Novo paciente");
+    function handleNewPaciente() {
+        navigation.navigate("EditCreatePaciente");
     }
 
-    function handlePatientPress(patient: Patient) {
-        Alert.alert("TO-DO", `Detalhes do paciente: ${patient.name}`);
+    function handlePacientePress(pacienteId: string) {
+        navigation.navigate("PacienteDetails", { pacienteId });
     }
 
-    function handleDeletePress(patient: Patient) {
-        setSelectedPatient(patient.name);
+    function handleDeletePress(paciente: Patient) {
+        setSelectedPatient(paciente.name);
         setModalVisible(true);
     }
 
@@ -79,7 +79,7 @@ export default function PacientesScreen({ navigation }: any) {
                     icon={() => (
                         <FontAwesome name="plus" size={16} color={COLORS.surface} style={{ marginRight: SPACING.sm }} />
                     )}
-                    onPress={handleNewPatient}
+                    onPress={handleNewPaciente}
                 />
 
                 <FlatList
@@ -92,7 +92,7 @@ export default function PacientesScreen({ navigation }: any) {
                                 { label: "Status", value: item.status },
                             ]}
                             title={item.name}
-                            onPress={() => handlePatientPress(item)}
+                            onPress={() => handlePacientePress(item.id)}
                             editButton={true}
                             trashButton={true}
                             editButtonAction={() => handleEditPatient(item)}

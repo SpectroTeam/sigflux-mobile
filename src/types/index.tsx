@@ -17,6 +17,12 @@ export type AuthResponse = {
     user: User;
 }
 
+export type PacienteStackParamList = {
+    ListPacientes: undefined;
+    EditCreatePaciente: { pacienteId?: string } | undefined;
+    PacienteDetails: { pacienteId: string };
+};
+
 export type AuthStackParamList = {
     Login: undefined;
     ForgotPassword: undefined;
@@ -24,7 +30,7 @@ export type AuthStackParamList = {
 
 export type MainStackParamList = {
     Home: undefined;
-    Pacientes: undefined;
+    PacienteStack: undefined;
 };
 
 // navigation types
