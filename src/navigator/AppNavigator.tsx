@@ -7,6 +7,7 @@ import { COLORS } from "../themes/tokens";
 
 import LoginScreen from "../screens/Auth/LoginScreen";
 import HomeScreen from "../screens/Home/HomeScreen";
+import PacientesScreen from "../screens/Pacientes/PacientesScreen";
 import { useAuth } from "../contexts/AuthContext";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
@@ -35,6 +36,7 @@ function HomeNavigator() {
             }}
         >
             <HomeStack.Screen name="Home" component={HomeScreen} />
+            <HomeStack.Screen name="Pacientes" component={PacientesScreen}  />
         </HomeStack.Navigator>
     );
 }

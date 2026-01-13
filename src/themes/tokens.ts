@@ -7,12 +7,12 @@ export const COLORS = {
     surface: "#FFFFFF",
     text: {
         primary: "#1A1A1A",
-        secondary: "#6B7280",
+        secondary: "#6A4C4C",
         light: "#9CA3AF",
     },
     border: "#E5E7EB",
     error: "#EF4444",
-    success: "#10B981",
+    success: "#00C684",
     warning: "#F59E0B",
     info: "#3B82F6",
 } as const;

@@ -84,8 +84,8 @@ function getSizeStyles(size: Size) {
     switch (size) {
         case "small":
             return {
-                paddingVertical: SPACING.xs,
-                fontSize: FONT_SIZES.sm,
+                paddingVertical: 0,
+                fontSize: FONT_SIZES.lg,
             };
         case "large":
             return {

@@ -34,7 +34,7 @@ export default function HomeScreen({ navigation }: Props) {
                     <MenuOption
                         title="Pacientes"
                         icon={<MaterialIcons name="people" size={80} color={COLORS.surface} />}
-                        onPress={() => console.log("Pacientes pressed")}
+                        onPress={() => navigation.navigate("Pacientes")}
                     />
 
                     <MenuOption
