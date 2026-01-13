@@ -3,7 +3,7 @@ import { View, StyleSheet, FlatList, Alert } from "react-native";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { BORDER_RADIUS, COLORS, SPACING } from "../../themes/tokens";
 import { Header } from "../../components/common/Header";
-import { SearchBar } from "../../components/SearchBar";
+import { SearchBar } from "../../components/common/SearchBar";
 import { GenericCard, Patient } from "../../components/common/GenericCard";
 import { CustomButton } from "../../components/common/CustomButton";
 import { ConfirmModal } from "../../components/common/Modal";
