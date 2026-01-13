@@ -3,7 +3,9 @@ import { Header } from "../../components/common/Header";
 import { PacienteStackParamList } from "../../types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export default function EditCreatePacienteScreen({ navigation, route }: any) {
+type Props = NativeStackScreenProps<PacienteStackParamList, 'EditCreatePaciente'>;
+
+export default function EditCreatePacienteScreen({ navigation, route }: Props) {
     return (
         <View>
             <Header

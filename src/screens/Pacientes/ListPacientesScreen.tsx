@@ -7,6 +7,10 @@ import { SearchBar } from "../../components/common/SearchBar";
 import { GenericCard, Patient } from "../../components/common/GenericCard";
 import { CustomButton } from "../../components/common/CustomButton";
 import { ConfirmModal } from "../../components/common/Modal";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { PacienteStackParamList } from "../../types";
+
+type Props = NativeStackScreenProps<PacienteStackParamList, 'ListPacientes'>;
 
 export default function ListPacientesSreen({ navigation }: any) {
     const [searchQuery, setSearchQuery] = useState("");
