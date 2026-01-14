@@ -7,6 +7,19 @@ export type User = {
     cargo: string;
 };
 
+export type Paciente = {
+    id: string;
+    nome: string;
+    cpf: string;
+    rg: string;
+    endereco: string;
+    telefone: string;
+    birthDate: Date;
+    status: string;
+}
+
+export type RegisterPaciente = Omit<Paciente, 'id'>;
+
 export type AuthCredentials = {
     matricula: string;
     password: string;
