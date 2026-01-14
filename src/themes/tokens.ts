@@ -10,7 +10,7 @@ export const COLORS = {
         secondary: "#6A4C4C",
         light: "#9CA3AF",
     },
-    border: "#E5E7EB",
+    border: "#ccc",
     error: "#EF4444",
     success: "#00C684",
     warning: "#F59E0B",
