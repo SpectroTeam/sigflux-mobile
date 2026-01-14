@@ -2,7 +2,6 @@ import { deletePaciente, getPacienteById, getPacientes, insertPaciente, updatePa
 import { Paciente, RegisterPaciente } from "../types";
 
 export async function getAll() {
-    await new Promise((resolve) => setTimeout(resolve, 10 * 1000)); // Simulate network delay
     const response = await getPacientes();
     return response;
 }
