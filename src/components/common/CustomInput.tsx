@@ -1,89 +1,108 @@
-import React from "react";
+import { ComponentProps, forwardRef } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
 import { COLORS, SPACING, FONT_SIZES, BORDER_RADIUS } from "../../themes/tokens";
 
-interface CustomInputProps extends React.ComponentProps<typeof TextInput> {
+interface CustomInputProps extends ComponentProps<typeof TextInput> {
     leftIcon?: string;
     rightIcon?: string;
     focused?: boolean;
-    placeholder?: string;
-    keyboardType?: React.ComponentProps<typeof TextInput>["keyboardType"];
-    maxLength?: number;
     errorStr?: string;
     onRightIconPress?: () => void;
 }
 
-export default function CustomInput({
-    leftIcon,
-    rightIcon,
-    onRightIconPress,
-    focused,
-    placeholder,
-    style,
-    keyboardType,
-    maxLength,
-    errorStr: errorStr,
-    ...props
-}: CustomInputProps) {
+const CustomInput = forwardRef<any, CustomInputProps>((props, ref) => {
+    const { label, style, leftIcon, rightIcon, focused, errorStr, onRightIconPress, ...inputProps } = props;
+
+    const left = leftIcon ? <TextInput.Icon icon={leftIcon} /> : undefined;
+
+    const right = rightIcon ? (
+        <TextInput.Icon
+            icon={rightIcon}
+            onPress={onRightIconPress}
+            color={focused ? COLORS.primary : COLORS.text.light}
+        />
+    ) : undefined;
+
     return (
         <View style={styles.container}>
-            {props.label && <Text style={styles.label}>{props.label}</Text>}
+            <View style={styles.labelContainer}>
+                {label && <Text style={styles.label}>{label}</Text>}
+                {errorStr && (
+                    <Text style={styles.errorText} ellipsizeMode="middle" textBreakStrategy="highQuality">
+                        {errorStr}
+                    </Text>
+                )}
+            </View>
+
             <TextInput
+                ref={ref}
                 mode="outlined"
                 style={[styles.input, style]}
-                activeOutlineColor="#281919"
-                placeholder={placeholder}
+                activeOutlineColor={COLORS.primary}
                 placeholderTextColor={COLORS.text.light}
-                outlineStyle={{ borderRadius: BORDER_RADIUS.md, borderWidth: 1.5 }}
-                contentStyle={{ paddingVertical: SPACING.lg }}
-                error={errorStr ? true : false}
-                left={leftIcon ? <TextInput.Icon icon={leftIcon} /> : undefined}
+                outlineStyle={styles.outlineStyle}
+                contentStyle={styles.contentStyle}
+                error={!!errorStr}
+                left={left}
+                right={right}
                 theme={{
                     colors: {
+                        outline: COLORS.border,
                         error: COLORS.error,
                     },
                 }}
-                right={
-                    rightIcon ? (
-                        <TextInput.Icon
-                            icon={rightIcon}
-                            onPress={onRightIconPress}
-                            color={(focused) => (focused ? COLORS.primary : COLORS.text.light)}
-                        />
-                    ) : undefined
-                }
-                {...props}
+                {...inputProps}
                 label={undefined}
-                keyboardType={keyboardType}
-                maxLength={maxLength}
             />
-
-            {errorStr && <Text style={styles.errorText}>{errorStr}</Text>}
         </View>
     );
-}
+});
+
+export default CustomInput;
 
 const styles = StyleSheet.create({
     container: {
         display: "flex",
         flexDirection: "column",
     },
+    labelContainer: {
+        display: "flex",
+        flexWrap: "nowrap",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        width: "100%",
+    },
     label: {
-        fontSize: FONT_SIZES.sm,
-        fontWeight: "600",
+        fontFamily: "Josefin Sans",
+        fontSize: FONT_SIZES.md,
         color: COLORS.text.primary,
         marginBottom: SPACING.xs,
         marginLeft: SPACING.xs,
+        marginRight: SPACING.sm,
+        alignSelf: "flex-start",
     },
     input: {
         fontSize: FONT_SIZES.md,
         backgroundColor: COLORS.inputBackground,
     },
+    outlineStyle: {
+        borderRadius: BORDER_RADIUS.md,
+        borderWidth: 1.5,
+    },
+    contentStyle: {
+        paddingVertical: SPACING.lg,
+        fontFamily: "Josefin Sans",
+        fontSize: FONT_SIZES.md,
+    },
     errorText: {
+        fontFamily: "Josefin Sans",
         fontSize: FONT_SIZES.xs,
         color: COLORS.error,
-        marginTop: SPACING.xs,
+        flexShrink: 0.1,
+        paddingHorizontal: SPACING.xs,
+        paddingVertical: SPACING.xs / 2,
+        textAlign: "left",
+        alignSelf: "flex-end"
     },
 });
-
