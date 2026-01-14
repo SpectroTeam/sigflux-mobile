@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, View, KeyboardAvoidingView, Platform } from "react-native";
+import { ScrollView, StyleSheet, View, KeyboardAvoidingView, Platform, Alert } from "react-native";
 import { Header } from "../../components/common/Header";
 import { Paciente, PacienteStackParamList } from "../../types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -9,6 +9,8 @@ import { useKeyboardHeight } from "../../hooks/useKeyboard";
 import { useForm, Controller } from "react-hook-form";
 import { CustomButton } from "../../components/common/CustomButton";
 import { formatCPF, formatRG, formatPhone } from "../../utils/masks";
+import { usePacienteMutations, usePacientes } from "../../hooks/usePacientes";
+import { useEffect } from "react";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "EditCreatePaciente">;
 
@@ -16,11 +18,16 @@ const MIN_DATE = new Date(1900, 0, 1);
 const MAX_DATE = new Date();
 
 export default function EditCreatePacienteScreen({ navigation, route }: Props) {
+    const pacienteId = route.params?.pacienteId;
+    const { createPaciente, updatePaciente } = usePacienteMutations();
+    const { data: pacientes } = usePacientes();
+
     const {
         control,
         handleSubmit,
+        reset,
         setFocus,
-        formState: { errors },
+        formState: { errors, isDirty },
     } = useForm<Paciente>({
         defaultValues: {
             nome: "",
@@ -32,13 +39,53 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
         },
     });
 
+    useEffect(() => {
+        if (!pacienteId) return;
+
+        const paciente = pacientes?.find((p) => p.id === pacienteId);
+
+        if (!paciente) return;
+
+        reset({
+            nome: paciente.nome,
+            cpf: paciente.cpf,
+            rg: paciente.rg,
+            endereco: paciente.endereco,
+            telefone: paciente.telefone,
+            birthDate: paciente.birthDate,
+        });
+    }, [pacienteId, pacientes, reset]);
+
     function cleanChange(value: string, cleanFunc: (val: string) => string, onChange: (val: string) => void) {
         const cleanedValue = cleanFunc(value);
         onChange(cleanedValue);
     }
 
     async function onSubmit(data: Paciente) {
-        console.log(data);
+        // verifica se é update ou create com base no pacienteId
+        const isUpdate = !!pacienteId;
+
+        // adiciona o id ao data se for update
+        data.id = isUpdate ? pacienteId : "";
+        // escolhe a operação correta
+        const operation = isUpdate ? updatePaciente.mutateAsync : createPaciente.mutateAsync;
+
+        try {
+            const response = await operation(data);
+
+            if (!response) {
+                throw new Error("Operação falhou");
+            }
+
+            Alert.alert("Sucesso", `Paciente ${isUpdate ? "atualizado" : "adicionado"} com sucesso.`, [
+                {
+                    text: "OK",
+                    onPress: () => navigation.replace("PacienteDetails", { pacienteId: response.id }),
+                },
+            ]);
+        } catch (error) {
+            Alert.alert("Erro", "Não foi possível excluir o paciente. Tente novamente.");
+        }
     }
 
     return (
@@ -73,7 +120,6 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
                             />
                         )}
                     />
-
                     <Controller
                         control={control}
                         name="cpf"
@@ -98,7 +144,6 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
                             />
                         )}
                     />
-
                     <Controller
                         control={control}
                         name="rg"
@@ -123,7 +168,6 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
                             />
                         )}
                     />
-
                     <Controller
                         control={control}
                         name="endereco"
@@ -145,7 +189,6 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
                             />
                         )}
                     />
-
                     <Controller
                         control={control}
                         name="telefone"
@@ -171,7 +214,6 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
                             />
                         )}
                     />
-
                     <Controller
                         control={control}
                         name="birthDate"
@@ -188,11 +230,14 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
                             />
                         )}
                     />
-
                     <CustomButton
                         style={styles.buttonStyle}
-                        title="Salvar"
+                        title={pacienteId ? "Atualizar" : "Adicionar"}
                         onPress={handleSubmit((data) => onSubmit(data))}
+                        loading={createPaciente.isPending}
+                        disabled={
+                            createPaciente.isPending || updatePaciente.isPending || (pacienteId ? !isDirty : false)
+                        }
                     />
                 </ScrollView>
             </KeyboardAvoidingView>

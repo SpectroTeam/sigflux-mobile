@@ -1,53 +1,39 @@
-import React, { useState } from "react";
-import { View, StyleSheet, FlatList, Alert } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { View, StyleSheet, FlatList, Alert, ActivityIndicator } from "react-native";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
-import { BORDER_RADIUS, COLORS, SPACING } from "../../themes/tokens";
+import { AVATAR_SIZES, BORDER_RADIUS, COLORS, SPACING } from "../../themes/tokens";
 import { Header } from "../../components/common/Header";
 import { SearchBar } from "../../components/common/SearchBar";
 import { GenericCard, Patient } from "../../components/common/GenericCard";
 import { CustomButton } from "../../components/common/CustomButton";
 import { ConfirmModal } from "../../components/common/Modal";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { PacienteStackParamList } from "../../types";
+import { Paciente, PacienteStackParamList } from "../../types";
+import { usePacienteMutations, usePacientes } from "../../hooks/usePacientes";
+import { useFocusEffect } from "@react-navigation/native";
 
-type Props = NativeStackScreenProps<PacienteStackParamList, 'ListPacientes'>;
+type Props = NativeStackScreenProps<PacienteStackParamList, "ListPacientes">;
 
-export default function ListPacientesSreen({ navigation }: any) {
+export default function ListPacientesSreen({ navigation }: Props) {
+    const { data: pacientes = [], isLoading, error, refetch } = usePacientes();
+    const { deletePaciente } = usePacienteMutations();
+
     const [searchQuery, setSearchQuery] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedPatient, setSelectedPatient] = useState("");
+    const [selectedPatient, setSelectedPatient] = useState({
+        id: "",
+        nome: "",
+    });
 
-    // mock data - substituir por dados reais da API
-    const patients: Patient[] = [
-        {
-            id: "1",
-            name: "José Fernando Alves",
-            cpf: "234.567.890-11",
-            status: "Em viagem",
-        },
-        {
-            id: "2",
-            name: "Maria Silva Santos",
-            cpf: "123.456.789-00",
-            status: "Na casa de apoio",
-        },
-        {
-            id: "3",
-            name: "João Pedro Costa",
-            cpf: "345.678.901-22",
-            status: "Em tratamento",
-        },
-        {
-            id: "4",
-            name: "Ana Paula Oliveira",
-            cpf: "456.789.012-33",
-            status: "Em viagem",
-        },
-    ];
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         refetch();
+    //     }, [refetch]),
+    // );
 
-    const filteredPatients = patients.filter(
-        (patient) =>
-            patient.name.toLowerCase().includes(searchQuery.toLowerCase()) || patient.cpf.includes(searchQuery),
+    const filteredPatients = pacientes.filter(
+        (paciente) =>
+            paciente.nome.toLowerCase().includes(searchQuery.toLowerCase()) || paciente.cpf.includes(searchQuery),
     );
 
     function handleNewPaciente() {
@@ -58,13 +44,27 @@ export default function ListPacientesSreen({ navigation }: any) {
         navigation.navigate("PacienteDetails", { pacienteId });
     }
 
-    function handleDeletePress(paciente: Patient) {
-        setSelectedPatient(paciente.name);
+    function handleDeletePress(paciente: Paciente) {
+        setSelectedPatient(() => ({
+            id: paciente.id,
+            nome: paciente.nome,
+        }));
         setModalVisible(true);
     }
 
-    function handleEditPatient(patient: Patient) {
-        Alert.alert("TO-DO", `Editar paciente: ${patient.name}`);
+    async function confirmDeletePatient() {
+        try {
+            await deletePaciente.mutateAsync(selectedPatient.id);
+
+            Alert.alert("Sucesso", "Paciente excluído com sucesso.");
+            setModalVisible(false);
+        } catch (error) {
+            Alert.alert("Erro", "Não foi possível excluir o paciente. Tente novamente.");
+        }
+    }
+
+    function handleEditPatient(patient: Paciente) {
+        navigation.navigate("EditCreatePaciente", { pacienteId: patient.id });
     }
 
     return (
@@ -86,26 +86,32 @@ export default function ListPacientesSreen({ navigation }: any) {
                     onPress={handleNewPaciente}
                 />
 
-                <FlatList
-                    data={filteredPatients}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <GenericCard
-                            fields={[
-                                { label: "CPF", value: item.cpf },
-                                { label: "Status", value: item.status },
-                            ]}
-                            title={item.name}
-                            onPress={() => handlePacientePress(item.id)}
-                            editButton={true}
-                            trashButton={true}
-                            editButtonAction={() => handleEditPatient(item)}
-                            trashButtonAction={() => handleDeletePress(item)}
-                        />
-                    )}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={styles.listContent}
-                />
+                {isLoading ? (
+                    <View style={styles.loadContainer}>
+                        <ActivityIndicator animating={true} color={COLORS.primary} size={AVATAR_SIZES.large} />
+                    </View>
+                ) : (
+                    <FlatList
+                        data={filteredPatients}
+                        keyExtractor={(item) => item.id}
+                        renderItem={({ item }) => (
+                            <GenericCard
+                                fields={[
+                                    { label: "CPF", value: item.cpf },
+                                    { label: "Status", value: item.status },
+                                ]}
+                                title={item.nome}
+                                onPress={() => handlePacientePress(item.id)}
+                                editButton={true}
+                                trashButton={true}
+                                editButtonAction={() => handleEditPatient(item)}
+                                trashButtonAction={() => handleDeletePress(item)}
+                            />
+                        )}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={styles.listContent}
+                    />
+                )}
             </View>
 
             <ConfirmModal
@@ -113,10 +119,15 @@ export default function ListPacientesSreen({ navigation }: any) {
                 message={`Tem certeza de que deseja excluir o paciente ${selectedPatient}? Esta ação não pode ser desfeita.`}
                 confirmText="Excluir"
                 icon={() => (
-                    <MaterialCommunityIcons name="alert-decagram-outline" size={56} style={{ color: COLORS.error }} />
+                    <MaterialCommunityIcons
+                        name="alert-decagram-outline"
+                        size={AVATAR_SIZES.lg - 8}
+                        style={{ color: COLORS.error }}
+                    />
                 )}
-                onConfirm={() => setModalVisible(false)}
+                onConfirm={confirmDeletePatient}
                 onCancel={() => setModalVisible(false)}
+                loading={deletePaciente.isPending}
                 confirmColor={COLORS.error}
             />
         </View>
@@ -136,6 +147,11 @@ const styles = StyleSheet.create({
     },
     listContent: {
         paddingBottom: SPACING.xl,
+    },
+    loadContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
     },
     button_style: {
         alignSelf: "flex-end",
