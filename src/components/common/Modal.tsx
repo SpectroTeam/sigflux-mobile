@@ -12,7 +12,7 @@ type Props = {
     onConfirm: () => void;
     onCancel: () => void;
     confirmColor?: string;
-    confirmLoading?: boolean;
+    loading?: boolean;
     cancelText?: string;
 };
 
@@ -25,7 +25,7 @@ export function ConfirmModal({
     onConfirm,
     onCancel,
     confirmColor = COLORS.primary,
-    confirmLoading = false,
+    loading = false,
     icon,
 }: Props) {
     return (
@@ -45,6 +45,7 @@ export function ConfirmModal({
                             style={styles.button_style}
                             contentStyle={styles.button_content_style}
                             labelStyle={styles.button_label_style}
+                            disabled={loading}
                         />
 
                         <CustomButton
@@ -54,7 +55,8 @@ export function ConfirmModal({
                             style={[styles.button_style, { backgroundColor: confirmColor }]}
                             contentStyle={styles.button_content_style}
                             labelStyle={styles.button_label_style}
-                            loading={confirmLoading}
+                            loading={loading}
+                            disabled={loading}
                         />
                     </View>
                 </View>
