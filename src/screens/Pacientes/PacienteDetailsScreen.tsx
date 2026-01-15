@@ -43,7 +43,7 @@ export default function PacienteDetailsScreen({ navigation, route }: Props) {
                         title="Documentos Anexados"
                         left={(props) => <List.Icon {...props} icon="file-document-outline" />}
                         right={(props) => <List.Icon {...props} icon="chevron-right" />}
-                        onPress={() => console.log("documentos anexados")}
+                        onPress={() => navigation.navigate("PacienteDocumentosAnexados", { paciente: paciente })}
                         style={styles.listItem}
                         titleStyle={styles.listItemTitle}
                     />

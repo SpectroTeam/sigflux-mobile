@@ -5,8 +5,10 @@ import { Directory, File, Paths } from "expo-file-system";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { getFileName } from "../../utils/file";
+import { MD3Colors, ProgressBar } from "react-native-paper";
+import { useState } from "react";
 
-interface PDFLinkProps {
+type PDFLinkProps = {
     url: string;
     fileName?: string;
     showIcon?: boolean;
@@ -14,6 +16,8 @@ interface PDFLinkProps {
     onDownloadStart?: () => void;
     onDownloadComplete?: (localPath: string) => void;
     onError?: (error: any) => void;
+    disabled?: boolean;
+    downloadProgress?: boolean;
 }
 
 export function PDFLink({
@@ -24,41 +28,38 @@ export function PDFLink({
     onDownloadStart,
     onDownloadComplete,
     onError,
+    disabled = false,
+    downloadProgress = false,
 }: PDFLinkProps) {
+    const [downloading, setDownloading] = useState(false);
+
     async function downloadPDF() {
+        setDownloading(true);
         try {
             onDownloadStart?.();
 
             const destination = new Directory(Paths.cache, "meus-pdfs");
             const fileToSave = new File(destination, fileName || getFileName(url, "download.pdf"));
 
-            if (fileToSave.exists) {
-                fileToSave.delete();
-            }
-
             if (!destination.exists) {
                 destination.create();
             }
 
-            const { uri } = await File.downloadFileAsync(url, destination);
+            if (fileToSave.exists) {
+                fileToSave.delete();
+            }
+
+            const downloadResult = await File.downloadFileAsync(url, fileToSave);
+            const { uri } = downloadResult;
 
             // Pergunta ao usuário o que fazer
             Alert.alert(
                 "PDF Baixado",
                 "O que você gostaria de fazer?",
                 [
-                    {
-                        text: "Abrir",
-                        onPress: () => openPDF(uri),
-                    },
-                    {
-                        text: "Compartilhar",
-                        onPress: () => sharePDF(uri),
-                    },
-                    {
-                        text: "Cancelar",
-                        style: "cancel",
-                    },
+                    { text: "Abrir", onPress: () => openPDF(uri) },
+                    { text: "Compartilhar", onPress: () => sharePDF(uri) },
+                    { text: "Cancelar", style: "cancel" },
                 ],
                 { cancelable: true },
             );
@@ -68,6 +69,8 @@ export function PDFLink({
             console.error("Erro ao baixar PDF:", error);
             onError?.(error);
             Alert.alert("Erro", "Não foi possível baixar o PDF");
+        } finally {
+            setDownloading(false);
         }
     }
 
@@ -94,20 +97,26 @@ export function PDFLink({
     }
 
     return (
-        <TouchableOpacity onPress={downloadPDF} style={styles.container} activeOpacity={0.7}>
-            {showIcon && <MaterialIcons name="picture-as-pdf" size={24} color={COLORS.error} style={styles.icon} />}
-            <View style={styles.textContainer}>
-                {showFileName && (
-                    <Text style={styles.cazuza} numberOfLines={1}>
-                        {fileName || getFileName(url, "download.pdf")}
+        <View>
+            <TouchableOpacity
+                onPress={downloadPDF}
+                style={[styles.container, downloading && downloadProgress && styles.downloadRadious]}
+                activeOpacity={0.7}
+                disabled={disabled}
+            >
+                {showIcon && <MaterialIcons name="picture-as-pdf" size={24} color={COLORS.error} style={styles.icon} />}
+                <View style={styles.textContainer}>
+                    {showFileName && <Text style={styles.cazuza}>{fileName || getFileName(url, "download.pdf")}</Text>}
+                    <Text style={styles.url} numberOfLines={1}>
+                        {url}
                     </Text>
-                )}
-                <Text style={styles.url} numberOfLines={1}>
-                    {url}
-                </Text>
-            </View>
-            <MaterialIcons name="download" size={20} color={COLORS.primary} style={styles.downloadIcon} />
-        </TouchableOpacity>
+                </View>
+                <MaterialIcons name="download" size={20} color={COLORS.primary} style={styles.downloadIcon} />
+            </TouchableOpacity>
+            {downloadProgress && downloading && (
+                <ProgressBar progress={0.5} color={MD3Colors.error50} indeterminate={true} />
+            )}
+        </View>
     );
 }
 
@@ -117,10 +126,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: COLORS.surface,
         borderRadius: BORDER_RADIUS.md,
-        paddingHorizontal: SPACING.md,
-        paddingVertical: SPACING.sm,
+        padding: SPACING.md,
         borderWidth: 0.5,
         borderColor: COLORS.border,
+    },
+    downloadRadious: {
+        borderBottomEndRadius: 0,
+        borderBottomStartRadius: 0,
     },
     icon: {
         marginRight: SPACING.md,
@@ -136,9 +148,10 @@ const styles = StyleSheet.create({
     url: {
         fontFamily: "Josefin Sans",
         fontSize: FONT_SIZES.sm,
+        lineHeight: FONT_SIZES.sm + 4,
         color: COLORS.text.secondary,
     },
     downloadIcon: {
         opacity: 0.8,
     },
-});
+}); 

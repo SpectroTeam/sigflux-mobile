@@ -49,6 +49,11 @@ const mockedPacientes: Paciente[] = [
         telefone: "(11) 91234-5678",
         birthDate: new Date(1980, 5, 15),
         status: "inativo",
+        documentosAnexados: [
+            "https://itaudeminas.mg.gov.br/arquivos/ere/livros/chapeuzinho-vermelho-2.pdf",
+            "https://salto.sp.gov.br/download/Os%20Tr%C3%AAs%20Porquinhos.pdf",
+            "https://www.fortaleza.ce.gov.br/images/Cultura/Monteiro_Lobato_-_O_Saci.pdf"
+        ],
         historicoViagens: [
             {
                 id: "v1",
@@ -100,6 +105,10 @@ const mockedPacientes: Paciente[] = [
         telefone: "(21) 92345-6789",
         birthDate: new Date(1990, 10, 20),
         status: "inativo",
+        documentosAnexados: [
+            "https://s2.q4cdn.com/175719177/files/doc_presentations/Placeholder-PDF.pdf",
+            "https://www.prodepa.pa.gov.br/sites/default/files/2023-08/Placeholder-PDF_10.pdf"
+        ],
         historicoViagens: [
             {
                 id: "v6",

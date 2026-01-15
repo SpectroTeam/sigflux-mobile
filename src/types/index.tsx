@@ -27,6 +27,7 @@ export type Paciente = {
     birthDate: Date;
     status: string;
     historicoViagens?: ViagemPaciente[];
+    documentosAnexados?: string[];
 }
 
 export type RegisterPaciente = Omit<Paciente, 'id'>;
@@ -46,6 +47,7 @@ export type PacienteStackParamList = {
     EditCreatePaciente: { pacienteId?: string } | undefined;
     PacienteDetails: { pacienteId: string };
     PacienteHistoricoViagens: { paciente: Paciente };
+    PacienteDocumentosAnexados: { paciente: Paciente };
 };
 
 export type AuthStackParamList = {
