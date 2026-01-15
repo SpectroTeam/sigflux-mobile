@@ -9,7 +9,7 @@ import { useKeyboardHeight } from "../../hooks/useKeyboard";
 import { useForm, Controller } from "react-hook-form";
 import { CustomButton } from "../../components/common/CustomButton";
 import { formatCPF, formatRG, formatPhone } from "../../utils/masks";
-import { usePacienteMutations, usePacientes } from "../../hooks/usePacientes";
+import { usePacienteById, usePacienteMutations } from "../../hooks/usePacientes";
 import { useEffect } from "react";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "EditCreatePaciente">;
@@ -18,9 +18,8 @@ const MIN_DATE = new Date(1900, 0, 1);
 const MAX_DATE = new Date();
 
 export default function EditCreatePacienteScreen({ navigation, route }: Props) {
-    const pacienteId = route.params?.pacienteId;
     const { createPaciente, updatePaciente } = usePacienteMutations();
-    const { data: pacientes } = usePacientes();
+    const { data: paciente } = usePacienteById(route.params?.pacienteId);
 
     const {
         control,
@@ -35,15 +34,11 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
             rg: "",
             endereco: "",
             telefone: "",
-            birthDate: undefined,
+            birthDate: new Date(2000, 0, 1),
         },
     });
 
     useEffect(() => {
-        if (!pacienteId) return;
-
-        const paciente = pacientes?.find((p) => p.id === pacienteId);
-
         if (!paciente) return;
 
         reset({
@@ -54,7 +49,8 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
             telefone: paciente.telefone,
             birthDate: paciente.birthDate,
         });
-    }, [pacienteId, pacientes, reset]);
+
+    }, [paciente, reset]);
 
     function cleanChange(value: string, cleanFunc: (val: string) => string, onChange: (val: string) => void) {
         const cleanedValue = cleanFunc(value);
@@ -63,10 +59,10 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
 
     async function onSubmit(data: Paciente) {
         // verifica se é update ou create com base no pacienteId
-        const isUpdate = !!pacienteId;
+        const isUpdate = !!paciente;
 
         // adiciona o id ao data se for update
-        data.id = isUpdate ? pacienteId : "";
+        data.id = isUpdate ? paciente.id : "";
         // escolhe a operação correta
         const operation = isUpdate ? updatePaciente.mutateAsync : createPaciente.mutateAsync;
 
@@ -232,11 +228,11 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
                     />
                     <CustomButton
                         style={styles.buttonStyle}
-                        title={pacienteId ? "Atualizar" : "Adicionar"}
+                        title={!!paciente ? "Atualizar" : "Adicionar"}
                         onPress={handleSubmit((data) => onSubmit(data))}
                         loading={createPaciente.isPending}
                         disabled={
-                            createPaciente.isPending || updatePaciente.isPending || (pacienteId ? !isDirty : false)
+                            createPaciente.isPending || updatePaciente.isPending || (!!paciente ? !isDirty : false)
                         }
                     />
                 </ScrollView>

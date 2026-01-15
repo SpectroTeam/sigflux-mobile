@@ -45,3 +45,13 @@ export function usePacienteMutations() {
         updatePaciente,
     };
 }
+
+export function usePacienteById(id?: string | number) {
+    const { data: pacientes } = usePacientes();
+    const paciente = pacientes?.find(p => p.id === id);
+    
+    return {
+        data: paciente,
+        isLoading: !pacientes,
+    };
+}

@@ -10,12 +10,11 @@ import { ConfirmModal } from "../../components/common/Modal";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Paciente, PacienteStackParamList } from "../../types";
 import { usePacienteMutations, usePacientes } from "../../hooks/usePacientes";
-import { useFocusEffect } from "@react-navigation/native";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "ListPacientes">;
 
 export default function ListPacientesSreen({ navigation }: Props) {
-    const { data: pacientes = [], isLoading, error, refetch } = usePacientes();
+    const { data: pacientes = [], isLoading } = usePacientes();
     const { deletePaciente } = usePacienteMutations();
 
     const [searchQuery, setSearchQuery] = useState("");
@@ -24,12 +23,6 @@ export default function ListPacientesSreen({ navigation }: Props) {
         id: "",
         nome: "",
     });
-
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         refetch();
-    //     }, [refetch]),
-    // );
 
     const filteredPatients = pacientes.filter(
         (paciente) =>
@@ -116,7 +109,7 @@ export default function ListPacientesSreen({ navigation }: Props) {
 
             <ConfirmModal
                 visible={modalVisible}
-                message={`Tem certeza de que deseja excluir o paciente ${selectedPatient}? Esta ação não pode ser desfeita.`}
+                message={`Tem certeza de que deseja excluir o paciente ${selectedPatient.nome}? Esta ação não pode ser desfeita.`}
                 confirmText="Excluir"
                 icon={() => (
                     <MaterialCommunityIcons
