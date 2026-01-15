@@ -1,4 +1,4 @@
-import { AuthCredentials, AuthResponse, Paciente, CreatePacienteDto, User } from "../types";
+import { AuthCredentials, AuthResponse, Paciente, CreatePacienteDto, User, Acompanhante, CreateAcompanhanteDto } from "../types";
 
 // tempo maximo de delay em milisegundos
 const MAX_DELAY_MS = 1000;
@@ -245,6 +245,71 @@ export async function updatePaciente(pacienteId: string, pacienteData: CreatePac
     };
 
     return deepCopy(mockedPacientes[index]);
+}
+
+export async function addAcompanhante(
+    pacienteId: string,
+    acompanhante: CreateAcompanhanteDto,
+): Promise<Acompanhante> {
+    await delay();
+    const paciente = mockedPacientes.find((p) => p.id === pacienteId);
+    if (!paciente) {
+        throw new Error("Paciente not found");
+    }
+
+    const newAcompanhante: Acompanhante = {
+        ...acompanhante,
+        id: `a${Math.floor(Math.random() * 10000)}`,
+    };
+
+    if (!paciente.acompanhantes) {
+        paciente.acompanhantes = [];
+    }
+
+    paciente.acompanhantes.push(newAcompanhante);
+
+    return deepCopy(newAcompanhante);
+}
+
+export async function deleteAcompanhante(pacienteId: string, acompanhanteId: string): Promise<void> {
+    await delay();
+    const paciente = mockedPacientes.find((p) => p.id === pacienteId);
+    if (!paciente || !paciente.acompanhantes) {
+        throw new Error("Paciente or acompanhante not found");
+    }
+
+    const index = paciente.acompanhantes.findIndex((a) => a.id === acompanhanteId);
+    if (index === -1) {
+        throw new Error("Acompanhante not found");
+    }
+
+    paciente.acompanhantes.splice(index, 1);
+}
+
+export async function updateAcompanhante(
+    pacienteId: string,
+    acompanhanteId: string,
+    acompanhanteData: CreateAcompanhanteDto,
+): Promise<Acompanhante> {
+    await delay();
+    const paciente = mockedPacientes.find((p) => p.id === pacienteId);
+    if (!paciente || !paciente.acompanhantes) {
+        throw new Error("Paciente or acompanhante not found");
+    }
+
+    const index = paciente.acompanhantes.findIndex((a) => a.id === acompanhanteId);
+    if (index === -1) {
+        throw new Error("Acompanhante not found");
+    }
+
+    const updatedAcompanhante: Acompanhante = {
+        ...paciente.acompanhantes[index],
+        ...acompanhanteData,
+    };
+
+    paciente.acompanhantes[index] = updatedAcompanhante;
+
+    return deepCopy(updatedAcompanhante);
 }
 
 async function delay(): Promise<void> {
