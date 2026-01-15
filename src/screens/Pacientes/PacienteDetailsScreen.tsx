@@ -51,7 +51,7 @@ export default function PacienteDetailsScreen({ navigation, route }: Props) {
                         title="Acompanhantes"
                         left={(props) => <List.Icon {...props} icon="account-multiple-outline" />}
                         right={(props) => <List.Icon {...props} icon="chevron-right" />}
-                        onPress={() => console.log("Acompanhantes")}
+                        onPress={() => navigation.navigate("ListAcompanhantes", { paciente: paciente })}
                         style={styles.listItem}
                         titleStyle={styles.listItemTitle}
                     />

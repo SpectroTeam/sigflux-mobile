@@ -17,6 +17,16 @@ export type ViagemPaciente = {
     status: "planejada" | "em andamento" | "concluída" | "cancelada";
 };
 
+export type Acompanhante = {
+    id: string;
+    nome: string;
+    cpf: string;
+    telefone: string;
+    parentesco: string;
+};
+
+export type CreateAcompanhanteDto = Omit<Acompanhante, "id">;
+
 export type Paciente = {
     id: string;
     nome: string;
@@ -28,6 +38,7 @@ export type Paciente = {
     status: string;
     historicoViagens?: ViagemPaciente[];
     documentosAnexados?: string[];
+    acompanhantes?: Acompanhante[];
 };
 
 export type CreatePacienteDto = Omit<Paciente, "id" | "historicoViagens" | "documentosAnexados">;
@@ -53,6 +64,7 @@ export type PacienteStackParamList = {
     PacienteDetails: { pacienteId: string };
     PacienteHistoricoViagens: { paciente: Paciente };
     PacienteDocumentosAnexados: { paciente: Paciente };
+    ListAcompanhantes: { paciente: Paciente };
 };
 
 export type AuthStackParamList = {

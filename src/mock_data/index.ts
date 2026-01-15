@@ -95,6 +95,36 @@ const mockedPacientes: Paciente[] = [
                 status: "concluída",
             },
         ],
+        acompanhantes: [
+            {
+                id: "a1",
+                nome: "Ana Alves",
+                cpf: "987.654.321-00",
+                telefone: "(11) 99876-5432",
+                parentesco: "conjuge",
+            },
+            {
+                id: "a2",
+                nome: "Carlos Alves",
+                cpf: "876.543.210-99",
+                telefone: "(11) 98765-4321",
+                parentesco: "filho",
+            },
+            {
+                id: "a3",
+                nome: "Mariana Alves",
+                cpf: "765.432.109-88",
+                telefone: "(11) 97654-3210",
+                parentesco: "filho",
+            },
+            {
+                id: "a6",
+                nome: "João Alves",
+                cpf: "654.321.098-77",
+                telefone: "(11) 96543-2109",
+                parentesco: "pai",
+            }
+        ],
     },
     {
         id: "2",
@@ -119,6 +149,22 @@ const mockedPacientes: Paciente[] = [
                 status: "concluída",
             },
         ],
+        acompanhantes: [
+            {
+                id: "a4",
+                nome: "Pedro Santos",
+                cpf: "654.321.098-77",
+                telefone: "(21) 96543-2109",
+                parentesco: "conjuge",
+            },
+            {
+                id: "a5",
+                nome: "Lucas Santos",
+                cpf: "543.210.987-66",
+                telefone: "(21) 95432-1098",
+                parentesco: "filho",
+            },
+        ],
     },
     {
         id: "3",
@@ -130,6 +176,8 @@ const mockedPacientes: Paciente[] = [
         birthDate: new Date(1975, 2, 5).toISOString(),
         status: "inativo",
         historicoViagens: [],
+        documentosAnexados: [],
+        acompanhantes: [],
     },
 ];
 
