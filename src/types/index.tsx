@@ -7,6 +7,16 @@ export type User = {
     cargo: string;
 };
 
+export type ViagemPaciente = {
+    id: string;
+    dataIda: Date;
+    dataVolta?: Date;
+    origem: string;
+    destino: string;
+    isPresente?: boolean;
+    status: "planejada" | "em andamento" | "concluída" | "cancelada";
+};
+
 export type Paciente = {
     id: string;
     nome: string;
@@ -16,6 +26,7 @@ export type Paciente = {
     telefone: string;
     birthDate: Date;
     status: string;
+    historicoViagens?: ViagemPaciente[];
 }
 
 export type RegisterPaciente = Omit<Paciente, 'id'>;
@@ -34,6 +45,7 @@ export type PacienteStackParamList = {
     ListPacientes: undefined;
     EditCreatePaciente: { pacienteId?: string } | undefined;
     PacienteDetails: { pacienteId: string };
+    PacienteHistoricoViagens: { paciente: Paciente };
 };
 
 export type AuthStackParamList = {

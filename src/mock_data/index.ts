@@ -49,6 +49,47 @@ const mockedPacientes: Paciente[] = [
         telefone: "(11) 91234-5678",
         birthDate: new Date(1980, 5, 15),
         status: "inativo",
+        historicoViagens: [
+            {
+                id: "v1",
+                dataIda: new Date(2023, 0, 10),
+                dataVolta: new Date(2023, 0, 20),
+                origem: "Cidade X",
+                destino: "Cidade Y",
+                status: "concluída",
+            },
+            {
+                id: "v2",
+                dataIda: new Date(2023, 2, 5),
+                origem: "Cidade Y",
+                destino: "Cidade Z",
+                status: "em andamento",
+            },
+            {
+                id: "v3",
+                dataIda: new Date(2023, 4, 15),
+                dataVolta: new Date(2023, 4, 25),
+                origem: "Cidade Z",
+                destino: "Cidade X",
+                status: "planejada",
+            },
+            {
+                id: "v4",
+                dataIda: new Date(2022, 10, 1),
+                dataVolta: new Date(2022, 10, 10),
+                origem: "Cidade X",
+                destino: "Cidade W",
+                status: "concluída",
+            },
+            {
+                id: "v5",
+                dataIda: new Date(2022, 7, 20),
+                dataVolta: new Date(2022, 7, 30),
+                origem: "Cidade W",
+                destino: "Cidade Y",
+                status: "concluída",
+            },
+        ],
     },
     {
         id: "2",
@@ -59,6 +100,16 @@ const mockedPacientes: Paciente[] = [
         telefone: "(21) 92345-6789",
         birthDate: new Date(1990, 10, 20),
         status: "inativo",
+        historicoViagens: [
+            {
+                id: "v6",
+                dataIda: new Date(2023, 1, 15),
+                dataVolta: new Date(2023, 1, 25),
+                origem: "Cidade Y",
+                destino: "Cidade Z",
+                status: "concluída",
+            },
+        ],
     },
     {
         id: "3",
@@ -69,6 +120,7 @@ const mockedPacientes: Paciente[] = [
         telefone: "(31) 93456-7890",
         birthDate: new Date(1975, 2, 5),
         status: "inativo",
+        historicoViagens: [],
     },
 ];
 
@@ -107,7 +159,7 @@ export async function insertPaciente(paciente: RegisterPaciente): Promise<Pacien
     const newPaciente = {
         ...paciente,
         id: (pacientes_key++).toString(),
-    }
+    };
     mockedPacientes.push(newPaciente);
 
     return newPaciente;

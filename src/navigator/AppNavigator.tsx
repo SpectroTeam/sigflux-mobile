@@ -11,6 +11,7 @@ import HomeScreen from "../screens/Home/HomeScreen";
 import ListPacientesScreen from "../screens/Pacientes/ListPacientesScreen";
 import EditCreatePaciente from "../screens/Pacientes/EditCreatePacienteScreen";
 import PacienteDetailsScreen from "../screens/Pacientes/PacienteDetailsScreen";
+import PacienteHistoricoViagensScreen from "../screens/Pacientes/PacienteHistoricoViagens";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const HomeStack = createNativeStackNavigator<MainStackParamList>();
@@ -29,6 +30,7 @@ function PacienteNavigator() {
             <PacienteStack.Screen name="ListPacientes" component={ListPacientesScreen} />
             <PacienteStack.Screen name="EditCreatePaciente" component={EditCreatePaciente} />
             <PacienteStack.Screen name="PacienteDetails" component={PacienteDetailsScreen} />
+            <PacienteStack.Screen name="PacienteHistoricoViagens" component={PacienteHistoricoViagensScreen} />
         </PacienteStack.Navigator>
     );
 }
