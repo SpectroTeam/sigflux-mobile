@@ -4,6 +4,7 @@ import { GenericCard } from "../../components/common/GenericCard";
 import { Header } from "../../components/common/Header";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Paciente, PacienteStackParamList } from "../../types";
+import { formatDateBR } from "../../utils/masks";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "PacienteHistoricoViagens">;
 
@@ -30,8 +31,8 @@ export default function PacienteHistoricoViagensScreen({ navigation, route }: Pr
                     <GenericCard
                         title={`${item.destino} - ${item.status}`}
                         fields={[
-                            { label: "Ida", value: item.dataIda.toLocaleDateString() },
-                            { label: "Volta", value: item.dataVolta?.toLocaleDateString() || "indefinido" },
+                            { label: "Ida", value: formatDateBR(item.dataIda) },
+                            { label: "Volta", value: item.dataVolta ? formatDateBR(item.dataVolta) : "indefinido" },
                             { label: "Origem", value: item.origem },
                             { label: "Status", value: item.isPresente ? "Presente" : "Ausente" },
                         ]}

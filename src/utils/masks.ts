@@ -27,3 +27,7 @@ export function formatPhone(value: string): string {
         .replace(/(\d{5})(\d)/, "$1-$2")
         .slice(0, 15);
 }
+
+export function formatDateBR(value: string): string {
+    return new Date(value).toLocaleDateString("pt-BR");
+}

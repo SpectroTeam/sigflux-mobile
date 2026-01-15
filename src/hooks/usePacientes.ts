@@ -1,7 +1,7 @@
 // src/hooks/pacientes.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as pacientesService from "../services/pacienteService";
-import { Paciente } from "../types";
+import { Paciente, UpdatePacienteDto } from "../types";
 import { REACT_QUERY_KEYS } from "../constants";
 
 const { PACIENTES } = REACT_QUERY_KEYS;
@@ -31,7 +31,8 @@ export function usePacienteMutations() {
     });
 
     const updatePaciente = useMutation({
-        mutationFn: pacientesService.update,
+        mutationFn: (vars: { pacienteId: string, data: UpdatePacienteDto }) => 
+            pacientesService.update(vars.pacienteId, vars.data),
         onSuccess: (updatedPaciente) => {
             queryClient.setQueryData<Paciente[]>([PACIENTES], (old = []) =>
                 old.map((p) => (p.id === updatedPaciente.id ? updatedPaciente : p)),

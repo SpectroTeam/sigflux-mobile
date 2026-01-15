@@ -9,8 +9,8 @@ export type User = {
 
 export type ViagemPaciente = {
     id: string;
-    dataIda: Date;
-    dataVolta?: Date;
+    dataIda: string;
+    dataVolta?: string;
     origem: string;
     destino: string;
     isPresente?: boolean;
@@ -24,13 +24,18 @@ export type Paciente = {
     rg: string;
     endereco: string;
     telefone: string;
-    birthDate: Date;
+    birthDate: string;
     status: string;
     historicoViagens?: ViagemPaciente[];
     documentosAnexados?: string[];
-}
+};
 
-export type RegisterPaciente = Omit<Paciente, 'id'>;
+export type CreatePacienteDto = Omit<Paciente, "id" | "historicoViagens" | "documentosAnexados">;
+export type UpdatePacienteDto = CreatePacienteDto;
+
+export type PacienteForm = Omit<CreatePacienteDto, "birthDate"> & {
+    birthDate: Date;
+};
 
 export type AuthCredentials = {
     matricula: string;
@@ -40,7 +45,7 @@ export type AuthCredentials = {
 export type AuthResponse = {
     token: string;
     user: User;
-}
+};
 
 export type PacienteStackParamList = {
     ListPacientes: undefined;

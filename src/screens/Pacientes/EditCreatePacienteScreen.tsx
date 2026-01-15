@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, View, KeyboardAvoidingView, Platform, Alert } from "react-native";
 import { Header } from "../../components/common/Header";
-import { Paciente, PacienteStackParamList } from "../../types";
+import { CreatePacienteDto, PacienteForm, PacienteStackParamList, UpdatePacienteDto } from "../../types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AVATAR_SIZES, COLORS, SPACING } from "../../themes/tokens";
 import DateInput from "../../components/common/DateInput";
@@ -18,8 +18,10 @@ const MIN_DATE = new Date(1900, 0, 1);
 const MAX_DATE = new Date();
 
 export default function EditCreatePacienteScreen({ navigation, route }: Props) {
+    const pacienteId = route.params?.pacienteId;
+
     const { createPaciente, updatePaciente } = usePacienteMutations();
-    const { data: paciente } = usePacienteById(route.params?.pacienteId);
+    const { data: paciente } = usePacienteById(pacienteId);
 
     const {
         control,
@@ -27,7 +29,7 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
         reset,
         setFocus,
         formState: { errors, isDirty },
-    } = useForm<Paciente>({
+    } = useForm<PacienteForm>({
         defaultValues: {
             nome: "",
             cpf: "",
@@ -47,9 +49,8 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
             rg: paciente.rg,
             endereco: paciente.endereco,
             telefone: paciente.telefone,
-            birthDate: paciente.birthDate,
+            birthDate: new Date(paciente.birthDate),
         });
-
     }, [paciente, reset]);
 
     function cleanChange(value: string, cleanFunc: (val: string) => string, onChange: (val: string) => void) {
@@ -57,17 +58,21 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
         onChange(cleanedValue);
     }
 
-    async function onSubmit(data: Paciente) {
-        // verifica se é update ou create com base no pacienteId
-        const isUpdate = !!paciente;
+    async function onSubmit(data: PacienteForm) {
+        const isUpdate = !!pacienteId;
 
-        // adiciona o id ao data se for update
-        data.id = isUpdate ? paciente.id : "";
         // escolhe a operação correta
-        const operation = isUpdate ? updatePaciente.mutateAsync : createPaciente.mutateAsync;
+        const operation = isUpdate
+            ? (data: UpdatePacienteDto) => updatePaciente.mutateAsync({ id: pacienteId, data })
+            : (data: CreatePacienteDto) => createPaciente.mutateAsync(data)
 
         try {
-            const response = await operation(data);
+            const formattedData = {
+                ...data,
+                birthDate: data.birthDate.toISOString(),
+            };
+
+            const response = await operation(formattedData);
 
             if (!response) {
                 throw new Error("Operação falhou");

@@ -1,5 +1,5 @@
 import { deletePaciente, getPacienteById, getPacientes, insertPaciente, updatePaciente } from "../mock_data";
-import { Paciente, RegisterPaciente } from "../types";
+import { Paciente, CreatePacienteDto, UpdatePacienteDto } from "../types";
 
 export async function getAll() {
     const response = await getPacientes();
@@ -11,13 +11,13 @@ export async function getById(pacienteId: string) {
     return paciente;
 }
 
-export async function create(data: RegisterPaciente): Promise<Paciente> {
+export async function create(data: CreatePacienteDto): Promise<Paciente> {
     const response = await insertPaciente(data);
     return response;
 }
 
-export async function update(data: Paciente): Promise<Paciente> {
-    const response = await updatePaciente(data.id, data);
+export async function update(pacienteId: string, data: UpdatePacienteDto): Promise<Paciente> {
+    const response = await updatePaciente(pacienteId, data);
     return response;
 }
 

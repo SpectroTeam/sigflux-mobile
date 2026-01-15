@@ -6,7 +6,7 @@ import LabelValue from "../../components/common/LabelValue";
 import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from "../../themes/tokens";
 import { List } from "react-native-paper";
 import { usePacienteById } from "../../hooks/usePacientes";
-import { PDFLink } from "../../components/common/PDFLinkProps";
+import { formatDateBR } from "../../utils/masks";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "PacienteDetails">;
 
@@ -31,7 +31,7 @@ export default function PacienteDetailsScreen({ navigation, route }: Props) {
                         <LabelValue label="RG: " value={paciente.rg} />
                     </View>
                     <LabelValue label="Endereço: " value={paciente.endereco} />
-                    <LabelValue label="Data de Nascimento: " value={paciente.birthDate.toLocaleDateString()} />
+                    <LabelValue label="Data de Nascimento: " value={formatDateBR(paciente.birthDate)} />
                     <LabelValue label="Telefone: " value={paciente.telefone} />
                     <LabelValue label="Status: " value={paciente.status} />
                 </View>

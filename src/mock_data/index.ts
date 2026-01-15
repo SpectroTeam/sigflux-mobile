@@ -1,4 +1,4 @@
-import { AuthCredentials, AuthResponse, Paciente, RegisterPaciente, User } from "../types";
+import { AuthCredentials, AuthResponse, Paciente, CreatePacienteDto, User } from "../types";
 
 // tempo maximo de delay em milisegundos
 const MAX_DELAY_MS = 1000;
@@ -47,7 +47,7 @@ const mockedPacientes: Paciente[] = [
         rg: "1.234.567-8",
         endereco: "Rua A, 123, Cidade X",
         telefone: "(11) 91234-5678",
-        birthDate: new Date(1980, 5, 15),
+        birthDate: new Date(1980, 5, 15).toISOString(),
         status: "inativo",
         documentosAnexados: [
             "https://itaudeminas.mg.gov.br/arquivos/ere/livros/chapeuzinho-vermelho-2.pdf",
@@ -57,39 +57,39 @@ const mockedPacientes: Paciente[] = [
         historicoViagens: [
             {
                 id: "v1",
-                dataIda: new Date(2023, 0, 10),
-                dataVolta: new Date(2023, 0, 20),
+                dataIda: new Date(2023, 0, 10).toISOString(),
+                dataVolta: new Date(2023, 0, 20).toISOString(),
                 origem: "Cidade X",
                 destino: "Cidade Y",
                 status: "concluída",
             },
             {
                 id: "v2",
-                dataIda: new Date(2023, 2, 5),
+                dataIda: new Date(2023, 2, 5).toISOString(),
                 origem: "Cidade Y",
                 destino: "Cidade Z",
                 status: "em andamento",
             },
             {
                 id: "v3",
-                dataIda: new Date(2023, 4, 15),
-                dataVolta: new Date(2023, 4, 25),
+                dataIda: new Date(2023, 4, 15).toISOString(),
+                dataVolta: new Date(2023, 4, 25).toISOString(),
                 origem: "Cidade Z",
                 destino: "Cidade X",
                 status: "planejada",
             },
             {
                 id: "v4",
-                dataIda: new Date(2022, 10, 1),
-                dataVolta: new Date(2022, 10, 10),
+                dataIda: new Date(2022, 10, 1).toISOString(),
+                dataVolta: new Date(2022, 10, 10).toISOString(),
                 origem: "Cidade X",
                 destino: "Cidade W",
                 status: "concluída",
             },
             {
                 id: "v5",
-                dataIda: new Date(2022, 7, 20),
-                dataVolta: new Date(2022, 7, 30),
+                dataIda: new Date(2022, 7, 20).toISOString(),
+                dataVolta: new Date(2022, 7, 30).toISOString(),
                 origem: "Cidade W",
                 destino: "Cidade Y",
                 status: "concluída",
@@ -103,7 +103,7 @@ const mockedPacientes: Paciente[] = [
         rg: "2.345.678-9",
         endereco: "Avenida B, 456, Cidade Y",
         telefone: "(21) 92345-6789",
-        birthDate: new Date(1990, 10, 20),
+        birthDate: new Date(1990, 10, 20).toISOString(),
         status: "inativo",
         documentosAnexados: [
             "https://s2.q4cdn.com/175719177/files/doc_presentations/Placeholder-PDF.pdf",
@@ -112,8 +112,8 @@ const mockedPacientes: Paciente[] = [
         historicoViagens: [
             {
                 id: "v6",
-                dataIda: new Date(2023, 1, 15),
-                dataVolta: new Date(2023, 1, 25),
+                dataIda: new Date(2023, 1, 15).toISOString(),
+                dataVolta: new Date(2023, 1, 25).toISOString(),
                 origem: "Cidade Y",
                 destino: "Cidade Z",
                 status: "concluída",
@@ -127,7 +127,7 @@ const mockedPacientes: Paciente[] = [
         rg: "3.456.789-0",
         endereco: "Travessa  C, 789, Cidade Z",
         telefone: "(31) 93456-7890",
-        birthDate: new Date(1975, 2, 5),
+        birthDate: new Date(1975, 2, 5).toISOString(),
         status: "inativo",
         historicoViagens: [],
     },
@@ -150,7 +150,7 @@ export async function findUserByCredentials(credentials: AuthCredentials): Promi
 
 export async function getPacientes(): Promise<Paciente[]> {
     await delay();
-    return mockedPacientes;
+    return deepCopy(mockedPacientes);
 }
 
 export async function getPacienteById(pacienteId: string): Promise<Paciente> {
@@ -159,19 +159,19 @@ export async function getPacienteById(pacienteId: string): Promise<Paciente> {
     if (!paciente) {
         throw new Error("Paciente not found");
     }
-    return paciente;
+    return deepCopy(paciente);
 }
 
-export async function insertPaciente(paciente: RegisterPaciente): Promise<Paciente> {
+export async function insertPaciente(paciente: CreatePacienteDto): Promise<Paciente> {
     await delay();
 
     const newPaciente = {
         ...paciente,
-        id: (pacientes_key++).toString(),
+        id: (pacientes_key++).toString()
     };
     mockedPacientes.push(newPaciente);
 
-    return newPaciente;
+    return deepCopy(newPaciente);
 }
 
 export async function deletePaciente(pacienteId: string): Promise<void> {
@@ -183,7 +183,7 @@ export async function deletePaciente(pacienteId: string): Promise<void> {
     mockedPacientes.splice(index, 1);
 }
 
-export async function updatePaciente(pacienteId: string, pacienteData: RegisterPaciente): Promise<Paciente> {
+export async function updatePaciente(pacienteId: string, pacienteData: CreatePacienteDto): Promise<Paciente> {
     await delay();
     const index = mockedPacientes.findIndex((p) => p.id === pacienteId);
 
@@ -196,10 +196,14 @@ export async function updatePaciente(pacienteId: string, pacienteData: RegisterP
         ...pacienteData,
     };
 
-    return mockedPacientes[index];
+    return deepCopy(mockedPacientes[index]);
 }
 
 async function delay(): Promise<void> {
     const randomNumber = Math.floor(Math.random() * MAX_DELAY_MS) + 1;
     return new Promise((resolve) => setTimeout(resolve, randomNumber));
+}
+
+function deepCopy<T>(data: T): T {
+    return JSON.parse(JSON.stringify(data));
 }
