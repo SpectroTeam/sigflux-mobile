@@ -48,11 +48,11 @@ export default function ListAcompanhantesScreen({ navigation, route }: Props) {
     }
 
     function handleNewAcompanhante() {
-        Alert.alert("TO-do", "new acompanhante");
+        navigation.navigate("EditCreateAcompanhante", { pacienteIndex });
     }
 
-    function handleEditAcompanhante(acompanhante: Acompanhante) {
-        Alert.alert("TO-do", "edit acompanhante");
+    function handleEditAcompanhante(acompanhanteIndex: number) {
+        navigation.navigate("EditCreateAcompanhante", { pacienteIndex, acompanhanteIndex });
     }
 
     if (isLoading) {
@@ -97,7 +97,7 @@ export default function ListAcompanhantesScreen({ navigation, route }: Props) {
                             editButton={true}
                             trashButton={true}
                             trashButtonAction={() => handleDeletePress(item)}
-                            editButtonAction={() => handleEditAcompanhante(item)} 
+                            editButtonAction={() => handleEditAcompanhante(index)}
                         />
                     )}
                     showsVerticalScrollIndicator={false}

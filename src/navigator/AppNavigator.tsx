@@ -14,6 +14,7 @@ import PacienteDetailsScreen from "../screens/Pacientes/PacienteDetailsScreen";
 import PacienteHistoricoViagensScreen from "../screens/Pacientes/PacienteHistoricoViagens";
 import PacienteDocumentosAnexadosScreen from "../screens/Pacientes/PacienteDocumentosAnexadosScreen";
 import ListAcompanhantesScreen from "../screens/Pacientes/ListAcompanhantesScreen";
+import EditCreateAcompanhanteScreen from "../screens/Pacientes/EditCreateAcompanhantes";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const HomeStack = createNativeStackNavigator<MainStackParamList>();
@@ -35,6 +36,7 @@ function PacienteNavigator() {
             <PacienteStack.Screen name="PacienteHistoricoViagens" component={PacienteHistoricoViagensScreen} />
             <PacienteStack.Screen name="PacienteDocumentosAnexados" component={PacienteDocumentosAnexadosScreen} />
             <PacienteStack.Screen name="ListAcompanhantes" component={ListAcompanhantesScreen} />
+            <PacienteStack.Screen name="EditCreateAcompanhante" component={EditCreateAcompanhanteScreen} />
         </PacienteStack.Navigator>
     );
 }

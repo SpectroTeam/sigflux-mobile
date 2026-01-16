@@ -65,6 +65,7 @@ export type PacienteStackParamList = {
     PacienteHistoricoViagens: { pacienteIndex: number };
     PacienteDocumentosAnexados: { pacienteIndex: number };
     ListAcompanhantes: { pacienteIndex: number };
+    EditCreateAcompanhante: { pacienteIndex: number; acompanhanteIndex?: number };
 };
 
 export type AuthStackParamList = {
