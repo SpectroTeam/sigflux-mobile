@@ -1,10 +1,12 @@
-import React from "react";
+import { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { COLORS, SPACING, SHADOWS, LOGO_SIZES, FONT_SIZES, BORDER_RADIUS } from "../../themes/tokens";
+import { COLORS, SPACING, SHADOWS, LOGO_SIZES, FONT_SIZES, BORDER_RADIUS, AVATAR_SIZES } from "../../themes/tokens";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useAuth } from "../../contexts/AuthContext";
+import { ConfirmModal } from "../common/Modal";
 
 export function HomeHeader() {
+    const [open, setOpen] = useState(false);
     const { logout, user } = useAuth();
 
     async function handleLogout() {
@@ -13,7 +15,6 @@ export function HomeHeader() {
 
     return (
         <View style={styles.container}>
-
             <Image
                 source={require("../../../assets/icon.png")}
                 width={LOGO_SIZES.sm / 2}
@@ -22,15 +23,26 @@ export function HomeHeader() {
                 resizeMode="center"
             />
 
-            <View style={styles.bottom_styles} >
+            <View style={styles.bottom_styles}>
                 <View style={styles.greetingsContainer}>
                     <Text style={styles.greetingsText}>Olá,</Text>
                     <Text style={styles.userNameText}>{user?.nome_completo}</Text>
                 </View>
                 <TouchableOpacity>
-                    <MaterialIcons name="logout" size={32} color={COLORS.error} onPress={handleLogout} />
+                    <MaterialIcons name="logout" size={AVATAR_SIZES.sm} color={COLORS.error} onPress={() => setOpen(true)} />
                 </TouchableOpacity>
             </View>
+
+            <ConfirmModal
+                visible={open}
+                icon={() => <MaterialIcons name="logout" size={AVATAR_SIZES.md} color={COLORS.error}/>}
+                title="Sair da conta ?"
+                confirmText="Sair"
+                cancelText="Cancelar"
+                confirmColor={COLORS.success}
+                onConfirm={handleLogout}
+                onCancel={() => setOpen(false)}
+            />
         </View>
     );
 }
