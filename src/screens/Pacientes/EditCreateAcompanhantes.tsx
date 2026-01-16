@@ -146,9 +146,11 @@ export default function EditCreateAcompanhanteScreen({ navigation, route }: Prop
                             control={control}
                             name="nome"
                             rules={{ required: "Nome é obrigatório" }}
-                            render={({ field }) => (
+                            render={({ field: { value, onChange, onBlur } }) => (
                                 <CustomInput
-                                    {...field}
+                                    value={value}
+                                    onChangeText={onChange}
+                                    onBlur={onBlur}
                                     style={styles.input}
                                     label="Nome"
                                     placeholder="Luiza Torres"
@@ -167,19 +169,20 @@ export default function EditCreateAcompanhanteScreen({ navigation, route }: Prop
                                 required: "CPF é obrigatório",
                                 minLength: { value: 14, message: "CPF inválido" },
                             }}
-                            render={({ field }) => (
+                            render={({ field: { value, onChange, onBlur } }) => (
                                 <CustomInput
+                                    value={value}
+                                    onChangeText={(val) => applyMask(val, formatCPF, onChange)}
+                                    onBlur={onBlur}
                                     style={styles.input}
                                     label="CPF"
                                     placeholder="111.222.333-44"
-                                    onChangeText={(value) => applyMask(value, formatCPF, field.onChange)}
                                     onSubmitEditing={() => setFocus("telefone")}
                                     returnKeyType="next"
                                     submitBehavior="submit"
                                     inputMode="numeric"
                                     maxLength={14}
                                     errorStr={errors.cpf?.message}
-                                    {...field}
                                 />
                             )}
                         />
@@ -194,15 +197,16 @@ export default function EditCreateAcompanhanteScreen({ navigation, route }: Prop
                                     message: "Telefone inválido",
                                 },
                             }}
-                            render={({ field }) => (
+                            render={({ field: { value, onChange, onBlur } }) => (
                                 <CustomInput
-                                    {...field}
+                                    value={value}
+                                    onChangeText={(v) => applyMask(v, formatPhone, onChange)}
+                                    onBlur={onBlur}
                                     label="Telefone"
                                     placeholder="83 99191-9191"
                                     inputMode="tel"
                                     maxLength={15}
                                     style={styles.input}
-                                    onChangeText={(v) => applyMask(v, formatPhone, field.onChange)}
                                     errorStr={errors.telefone?.message}
                                 />
                             )}
