@@ -8,14 +8,14 @@ import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ConfirmModal } from "../../components/common/Modal";
 import { useEffect, useState } from "react";
 import { Acompanhante, PacienteStackParamList } from "../../types";
-import { usePacienteByIndex, usePacienteMutations } from "../../hooks/usePacientes";
+import { usePacienteById, usePacienteMutations } from "../../hooks/usePacientes";
 import { useSnackbar } from "../../contexts/SnackBarContext";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "ListAcompanhantes">;
 
 export default function ListAcompanhantesScreen({ navigation, route }: Props) {
-    const { pacienteIndex } = route.params;
-    const { data: paciente, isLoading } = usePacienteByIndex(pacienteIndex);
+    const { pacienteId } = route.params;
+    const { data: paciente, isLoading } = usePacienteById(pacienteId);
     const { deleteAcompanhante } = usePacienteMutations();
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedAcompanhante, setSelectedAcompanhante] = useState({ id: "", nome: "" });
@@ -51,11 +51,11 @@ export default function ListAcompanhantesScreen({ navigation, route }: Props) {
     }
 
     function handleNewAcompanhante() {
-        navigation.navigate("EditCreateAcompanhante", { pacienteIndex });
+        navigation.navigate("EditCreateAcompanhante", { pacienteId });
     }
 
-    function handleEditAcompanhante(acompanhanteIndex: number) {
-        navigation.navigate("EditCreateAcompanhante", { pacienteIndex, acompanhanteIndex });
+    function handleEditAcompanhante(acompanhanteId: string) {
+        navigation.navigate("EditCreateAcompanhante", { pacienteId, acompanhanteId });
     }
 
     if (isLoading) {
@@ -89,7 +89,7 @@ export default function ListAcompanhantesScreen({ navigation, route }: Props) {
                 <FlatList
                     data={paciente.acompanhantes}
                     keyExtractor={(item) => item.id}
-                    renderItem={({ index, item }) => (
+                    renderItem={({ item }) => (
                         <GenericCard
                             title={item.nome}
                             fields={[
@@ -100,7 +100,7 @@ export default function ListAcompanhantesScreen({ navigation, route }: Props) {
                             editButton={true}
                             trashButton={true}
                             trashButtonAction={() => handleDeletePress(item)}
-                            editButtonAction={() => handleEditAcompanhante(index)}
+                            editButtonAction={() => handleEditAcompanhante(item.id)}
                         />
                     )}
                     showsVerticalScrollIndicator={false}

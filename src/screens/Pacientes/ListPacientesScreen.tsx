@@ -35,8 +35,8 @@ export default function ListPacientesSreen({ navigation }: Props) {
         navigation.navigate("EditCreatePaciente");
     }
 
-    function handlePacientePress(pacienteIndex: number) {
-        navigation.navigate("PacienteDetails", { pacienteIndex });
+    function handlePacientePress(pacienteId: string) {
+        navigation.navigate("PacienteDetails", { pacienteId });
     }
 
     function handleDeletePress(paciente: Paciente) {
@@ -57,8 +57,8 @@ export default function ListPacientesSreen({ navigation }: Props) {
         }
     }
 
-    function handleEditPatient(index: number) {
-        navigation.navigate("EditCreatePaciente", { pacienteIndex: index });
+    function handleEditPatient(pacienteId: string) {
+        navigation.navigate("EditCreatePaciente", { pacienteId });
     }
 
     return (
@@ -88,17 +88,17 @@ export default function ListPacientesSreen({ navigation }: Props) {
                     <FlatList
                         data={filteredPatients}
                         keyExtractor={(item) => item.id}
-                        renderItem={({ index,  item }) => (
+                        renderItem={({ item }) => (
                             <GenericCard
                                 fields={[
                                     { label: "CPF", value: item.cpf },
                                     { label: "Status", value: item.status },
                                 ]}
                                 title={item.nome}
-                                onPress={() => handlePacientePress(index)}
+                                onPress={() => handlePacientePress(item.id)}
                                 editButton={true}
                                 trashButton={true}
-                                editButtonAction={() => handleEditPatient(index)}
+                                editButtonAction={() => handleEditPatient(item.id)}
                                 trashButtonAction={() => handleDeletePress(item)}
                             />
                         )}

@@ -9,7 +9,7 @@ import { useKeyboardHeight } from "../../hooks/useKeyboard";
 import { useForm, Controller } from "react-hook-form";
 import { CustomButton } from "../../components/common/CustomButton";
 import { formatCPF, formatRG, formatPhone } from "../../utils/masks";
-import { usePacienteByIndex, usePacienteMutations } from "../../hooks/usePacientes";
+import { usePacienteById, usePacienteMutations } from "../../hooks/usePacientes";
 import { useEffect } from "react";
 import { PACIENTE_STATUS_OPTIONS } from "../../constants";
 import DropdownComponent from "../../components/common/DropdownComponent";
@@ -22,7 +22,7 @@ const MAX_DATE = new Date();
 
 export default function EditCreatePacienteScreen({ navigation, route }: Props) {
     const { createPaciente, updatePaciente } = usePacienteMutations();
-    const { data: paciente } = usePacienteByIndex(route.params?.pacienteIndex);
+    const { data: paciente } = usePacienteById(route.params?.pacienteId);
     const { showSnackbar } = useSnackbar();
 
     const {
@@ -82,7 +82,7 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
             }
 
             showSnackbar("Paciente salvo!", "success", "short");
-            navigation.replace("PacienteDetails", { pacienteIndex: route.params!.pacienteIndex! });
+            navigation.replace("PacienteDetails", { pacienteId: response.id });
         } catch (error) {
             console.error("Error saving paciente:", error);
             showSnackbar("Erro ao salvar paciente.", "error", "short");

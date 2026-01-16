@@ -5,7 +5,7 @@ import { PacienteStackParamList } from "../../types";
 import LabelValue from "../../components/common/LabelValue";
 import { AVATAR_SIZES, BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from "../../themes/tokens";
 import { List } from "react-native-paper";
-import { usePacienteByIndex } from "../../hooks/usePacientes";
+import { usePacienteById } from "../../hooks/usePacientes";
 import { formatDateBR } from "../../utils/masks";
 import { useEffect } from "react";
 import { useSnackbar } from "../../contexts/SnackBarContext";
@@ -13,8 +13,8 @@ import { useSnackbar } from "../../contexts/SnackBarContext";
 type Props = NativeStackScreenProps<PacienteStackParamList, "PacienteDetails">;
 
 export default function PacienteDetailsScreen({ navigation, route }: Props) {
-    const { pacienteIndex } = route.params;
-    const { data: paciente, isLoading } = usePacienteByIndex(pacienteIndex);
+    const { pacienteId } = route.params;
+    const { data: paciente, isLoading } = usePacienteById(pacienteId);
     const { showSnackbar } = useSnackbar();
 
     useEffect(() => {
@@ -55,7 +55,7 @@ export default function PacienteDetailsScreen({ navigation, route }: Props) {
                         title="Documentos Anexados"
                         left={(props) => <List.Icon {...props} icon="file-document-outline" />}
                         right={(props) => <List.Icon {...props} icon="chevron-right" />}
-                        onPress={() => navigation.navigate("PacienteDocumentosAnexados", { pacienteIndex })}
+                        onPress={() => navigation.navigate("PacienteDocumentosAnexados", { pacienteId })}
                         style={styles.listItem}
                         titleStyle={styles.listItemTitle}
                     />
@@ -63,7 +63,7 @@ export default function PacienteDetailsScreen({ navigation, route }: Props) {
                         title="Acompanhantes"
                         left={(props) => <List.Icon {...props} icon="account-multiple-outline" />}
                         right={(props) => <List.Icon {...props} icon="chevron-right" />}
-                        onPress={() => navigation.navigate("ListAcompanhantes", { pacienteIndex })}
+                        onPress={() => navigation.navigate("ListAcompanhantes", { pacienteId })}
                         style={styles.listItem}
                         titleStyle={styles.listItemTitle}
                     />
@@ -71,7 +71,7 @@ export default function PacienteDetailsScreen({ navigation, route }: Props) {
                         title="Historico de Viagens"
                         left={(props) => <List.Icon {...props} icon="map-marker-path" />}
                         right={(props) => <List.Icon {...props} icon="chevron-right" />}
-                        onPress={() => navigation.navigate("PacienteHistoricoViagens", { pacienteIndex })}
+                        onPress={() => navigation.navigate("PacienteHistoricoViagens", { pacienteId })}
                         style={styles.listItem}
                         titleStyle={styles.listItemTitle}
                     />

@@ -1,5 +1,5 @@
 import * as mockFunctions from "../mock_data";
-import { Acompanhante, CreateAcompanhanteDto, CreatePacienteDto, Paciente, UpdatePacienteDto } from "../types";
+import { Acompanhante, CreateAcompanhanteDto, CreatePacienteDto, Paciente, UpdatePacienteDto, UpdateAcompanhanteDto } from "../types";
 
 export async function getAll() {
     const response = await mockFunctions.getPacientes();
@@ -36,7 +36,7 @@ export async function addAcompanhante(pacienteId: string, acompanhante: CreateAc
 export async function updateAcompanhante(
     pacienteId: string,
     acompanhanteId: string,
-    acompanhanteData: CreateAcompanhanteDto,
+    acompanhanteData: UpdateAcompanhanteDto,
 ): Promise<Acompanhante> {
     const response = await mockFunctions.updateAcompanhante(pacienteId, acompanhanteId, acompanhanteData);
     return response;

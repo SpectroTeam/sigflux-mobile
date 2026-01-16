@@ -17,11 +17,11 @@ import CustomInput from "../../components/common/CustomInput";
 import DropdownComponent from "../../components/common/DropdownComponent";
 import { CustomButton } from "../../components/common/CustomButton";
 
-import { Acompanhante, PacienteStackParamList } from "../../types";
+import { Acompanhante, CreateAcompanhanteDto, PacienteStackParamList } from "../../types";
 import { AVATAR_SIZES, COLORS, FONT_SIZES, SPACING } from "../../themes/tokens";
 import { formatCPF, formatPhone } from "../../utils/masks";
 import { useKeyboardHeight } from "../../hooks/useKeyboard";
-import { usePacienteByIndex, usePacienteMutations } from "../../hooks/usePacientes";
+import { usePacienteById, usePacienteMutations } from "../../hooks/usePacientes";
 import { useSnackbar } from "../../contexts/SnackBarContext";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "EditCreateAcompanhante">;
@@ -38,10 +38,10 @@ const PARENTESCO_OPTIONS = [
 ];
 
 export default function EditCreateAcompanhanteScreen({ navigation, route }: Props) {
-    const { pacienteIndex, acompanhanteIndex } = route.params;
-    const isEditMode = acompanhanteIndex !== undefined;
+    const { pacienteId, acompanhanteId } = route.params;
+    const isEditMode = acompanhanteId !== undefined;
 
-    const { data: paciente, isLoading } = usePacienteByIndex(pacienteIndex);
+    const { data: paciente, isLoading } = usePacienteById(pacienteId);
     const { addAcompanhante, updateAcompanhante } = usePacienteMutations();
     const { showSnackbar } = useSnackbar();
 
@@ -53,7 +53,7 @@ export default function EditCreateAcompanhanteScreen({ navigation, route }: Prop
         setFocus,
         formState: { errors },
         reset,
-    } = useForm<Acompanhante>({
+    } = useForm<CreateAcompanhanteDto>({
         defaultValues: {
             nome: "",
             cpf: "",
@@ -63,7 +63,7 @@ export default function EditCreateAcompanhanteScreen({ navigation, route }: Prop
     });
 
     /**
-     * tenta carregar acompanhante para edição se acompanhanteIndex for fornecido
+     * tenta carregar acompanhante para edição se acompanhanteId for fornecido
      */
     useEffect(() => {
         if (isLoading) return;
@@ -75,7 +75,7 @@ export default function EditCreateAcompanhanteScreen({ navigation, route }: Prop
 
         if (!isEditMode) return;
 
-        const acompanhante = paciente.acompanhantes?.[acompanhanteIndex];
+        const acompanhante = paciente.acompanhantes?.find(a => a.id === acompanhanteId);
 
         if (!acompanhante) {
             navigation.goBack();
@@ -90,13 +90,13 @@ export default function EditCreateAcompanhanteScreen({ navigation, route }: Prop
             telefone: acompanhante.telefone,
             parentesco: acompanhante.parentesco,
         });
-    }, [isLoading, paciente, acompanhanteIndex, isEditMode, navigation, reset]);
+    }, [isLoading, paciente, acompanhanteId, isEditMode, navigation, reset]);
 
     function applyMask(value: string, formatter: (val: string) => string, onChange: (val: string) => void) {
         onChange(formatter(value));
     }
 
-    async function submitAcompanhante(data: Acompanhante) {
+    async function submitAcompanhante(data: CreateAcompanhanteDto) {
         if (!paciente) return;
 
         try {

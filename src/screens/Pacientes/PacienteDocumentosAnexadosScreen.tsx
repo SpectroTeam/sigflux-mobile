@@ -8,13 +8,13 @@ import { useEffect, useState } from "react";
 import * as DocumentPicker from "expo-document-picker";
 import { CustomButton } from "../../components/common/CustomButton";
 import { Entypo } from "@expo/vector-icons";
-import { usePacienteByIndex } from "../../hooks/usePacientes";
+import { usePacienteById } from "../../hooks/usePacientes";
 import { useSnackbar } from "../../contexts/SnackBarContext";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "PacienteDocumentosAnexados">;
 
 export default function PacienteDocumentosAnexadosScreen({ navigation, route }: Props) {
-    const { data: paciente, isLoading } = usePacienteByIndex(route.params.pacienteIndex);
+    const { data: paciente, isLoading } = usePacienteById(route.params.pacienteId);
     const { showSnackbar } = useSnackbar();
 
     useEffect(() => {

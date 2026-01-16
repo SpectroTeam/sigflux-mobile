@@ -28,6 +28,7 @@ export type Acompanhante = {
 };
 
 export type CreateAcompanhanteDto = Omit<Acompanhante, "id">;
+export type UpdateAcompanhanteDto = CreateAcompanhanteDto;
 
 export type PacienteStatus = typeof PACIENTE_STATUS[keyof typeof PACIENTE_STATUS];
 
@@ -64,12 +65,12 @@ export type AuthResponse = {
 
 export type PacienteStackParamList = {
     ListPacientes: undefined;
-    EditCreatePaciente: { pacienteIndex?: number } | undefined;
-    PacienteDetails: { pacienteIndex: number };
-    PacienteHistoricoViagens: { pacienteIndex: number };
-    PacienteDocumentosAnexados: { pacienteIndex: number };
-    ListAcompanhantes: { pacienteIndex: number };
-    EditCreateAcompanhante: { pacienteIndex: number; acompanhanteIndex?: number };
+    EditCreatePaciente: { pacienteId?: string } | undefined;
+    PacienteDetails: { pacienteId: string };
+    PacienteHistoricoViagens: { pacienteId: string };
+    PacienteDocumentosAnexados: { pacienteId: string };
+    ListAcompanhantes: { pacienteId: string };
+    EditCreateAcompanhante: { pacienteId: string; acompanhanteId?: string };
 };
 
 export type AuthStackParamList = {

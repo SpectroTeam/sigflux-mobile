@@ -5,14 +5,14 @@ import { Header } from "../../components/common/Header";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { PacienteStackParamList } from "../../types";
 import { formatDateBR } from "../../utils/masks";
-import { usePacienteByIndex } from "../../hooks/usePacientes";
+import { usePacienteById } from "../../hooks/usePacientes";
 import { useEffect } from "react";
 import { useSnackbar } from "../../contexts/SnackBarContext";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "PacienteHistoricoViagens">;
 
 export default function PacienteHistoricoViagensScreen({ navigation, route }: Props) {
-    const { data: paciente, isLoading } = usePacienteByIndex(route.params.pacienteIndex);
+    const { data: paciente, isLoading } = usePacienteById(route.params.pacienteId);
     const { showSnackbar } = useSnackbar();
 
     useEffect(() => {

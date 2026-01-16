@@ -1,7 +1,7 @@
 // src/hooks/pacientes.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as pacientesService from "../services/pacienteService";
-import { Paciente, UpdatePacienteDto, CreateAcompanhanteDto } from "../types";
+import { Paciente, UpdatePacienteDto, CreateAcompanhanteDto, UpdateAcompanhanteDto } from "../types";
 import { REACT_QUERY_KEYS } from "../constants";
 
 const { PACIENTES } = REACT_QUERY_KEYS;
@@ -65,7 +65,7 @@ export function usePacienteMutations() {
     });
 
     const updateAcompanhante = useMutation({
-        mutationFn: (vars: { pacienteId: string; acompanhanteId: string; acompanhanteData: CreateAcompanhanteDto }) =>
+        mutationFn: (vars: { pacienteId: string; acompanhanteId: string; acompanhanteData: UpdateAcompanhanteDto }) =>
             pacientesService.updateAcompanhante(vars.pacienteId, vars.acompanhanteId, vars.acompanhanteData),
         onSuccess: (updatedAcompanhante, vars) => {
             const { pacienteId, acompanhanteId } = vars;
@@ -121,9 +121,9 @@ export function usePacienteMutations() {
     };
 }
 
-export function usePacienteByIndex(index?: number) {
+export function usePacienteById(id?: string) {
     const { data: pacientes } = usePacientes();
-    const paciente = pacientes && index !== undefined ? pacientes[index] : null;
+    const paciente = pacientes?.find((p) => p.id === id);
 
     return {
         data: paciente,
