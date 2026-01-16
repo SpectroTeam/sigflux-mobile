@@ -2,7 +2,7 @@ import { View, Text, FlatList, StyleSheet, Alert, ActivityIndicator } from "reac
 import { SPACING, FONT_SIZES, COLORS, BORDER_RADIUS, AVATAR_SIZES } from "../../themes/tokens";
 import { Header } from "../../components/common/Header";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Paciente, PacienteStackParamList } from "../../types";
+import { PacienteStackParamList } from "../../types";
 import { PDFLink } from "../../components/common/PDFLinkProps";
 import { useEffect, useState } from "react";
 import * as DocumentPicker from "expo-document-picker";

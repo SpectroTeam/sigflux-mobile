@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from "../../themes/tokens";

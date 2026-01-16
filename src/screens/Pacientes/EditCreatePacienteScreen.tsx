@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, View, KeyboardAvoidingView, Platform, Alert } from "react-native";
+import { ScrollView, StyleSheet, View, KeyboardAvoidingView, Platform } from "react-native";
 import { Header } from "../../components/common/Header";
 import { CreatePacienteDto, PacienteForm, PacienteStackParamList, UpdatePacienteDto } from "../../types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";

@@ -1,8 +1,7 @@
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform, Linking } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from "../../themes/tokens";
 import { Directory, File, Paths } from "expo-file-system";
-import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { getFileName } from "../../utils/file";
 import { MD3Colors, ProgressBar } from "react-native-paper";

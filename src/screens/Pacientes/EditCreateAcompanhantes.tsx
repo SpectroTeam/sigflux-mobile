@@ -4,7 +4,6 @@ import {
     View,
     KeyboardAvoidingView,
     Platform,
-    Alert,
     ActivityIndicator,
     Text,
 } from "react-native";
@@ -17,7 +16,7 @@ import CustomInput from "../../components/common/CustomInput";
 import DropdownComponent from "../../components/common/DropdownComponent";
 import { CustomButton } from "../../components/common/CustomButton";
 
-import { Acompanhante, CreateAcompanhanteDto, PacienteStackParamList } from "../../types";
+import { CreateAcompanhanteDto, PacienteStackParamList } from "../../types";
 import { AVATAR_SIZES, COLORS, FONT_SIZES, SPACING } from "../../themes/tokens";
 import { formatCPF, formatPhone } from "../../utils/masks";
 import { useKeyboardHeight } from "../../hooks/useKeyboard";

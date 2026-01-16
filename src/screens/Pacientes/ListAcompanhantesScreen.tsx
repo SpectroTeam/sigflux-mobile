@@ -1,4 +1,4 @@
-import { View, FlatList, Text, StyleSheet, Alert, ActivityIndicator } from "react-native";
+import { View, FlatList, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { GenericCard } from "../../components/common/GenericCard";
 import { Header } from "../../components/common/Header";
 import { SPACING, COLORS, FONT_SIZES, BORDER_RADIUS, AVATAR_SIZES } from "../../themes/tokens";

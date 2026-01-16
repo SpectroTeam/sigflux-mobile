@@ -1,8 +1,5 @@
-import { FontAwesome } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
-import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from "../../themes/tokens";
+import { StyleSheet } from "react-native";
 import { CustomButton } from "./CustomButton";
 
 export type PickDocumentsProps = {

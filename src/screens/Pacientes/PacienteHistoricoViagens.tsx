@@ -1,5 +1,5 @@
 import { View, Text, FlatList, StyleSheet, ActivityIndicator } from "react-native";
-import { SPACING, FONT_SIZES, BORDER_RADIUS, COLORS, AVATAR_SIZES } from "../../themes/tokens";
+import { SPACING, FONT_SIZES, COLORS, AVATAR_SIZES } from "../../themes/tokens";
 import { GenericCard } from "../../components/common/GenericCard";
 import { Header } from "../../components/common/Header";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
