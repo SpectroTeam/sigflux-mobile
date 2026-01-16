@@ -6,6 +6,7 @@ import { AppNavigator } from "./src/navigator/AppNavigator";
 import { AuthProvider } from "./src/contexts/AuthContext";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./src/lib/queryClient";
+import { PaperProvider } from "react-native-paper";
 
 export default function App() {
     const fontsLoaded = useFonts();
@@ -20,12 +21,14 @@ export default function App() {
 
     return (
         <SafeAreaProvider>
-            <QueryClientProvider client={queryClient}>
-                <AuthProvider>
-                    <AppNavigator />
-                    <StatusBar style="auto" />
-                </AuthProvider>
-            </QueryClientProvider>
+            <PaperProvider>
+                <QueryClientProvider client={queryClient}>
+                    <AuthProvider>
+                        <AppNavigator />
+                        <StatusBar style="auto" />
+                    </AuthProvider>
+                </QueryClientProvider>
+            </PaperProvider>
         </SafeAreaProvider>
     );
 }

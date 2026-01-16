@@ -1,5 +1,6 @@
 import React from "react";
-import { Modal, View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { Modal, Portal } from "react-native-paper";
 import { COLORS, SPACING, FONT_SIZES, BORDER_RADIUS } from "../../themes/tokens";
 import { CustomButton } from "./CustomButton";
 
@@ -7,7 +8,7 @@ type Props = {
     visible: boolean;
     title?: string;
     icon?: () => React.ReactNode;
-    message: string;
+    message?: string;
     confirmText: string;
     onConfirm: () => void;
     onCancel: () => void;
@@ -29,12 +30,18 @@ export function ConfirmModal({
     icon,
 }: Props) {
     return (
-        <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
-            <View style={styles.overlay}>
+        <Portal>
+            <Modal
+                visible={visible}
+                onDismiss={onCancel}
+                contentContainerStyle={styles.container}
+                dismissable={!loading}
+            >
                 <View style={styles.content}>
                     {icon && icon()}
+
                     {title && <Text style={styles.title}>{title}</Text>}
-                    <Text style={styles.message}>{message}</Text>
+                    {message && <Text style={styles.message}>{message}</Text>}
 
                     <View style={styles.actions}>
                         <CustomButton
@@ -60,25 +67,24 @@ export function ConfirmModal({
                         />
                     </View>
                 </View>
-            </View>
-        </Modal>
+            </Modal>
+        </Portal>
     );
 }
 
 const styles = StyleSheet.create({
-    overlay: {
-        flex: 1,
-        backgroundColor: "rgba(0,0,0,0.5)",
+    container: {
         justifyContent: "center",
         alignItems: "center",
+        padding: SPACING.lg,
     },
 
     content: {
         backgroundColor: COLORS.surface,
         borderRadius: BORDER_RADIUS.lg,
         padding: SPACING.lg,
-        width: "85%",
-        display: "flex",
+        width: "100%",
+        maxWidth: 360,
         alignItems: "center",
         gap: SPACING.xs,
     },
@@ -97,7 +103,6 @@ const styles = StyleSheet.create({
     },
 
     actions: {
-        display: "flex",
         flexDirection: "row",
         width: "100%",
         justifyContent: "space-between",
@@ -105,9 +110,7 @@ const styles = StyleSheet.create({
     },
 
     button_style: {
-        alignSelf: "flex-end",
         borderRadius: BORDER_RADIUS.md,
-        paddingHorizontal: 0,
         width: 140,
     },
 
