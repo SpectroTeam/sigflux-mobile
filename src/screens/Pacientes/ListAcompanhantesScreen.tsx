@@ -1,4 +1,4 @@
-import { View, FlatList, Text, StyleSheet, Alert } from "react-native";
+import { View, FlatList, Text, StyleSheet, Alert, ActivityIndicator } from "react-native";
 import { GenericCard } from "../../components/common/GenericCard";
 import { Header } from "../../components/common/Header";
 import { SPACING, COLORS, FONT_SIZES, BORDER_RADIUS, AVATAR_SIZES } from "../../themes/tokens";
@@ -6,26 +6,37 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { CustomButton } from "../../components/common/CustomButton";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ConfirmModal } from "../../components/common/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Acompanhante, PacienteStackParamList } from "../../types";
+import { usePacienteByIndex, usePacienteMutations } from "../../hooks/usePacientes";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "ListAcompanhantes">;
 
 export default function ListAcompanhantesScreen({ navigation, route }: Props) {
-    const paciente = route.params.paciente;
-    if (!paciente) {
-        navigation.goBack();
-        return null;
-    }
-
+    const { pacienteIndex } = route.params;
+    const { data: paciente, isLoading } = usePacienteByIndex(pacienteIndex);
+    const { deleteAcompanhante } = usePacienteMutations();
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedAcompanhante, setSelectedAcompanhante] = useState({
-        id: "",
-        nome: "",
-    });
+    const [selectedAcompanhante, setSelectedAcompanhante] = useState({ id: "", nome: "" });
+
+    useEffect(() => {
+        if (!isLoading && !paciente) {
+            navigation.goBack();
+        }
+    }, [paciente, isLoading, navigation]);
 
     async function confirmDeleteAcompanhante() {
-        Alert.alert("TO-do", "delete acompanhante");
+        try {
+            await deleteAcompanhante.mutateAsync({
+                pacienteId: paciente!.id,
+                acompanhanteId: selectedAcompanhante.id,
+            });
+
+            Alert.alert("Sucesso", "Acompanhante excluído com sucesso.");
+            setModalVisible(false);
+        } catch (error) {
+            Alert.alert("Erro", "Não foi possível excluir o acompanhante. Tente novamente.");
+        }
     }
 
     function handleDeletePress(paciente: Acompanhante) {
@@ -43,6 +54,12 @@ export default function ListAcompanhantesScreen({ navigation, route }: Props) {
     function handleEditAcompanhante(acompanhante: Acompanhante) {
         Alert.alert("TO-do", "edit acompanhante");
     }
+
+    if (isLoading) {
+        return <ActivityIndicator animating={true} color={COLORS.primary} size={AVATAR_SIZES.large} />;
+    }
+
+    if (!paciente) return null;
 
     return (
         <View style={{ flex: 1 }}>
@@ -69,7 +86,7 @@ export default function ListAcompanhantesScreen({ navigation, route }: Props) {
                 <FlatList
                     data={paciente.acompanhantes}
                     keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
+                    renderItem={({ index, item }) => (
                         <GenericCard
                             title={item.nome}
                             fields={[

@@ -9,7 +9,7 @@ import { useKeyboardHeight } from "../../hooks/useKeyboard";
 import { useForm, Controller } from "react-hook-form";
 import { CustomButton } from "../../components/common/CustomButton";
 import { formatCPF, formatRG, formatPhone } from "../../utils/masks";
-import { usePacienteById, usePacienteMutations } from "../../hooks/usePacientes";
+import { usePacienteByIndex, usePacienteMutations } from "../../hooks/usePacientes";
 import { useEffect } from "react";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "EditCreatePaciente">;
@@ -18,10 +18,8 @@ const MIN_DATE = new Date(1900, 0, 1);
 const MAX_DATE = new Date();
 
 export default function EditCreatePacienteScreen({ navigation, route }: Props) {
-    const pacienteId = route.params?.pacienteId;
-
     const { createPaciente, updatePaciente } = usePacienteMutations();
-    const { data: paciente } = usePacienteById(pacienteId);
+    const { data: paciente } = usePacienteByIndex(route.params?.pacienteIndex);
 
     const {
         control,
@@ -59,12 +57,12 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
     }
 
     async function onSubmit(data: PacienteForm) {
-        const isUpdate = !!pacienteId;
+        const isUpdate = !!paciente;
 
         // escolhe a operação correta
         const operation = isUpdate
-            ? (data: UpdatePacienteDto) => updatePaciente.mutateAsync({ id: pacienteId, data })
-            : (data: CreatePacienteDto) => createPaciente.mutateAsync(data)
+            ? (data: UpdatePacienteDto) => updatePaciente.mutateAsync({ pacienteId: paciente.id, data })
+            : (data: CreatePacienteDto) => createPaciente.mutateAsync(data);
 
         try {
             const formattedData = {
@@ -81,7 +79,8 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
             Alert.alert("Sucesso", `Paciente ${isUpdate ? "atualizado" : "adicionado"} com sucesso.`, [
                 {
                     text: "OK",
-                    onPress: () => navigation.replace("PacienteDetails", { pacienteId: response.id }),
+                    onPress: () =>
+                        navigation.replace("PacienteDetails", { pacienteIndex: route.params!.pacienteIndex! }),
                 },
             ]);
         } catch (error) {
@@ -92,7 +91,7 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
     return (
         <View style={{ flex: 1, backgroundColor: COLORS.background }}>
             <Header
-                title={route.params?.pacienteId ? "Editar Paciente" : "Novo Paciente"}
+                title={paciente ? "Editar Paciente" : "Novo Paciente"}
                 onBack={() => navigation.goBack()}
             />
 

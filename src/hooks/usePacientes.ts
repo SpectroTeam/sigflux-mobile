@@ -121,9 +121,9 @@ export function usePacienteMutations() {
     };
 }
 
-export function usePacienteById(id?: string | number) {
+export function usePacienteByIndex(index?: number) {
     const { data: pacientes } = usePacientes();
-    const paciente = pacientes?.find((p) => p.id === id);
+    const paciente = pacientes && index !== undefined ? pacientes[index] : null;
 
     return {
         data: paciente,

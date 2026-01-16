@@ -1,20 +1,29 @@
-import { View, Text, FlatList, StyleSheet } from "react-native";
-import { SPACING, FONT_SIZES, BORDER_RADIUS, COLORS } from "../../themes/tokens";
+import { View, Text, FlatList, StyleSheet, ActivityIndicator } from "react-native";
+import { SPACING, FONT_SIZES, BORDER_RADIUS, COLORS, AVATAR_SIZES } from "../../themes/tokens";
 import { GenericCard } from "../../components/common/GenericCard";
 import { Header } from "../../components/common/Header";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Paciente, PacienteStackParamList } from "../../types";
+import { PacienteStackParamList } from "../../types";
 import { formatDateBR } from "../../utils/masks";
+import { usePacienteByIndex } from "../../hooks/usePacientes";
+import { useEffect } from "react";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "PacienteHistoricoViagens">;
 
 export default function PacienteHistoricoViagensScreen({ navigation, route }: Props) {
-    const paciente: Paciente = route.params.paciente;
+    const { data: paciente, isLoading } = usePacienteByIndex(route.params.pacienteIndex);
 
-    if (!paciente) {
-        navigation.goBack();
-        return null;
+    useEffect(() => {
+        if (!isLoading && !paciente) {
+            navigation.goBack();
+        }
+    }, [paciente, isLoading, navigation]);
+
+    if (isLoading) {
+        return <ActivityIndicator animating={true} color={COLORS.primary} size={AVATAR_SIZES.large} />;
     }
+
+    if (!paciente) return null;
 
     return (
         <View style={{ flex: 1 }}>
@@ -56,7 +65,7 @@ const styles = StyleSheet.create({
     headerInfo: {
         paddingHorizontal: SPACING.xl,
         backgroundColor: COLORS.background,
-        paddingBottom: SPACING.sm
+        paddingBottom: SPACING.sm,
     },
     listContent: {
         paddingHorizontal: SPACING.xl,

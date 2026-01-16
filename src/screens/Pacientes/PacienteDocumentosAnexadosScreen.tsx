@@ -1,24 +1,27 @@
-import { View, Text, FlatList, StyleSheet, Alert } from "react-native";
-import { SPACING, FONT_SIZES, COLORS, BORDER_RADIUS } from "../../themes/tokens";
+import { View, Text, FlatList, StyleSheet, Alert, ActivityIndicator } from "react-native";
+import { SPACING, FONT_SIZES, COLORS, BORDER_RADIUS, AVATAR_SIZES } from "../../themes/tokens";
 import { Header } from "../../components/common/Header";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Paciente, PacienteStackParamList } from "../../types";
 import { PDFLink } from "../../components/common/PDFLinkProps";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as DocumentPicker from "expo-document-picker";
 import { CustomButton } from "../../components/common/CustomButton";
 import { Entypo } from "@expo/vector-icons";
+import { usePacienteByIndex } from "../../hooks/usePacientes";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "PacienteDocumentosAnexados">;
 
 export default function PacienteDocumentosAnexadosScreen({ navigation, route }: Props) {
-    const paciente: Paciente = route.params.paciente;
-    const [isDownloading, setIsDownloading] = useState(false);
+    const { data: paciente, isLoading } = usePacienteByIndex(route.params.pacienteIndex);
 
-    if (!paciente) {
-        navigation.goBack();
-        return null;
-    }
+    useEffect(() => {
+        if (!isLoading && !paciente) {
+            navigation.goBack();
+        }
+    }, [paciente, isLoading, navigation]);
+
+    const [isDownloading, setIsDownloading] = useState(false);
 
     function handleDownloadStart() {
         setIsDownloading(true);
@@ -44,6 +47,12 @@ export default function PacienteDocumentosAnexadosScreen({ navigation, route }: 
 
         Alert.alert("TO-DO", "upload de arquivos");
     }
+
+    if (isLoading) {
+        return <ActivityIndicator animating={true} color={COLORS.primary} size={AVATAR_SIZES.large} />;
+    }
+
+    if (!paciente) return null;
 
     return (
         <View style={{ flex: 1 }}>

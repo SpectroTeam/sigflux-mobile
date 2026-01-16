@@ -60,11 +60,11 @@ export type AuthResponse = {
 
 export type PacienteStackParamList = {
     ListPacientes: undefined;
-    EditCreatePaciente: { pacienteId?: string } | undefined;
-    PacienteDetails: { pacienteId: string };
-    PacienteHistoricoViagens: { paciente: Paciente };
-    PacienteDocumentosAnexados: { paciente: Paciente };
-    ListAcompanhantes: { paciente: Paciente };
+    EditCreatePaciente: { pacienteIndex?: number } | undefined;
+    PacienteDetails: { pacienteIndex: number };
+    PacienteHistoricoViagens: { pacienteIndex: number };
+    PacienteDocumentosAnexados: { pacienteIndex: number };
+    ListAcompanhantes: { pacienteIndex: number };
 };
 
 export type AuthStackParamList = {

@@ -1,22 +1,31 @@
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import { Header } from "../../components/common/Header";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { PacienteStackParamList } from "../../types";
 import LabelValue from "../../components/common/LabelValue";
-import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from "../../themes/tokens";
+import { AVATAR_SIZES, BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from "../../themes/tokens";
 import { List } from "react-native-paper";
-import { usePacienteById } from "../../hooks/usePacientes";
+import { usePacienteByIndex } from "../../hooks/usePacientes";
 import { formatDateBR } from "../../utils/masks";
+import { useEffect } from "react";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "PacienteDetails">;
 
 export default function PacienteDetailsScreen({ navigation, route }: Props) {
-    const { data: paciente } = usePacienteById(route.params.pacienteId);
+    const { pacienteIndex } = route.params;
+    const { data: paciente, isLoading } = usePacienteByIndex(pacienteIndex);
 
-    if (!paciente) {
-        navigation.goBack();
-        return;
+    useEffect(() => {
+        if (!isLoading && !paciente) {
+            navigation.goBack();
+        }
+    }, [paciente, isLoading, navigation]);
+
+    if (isLoading) {
+        return <ActivityIndicator animating={true} color={COLORS.primary} size={AVATAR_SIZES.large} />;
     }
+
+    if (!paciente) return null;
 
     return (
         <View style={{ flex: 1 }}>
@@ -43,7 +52,7 @@ export default function PacienteDetailsScreen({ navigation, route }: Props) {
                         title="Documentos Anexados"
                         left={(props) => <List.Icon {...props} icon="file-document-outline" />}
                         right={(props) => <List.Icon {...props} icon="chevron-right" />}
-                        onPress={() => navigation.navigate("PacienteDocumentosAnexados", { paciente: paciente })}
+                        onPress={() => navigation.navigate("PacienteDocumentosAnexados", { pacienteIndex })}
                         style={styles.listItem}
                         titleStyle={styles.listItemTitle}
                     />
@@ -51,7 +60,7 @@ export default function PacienteDetailsScreen({ navigation, route }: Props) {
                         title="Acompanhantes"
                         left={(props) => <List.Icon {...props} icon="account-multiple-outline" />}
                         right={(props) => <List.Icon {...props} icon="chevron-right" />}
-                        onPress={() => navigation.navigate("ListAcompanhantes", { paciente: paciente })}
+                        onPress={() => navigation.navigate("ListAcompanhantes", { pacienteIndex })}
                         style={styles.listItem}
                         titleStyle={styles.listItemTitle}
                     />
@@ -59,7 +68,7 @@ export default function PacienteDetailsScreen({ navigation, route }: Props) {
                         title="Historico de Viagens"
                         left={(props) => <List.Icon {...props} icon="map-marker-path" />}
                         right={(props) => <List.Icon {...props} icon="chevron-right" />}
-                        onPress={() => navigation.navigate("PacienteHistoricoViagens", { paciente: paciente })}
+                        onPress={() => navigation.navigate("PacienteHistoricoViagens", { pacienteIndex })}
                         style={styles.listItem}
                         titleStyle={styles.listItemTitle}
                     />
