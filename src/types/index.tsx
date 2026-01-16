@@ -1,3 +1,5 @@
+import { PACIENTE_STATUS } from "../constants";
+
 export type User = {
     nome_completo: string;
     cpf: string;
@@ -27,6 +29,8 @@ export type Acompanhante = {
 
 export type CreateAcompanhanteDto = Omit<Acompanhante, "id">;
 
+export type PacienteStatus = typeof PACIENTE_STATUS[keyof typeof PACIENTE_STATUS];
+
 export type Paciente = {
     id: string;
     nome: string;
@@ -35,7 +39,7 @@ export type Paciente = {
     endereco: string;
     telefone: string;
     birthDate: string;
-    status: string;
+    status: PacienteStatus;
     historicoViagens?: ViagemPaciente[];
     documentosAnexados?: string[];
     acompanhantes?: Acompanhante[];

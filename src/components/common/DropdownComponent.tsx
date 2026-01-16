@@ -3,9 +3,14 @@ import { StyleSheet, View, Text } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from "../../themes/tokens";
 
+type DropdownItem = {
+    label: string;
+    value: string;
+};
+
 type DropdownComponentProps = {
     label?: string;
-    data: { label: string; value: string }[];
+    data: DropdownItem[];
     onSelect?: (value: string) => void;
     placeholder?: string;
     value: string;

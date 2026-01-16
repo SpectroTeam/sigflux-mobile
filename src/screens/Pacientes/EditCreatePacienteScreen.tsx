@@ -11,6 +11,8 @@ import { CustomButton } from "../../components/common/CustomButton";
 import { formatCPF, formatRG, formatPhone } from "../../utils/masks";
 import { usePacienteByIndex, usePacienteMutations } from "../../hooks/usePacientes";
 import { useEffect } from "react";
+import { PACIENTE_STATUS_OPTIONS } from "../../constants";
+import DropdownComponent from "../../components/common/DropdownComponent";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "EditCreatePaciente">;
 
@@ -48,6 +50,7 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
             endereco: paciente.endereco,
             telefone: paciente.telefone,
             birthDate: new Date(paciente.birthDate),
+            status: paciente.status,
         });
     }, [paciente, reset]);
 
@@ -90,10 +93,7 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
 
     return (
         <View style={{ flex: 1, backgroundColor: COLORS.background }}>
-            <Header
-                title={paciente ? "Editar Paciente" : "Novo Paciente"}
-                onBack={() => navigation.goBack()}
-            />
+            <Header title={paciente ? "Editar Paciente" : "Novo Paciente"} onBack={() => navigation.goBack()} />
 
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
@@ -120,54 +120,61 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
                             />
                         )}
                     />
-                    <Controller
-                        control={control}
-                        name="cpf"
-                        rules={{
-                            required: "CPF é obrigatório",
-                            minLength: { value: 14, message: "CPF inválido" },
-                        }}
-                        render={({ field: { ref, value, onChange } }) => (
-                            <CustomInput
-                                ref={ref}
-                                style={styles.custom_input}
-                                label="CPF"
-                                placeholder="111.222.333-44"
-                                value={value}
-                                onChangeText={(value) => cleanChange(value, formatCPF, onChange)}
-                                onSubmitEditing={() => setFocus("rg")}
-                                returnKeyType="next"
-                                submitBehavior="submit"
-                                inputMode="numeric"
-                                maxLength={14}
-                                errorStr={errors.cpf?.message}
+                    <View style={styles.row}>
+                        <View style={styles.half}>
+                            <Controller
+                                control={control}
+                                name="cpf"
+                                rules={{
+                                    required: "CPF é obrigatório",
+                                    minLength: { value: 14, message: "CPF inválido" },
+                                }}
+                                render={({ field: { ref, value, onChange } }) => (
+                                    <CustomInput
+                                        ref={ref}
+                                        style={styles.custom_input}
+                                        label="CPF"
+                                        placeholder="111.222.333-44"
+                                        value={value}
+                                        onChangeText={(value) => cleanChange(value, formatCPF, onChange)}
+                                        onSubmitEditing={() => setFocus("rg")}
+                                        returnKeyType="next"
+                                        submitBehavior="submit"
+                                        inputMode="numeric"
+                                        maxLength={14}
+                                        errorStr={errors.cpf?.message}
+                                    />
+                                )}
                             />
-                        )}
-                    />
-                    <Controller
-                        control={control}
-                        name="rg"
-                        rules={{
-                            required: "RG é obrigatorio",
-                            minLength: { value: 9, message: "RG inválido" },
-                        }}
-                        render={({ field: { ref, value, onChange } }) => (
-                            <CustomInput
-                                ref={ref}
-                                style={styles.custom_input}
-                                value={value}
-                                label="RG"
-                                placeholder="1.234.567"
-                                onChangeText={(value) => cleanChange(value, formatRG, onChange)}
-                                onSubmitEditing={() => setFocus("endereco")}
-                                returnKeyType="next"
-                                submitBehavior="submit"
-                                inputMode="numeric"
-                                maxLength={9}
-                                errorStr={errors.rg?.message}
+                        </View>
+
+                        <View style={styles.half}>
+                            <Controller
+                                control={control}
+                                name="rg"
+                                rules={{
+                                    required: "RG é obrigatório",
+                                    minLength: { value: 9, message: "RG inválido" },
+                                }}
+                                render={({ field: { ref, value, onChange } }) => (
+                                    <CustomInput
+                                        ref={ref}
+                                        style={styles.custom_input}
+                                        label="RG"
+                                        placeholder="1.234.567"
+                                        value={value}
+                                        onChangeText={(value) => cleanChange(value, formatRG, onChange)}
+                                        onSubmitEditing={() => setFocus("endereco")}
+                                        returnKeyType="next"
+                                        submitBehavior="submit"
+                                        inputMode="numeric"
+                                        maxLength={9}
+                                        errorStr={errors.rg?.message}
+                                    />
+                                )}
                             />
-                        )}
-                    />
+                        </View>
+                    </View>
                     <Controller
                         control={control}
                         name="endereco"
@@ -214,22 +221,47 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
                             />
                         )}
                     />
-                    <Controller
-                        control={control}
-                        name="birthDate"
-                        render={({ field: { value, onChange } }) => (
-                            <DateInput
-                                label="Data de nascimento"
-                                value={value}
-                                onChange={onChange}
-                                containerStyle={styles.dateInputContainerStyle}
-                                inputStyle={styles.dateInputInputStyle}
-                                textStyle={styles.dateInputTextStyle}
-                                maximumDate={MAX_DATE}
-                                minimumDate={MIN_DATE}
+
+                    <View style={styles.row}>
+                        <View style={styles.half}>
+                            <Controller
+                                control={control}
+                                name="birthDate"
+                                render={({ field: { value, onChange } }) => (
+                                    <DateInput
+                                        label="Data Nascimento"
+                                        value={value}
+                                        onChange={onChange}
+                                        containerStyle={styles.dateInputContainerStyle}
+                                        inputStyle={styles.dateInputInputStyle}
+                                        textStyle={styles.dateInputTextStyle}
+                                        maximumDate={MAX_DATE}
+                                        minimumDate={MIN_DATE}
+                                    />
+                                )}
                             />
-                        )}
-                    />
+                        </View>
+
+                        <View style={styles.half}>
+                            <Controller
+                                control={control}
+                                name="status"
+                                rules={{ required: "Status é obrigatório" }}
+                                render={({ field }) => (
+                                    <DropdownComponent
+                                        {...field}
+                                        label="Status"
+                                        value={field.value}
+                                        data={PACIENTE_STATUS_OPTIONS as any}
+                                        placeholder="Inativo"
+                                        onSelect={field.onChange}
+                                        errorStr={errors.status?.message}
+                                    />
+                                )}
+                            />
+                        </View>
+                    </View>
+
                     <CustomButton
                         style={styles.buttonStyle}
                         title={!!paciente ? "Atualizar" : "Adicionar"}
@@ -261,12 +293,20 @@ const styles = StyleSheet.create({
         width: AVATAR_SIZES.large,
     },
     dateInputInputStyle: {
-        width: AVATAR_SIZES.xxl,
+        width: "100%",
+        paddingVertical: SPACING.md,
     },
     dateInputTextStyle: {
         textAlign: "center",
     },
     buttonStyle: {
         marginTop: SPACING.lg,
+    },
+    row: {
+        flexDirection: "row",
+        gap: SPACING.sm,
+    },
+    half: {
+        flex: 1,
     },
 });
