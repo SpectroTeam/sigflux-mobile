@@ -1,4 +1,4 @@
-import { PACIENTE_STATUS } from "../constants";
+import { PACIENTE_STATUS, SNACKBAR_DURATION } from "../constants";
 
 export type User = {
     nome_completo: string;
@@ -87,3 +87,5 @@ export type RootStackParamList = {
     Auth: undefined;
     Main: undefined;
 };
+
+export type SnackbarDurationKey = keyof typeof SNACKBAR_DURATION;

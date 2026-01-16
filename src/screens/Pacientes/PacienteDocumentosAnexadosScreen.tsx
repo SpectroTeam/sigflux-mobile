@@ -9,14 +9,17 @@ import * as DocumentPicker from "expo-document-picker";
 import { CustomButton } from "../../components/common/CustomButton";
 import { Entypo } from "@expo/vector-icons";
 import { usePacienteByIndex } from "../../hooks/usePacientes";
+import { useSnackbar } from "../../contexts/SnackBarContext";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "PacienteDocumentosAnexados">;
 
 export default function PacienteDocumentosAnexadosScreen({ navigation, route }: Props) {
     const { data: paciente, isLoading } = usePacienteByIndex(route.params.pacienteIndex);
+    const { showSnackbar } = useSnackbar();
 
     useEffect(() => {
         if (!isLoading && !paciente) {
+            showSnackbar("Paciente não encontrado", "error", "default");
             navigation.goBack();
         }
     }, [paciente, isLoading, navigation]);

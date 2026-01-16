@@ -1,21 +1,23 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { View, StyleSheet, FlatList, Alert, ActivityIndicator } from "react-native";
+import { useState } from "react";
+import { View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { AVATAR_SIZES, BORDER_RADIUS, COLORS, SPACING } from "../../themes/tokens";
 import { Header } from "../../components/common/Header";
 import { SearchBar } from "../../components/common/SearchBar";
-import { GenericCard, Patient } from "../../components/common/GenericCard";
+import { GenericCard } from "../../components/common/GenericCard";
 import { CustomButton } from "../../components/common/CustomButton";
 import { ConfirmModal } from "../../components/common/Modal";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Paciente, PacienteStackParamList } from "../../types";
 import { usePacienteMutations, usePacientes } from "../../hooks/usePacientes";
+import { useSnackbar } from "../../contexts/SnackBarContext";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "ListPacientes">;
 
 export default function ListPacientesSreen({ navigation }: Props) {
     const { data: pacientes = [], isLoading } = usePacientes();
     const { deletePaciente } = usePacienteMutations();
+    const { showSnackbar } = useSnackbar();
 
     const [searchQuery, setSearchQuery] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
@@ -48,11 +50,10 @@ export default function ListPacientesSreen({ navigation }: Props) {
     async function confirmDeletePatient() {
         try {
             await deletePaciente.mutateAsync(selectedPatient.id);
-
-            Alert.alert("Sucesso", "Paciente excluído com sucesso.");
+            showSnackbar("Paciente excluído!", "success", "short")
             setModalVisible(false);
         } catch (error) {
-            Alert.alert("Erro", "Não foi possível excluir o paciente. Tente novamente.");
+            showSnackbar("Erro ao excluir paciente!", "error", "short")
         }
     }
 

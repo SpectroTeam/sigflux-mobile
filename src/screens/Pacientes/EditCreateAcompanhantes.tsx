@@ -22,6 +22,7 @@ import { AVATAR_SIZES, COLORS, FONT_SIZES, SPACING } from "../../themes/tokens";
 import { formatCPF, formatPhone } from "../../utils/masks";
 import { useKeyboardHeight } from "../../hooks/useKeyboard";
 import { usePacienteByIndex, usePacienteMutations } from "../../hooks/usePacientes";
+import { useSnackbar } from "../../contexts/SnackBarContext";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "EditCreateAcompanhante">;
 
@@ -42,6 +43,7 @@ export default function EditCreateAcompanhanteScreen({ navigation, route }: Prop
 
     const { data: paciente, isLoading } = usePacienteByIndex(pacienteIndex);
     const { addAcompanhante, updateAcompanhante } = usePacienteMutations();
+    const { showSnackbar } = useSnackbar();
 
     const acompanhanteIdRef = useRef<string | null>(null);
 
@@ -111,10 +113,10 @@ export default function EditCreateAcompanhanteScreen({ navigation, route }: Prop
                 });
             }
 
-            Alert.alert("Sucesso", "Acompanhante salvo com sucesso!");
+            showSnackbar(`Acompanhante salvo!`, "success", "short");
             navigation.goBack();
         } catch {
-            Alert.alert("Erro", "Não foi possível salvar o acompanhante. Tente novamente.");
+            showSnackbar("Erro ao salvar acompanhante.", "error", "short")
         }
     }
 

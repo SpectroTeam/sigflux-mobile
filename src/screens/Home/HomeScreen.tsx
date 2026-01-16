@@ -8,13 +8,16 @@ import { MenuOption } from "../../components/Home/MenuOption";
 import { useAuth } from "../../contexts/AuthContext";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { MainStackParamList } from "../../types";
+import { useSnackbar } from "../../contexts/SnackBarContext";
 
 type Props = NativeStackScreenProps<MainStackParamList, "Home">;
 
 export default function HomeScreen({ navigation }: Props) {
     const { user } = useAuth();
+    const { showSnackbar } = useSnackbar();
 
     if (!user) {
+        showSnackbar("Usuário não autenticado", "error", "default");
         navigation.goBack();
         return;
     }

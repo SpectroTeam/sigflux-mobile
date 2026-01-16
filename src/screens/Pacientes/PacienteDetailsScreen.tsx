@@ -8,15 +8,18 @@ import { List } from "react-native-paper";
 import { usePacienteByIndex } from "../../hooks/usePacientes";
 import { formatDateBR } from "../../utils/masks";
 import { useEffect } from "react";
+import { useSnackbar } from "../../contexts/SnackBarContext";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "PacienteDetails">;
 
 export default function PacienteDetailsScreen({ navigation, route }: Props) {
     const { pacienteIndex } = route.params;
     const { data: paciente, isLoading } = usePacienteByIndex(pacienteIndex);
+    const { showSnackbar } = useSnackbar();
 
     useEffect(() => {
         if (!isLoading && !paciente) {
+            showSnackbar("Paciente não encontrado", "error", "default");
             navigation.goBack();
         }
     }, [paciente, isLoading, navigation]);

@@ -9,6 +9,7 @@ import { ConfirmModal } from "../../components/common/Modal";
 import { useEffect, useState } from "react";
 import { Acompanhante, PacienteStackParamList } from "../../types";
 import { usePacienteByIndex, usePacienteMutations } from "../../hooks/usePacientes";
+import { useSnackbar } from "../../contexts/SnackBarContext";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "ListAcompanhantes">;
 
@@ -18,9 +19,11 @@ export default function ListAcompanhantesScreen({ navigation, route }: Props) {
     const { deleteAcompanhante } = usePacienteMutations();
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedAcompanhante, setSelectedAcompanhante] = useState({ id: "", nome: "" });
+    const { showSnackbar } = useSnackbar();
 
     useEffect(() => {
         if (!isLoading && !paciente) {
+            showSnackbar("Paciente não encontrado", "error");
             navigation.goBack();
         }
     }, [paciente, isLoading, navigation]);
@@ -32,10 +35,10 @@ export default function ListAcompanhantesScreen({ navigation, route }: Props) {
                 acompanhanteId: selectedAcompanhante.id,
             });
 
-            Alert.alert("Sucesso", "Acompanhante excluído com sucesso.");
+            showSnackbar("Acompanhante excluído", "success", "short");
             setModalVisible(false);
         } catch (error) {
-            Alert.alert("Erro", "Não foi possível excluir o acompanhante. Tente novamente.");
+            showSnackbar("Erro ao excluir acompanhante", "error", "short");
         }
     }
 

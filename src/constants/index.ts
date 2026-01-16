@@ -25,3 +25,10 @@ export const PACIENTE_STATUS_OPTIONS = [
     { label: "Em viagem", value: PACIENTE_STATUS.EM_VIAGEM },
     { label: "Hospedado", value: PACIENTE_STATUS.HOSPEDADO },
 ] as const;
+
+export const SNACKBAR_DURATION = {
+    short: 500,
+    default: 1500,
+    long: 2500,
+    max: 3000,
+} as const;

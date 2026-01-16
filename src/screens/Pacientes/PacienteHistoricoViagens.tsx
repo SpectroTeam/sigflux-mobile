@@ -7,14 +7,17 @@ import { PacienteStackParamList } from "../../types";
 import { formatDateBR } from "../../utils/masks";
 import { usePacienteByIndex } from "../../hooks/usePacientes";
 import { useEffect } from "react";
+import { useSnackbar } from "../../contexts/SnackBarContext";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "PacienteHistoricoViagens">;
 
 export default function PacienteHistoricoViagensScreen({ navigation, route }: Props) {
     const { data: paciente, isLoading } = usePacienteByIndex(route.params.pacienteIndex);
+    const { showSnackbar } = useSnackbar();
 
     useEffect(() => {
         if (!isLoading && !paciente) {
+            showSnackbar("Paciente não encontrado", "error", "default");
             navigation.goBack();
         }
     }, [paciente, isLoading, navigation]);

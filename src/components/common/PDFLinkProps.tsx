@@ -7,6 +7,7 @@ import * as Sharing from "expo-sharing";
 import { getFileName } from "../../utils/file";
 import { MD3Colors, ProgressBar } from "react-native-paper";
 import { useState } from "react";
+import { useSnackbar } from "../../contexts/SnackBarContext";
 
 type PDFLinkProps = {
     url: string;
@@ -32,6 +33,7 @@ export function PDFLink({
     downloadProgress = false,
 }: PDFLinkProps) {
     const [downloading, setDownloading] = useState(false);
+    const { showSnackbar } = useSnackbar();
 
     async function downloadPDF() {
         setDownloading(true);
@@ -68,7 +70,7 @@ export function PDFLink({
         } catch (error) {
             console.error("Erro ao baixar PDF:", error);
             onError?.(error);
-            Alert.alert("Erro", "Não foi possível baixar o PDF");
+            showSnackbar("Erro ao baixar o PDF", "error", "default");
         } finally {
             setDownloading(false);
         }
@@ -83,7 +85,7 @@ export function PDFLink({
             });
         } catch (error) {
             console.error("Erro ao abrir PDF:", error);
-            Alert.alert("Erro", "Não foi possível abrir o PDF");
+            showSnackbar("Erro ao abrir o PDF", "error", "default");
         }
     }
 
@@ -92,7 +94,7 @@ export function PDFLink({
             await Sharing.shareAsync(uri);
         } catch (error) {
             console.error("Erro ao compartilhar PDF:", error);
-            Alert.alert("Erro", "Não foi possível compartilhar o PDF");
+            showSnackbar("Erro ao compartilhar o PDF", "error", "default");
         }
     }
 

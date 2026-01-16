@@ -13,6 +13,7 @@ import { usePacienteByIndex, usePacienteMutations } from "../../hooks/usePacient
 import { useEffect } from "react";
 import { PACIENTE_STATUS_OPTIONS } from "../../constants";
 import DropdownComponent from "../../components/common/DropdownComponent";
+import { useSnackbar } from "../../contexts/SnackBarContext";
 
 type Props = NativeStackScreenProps<PacienteStackParamList, "EditCreatePaciente">;
 
@@ -22,6 +23,7 @@ const MAX_DATE = new Date();
 export default function EditCreatePacienteScreen({ navigation, route }: Props) {
     const { createPaciente, updatePaciente } = usePacienteMutations();
     const { data: paciente } = usePacienteByIndex(route.params?.pacienteIndex);
+    const { showSnackbar } = useSnackbar();
 
     const {
         control,
@@ -79,15 +81,11 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
                 throw new Error("Operação falhou");
             }
 
-            Alert.alert("Sucesso", `Paciente ${isUpdate ? "atualizado" : "adicionado"} com sucesso.`, [
-                {
-                    text: "OK",
-                    onPress: () =>
-                        navigation.replace("PacienteDetails", { pacienteIndex: route.params!.pacienteIndex! }),
-                },
-            ]);
+            showSnackbar("Paciente salvo!", "success", "short");
+            navigation.replace("PacienteDetails", { pacienteIndex: route.params!.pacienteIndex! });
         } catch (error) {
-            Alert.alert("Erro", "Não foi possível excluir o paciente. Tente novamente.");
+            console.error("Error saving paciente:", error);
+            showSnackbar("Erro ao salvar paciente.", "error", "short");
         }
     }
 
