@@ -64,6 +64,17 @@ export type CasaApoio = {
 export type CreateCasaApoioDto = Omit<CasaApoio, "id">;
 export type UpdateCasaApoioDto = CreateCasaApoioDto;
 
+export type Motorista = {
+    id: string;
+    nome: string;
+    telefone: string;
+    matricula: string;
+    documentosAnexados?: string[];
+};
+
+export type CreateMotoristaDto = Omit<Motorista, "id">;
+export type UpdateMotoristaDto = CreateMotoristaDto;
+
 export type AuthCredentials = {
     matricula: string;
     password: string;
@@ -89,6 +100,11 @@ export type CasaApoioStackParamList = {
     EditCreateCasaApoio: { casaApoioId?: string } | undefined;
 };
 
+export type MotoristaStackParamList = {
+    ListMotoristas: undefined;
+    EditCreateMotorista: { motoristaId?: string } | undefined;
+};
+
 export type AuthStackParamList = {
     Login: undefined;
     ForgotPassword: undefined;
@@ -98,6 +114,7 @@ export type MainStackParamList = {
     Home: undefined;
     PacienteStack: undefined;
     CasaApoioStack: undefined;
+    MotoristaStack: undefined;
 };
 
 // navigation types

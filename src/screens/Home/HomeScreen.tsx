@@ -61,7 +61,7 @@ export default function HomeScreen({ navigation }: Props) {
                     <MenuOption
                         title="Motoristas"
                         icon={<FontAwesome5 name="user-tie" size={70} color={COLORS.surface} />}
-                        onPress={() => console.log("Motoristas pressed")}
+                        onPress={() => navigation.navigate("MotoristaStack")}
                     />
 
                     <MenuOption
