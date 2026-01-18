@@ -5,7 +5,7 @@ export async function getAll(): Promise<Motorista[]> {
     return mockFunctions.getMotoristas();
 }
 
-export async function getById(id: string): Promise<Motorista | undefined> {
+export async function getById(id: string): Promise<Motorista> {
     return mockFunctions.getMotoristaById(id);
 }
 

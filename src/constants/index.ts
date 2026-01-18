@@ -10,6 +10,7 @@ export const REACT_QUERY_DEFAULTS = {
 
 export const REACT_QUERY_KEYS = {
     PACIENTES: "pacientes",
+    MOTORISTAS: "motoristas",
 };
 
 export const PACIENTE_STATUS = {

@@ -1,82 +1,63 @@
-import { useCallback, useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as motoristaService from "../services/motorista_service";
 import { Motorista, CreateMotoristaDto, UpdateMotoristaDto } from "../types";
+import { REACT_QUERY_KEYS } from "../constants";
 
-// Hook para listar todos os motoristas
+const { MOTORISTAS } = REACT_QUERY_KEYS;
+
 export function useMotoristas() {
-    const [motoristas, setMotoristas] = useState<Motorista[]>([]);
-    const [loading, setLoading] = useState(false);
-
-    const loadMotoristas = useCallback(async () => {
-        setLoading(true);
-        const data = await motoristaService.getAll();
-        setMotoristas(data);
-        setLoading(false);
-    }, []);
-
-    useEffect(() => {
-        loadMotoristas();
-    }, [loadMotoristas]);
-
-    return {
-        motoristas,
-        loading,
-        reload: loadMotoristas,
-    };
+    return useQuery<Motorista[]>({
+        queryKey: [MOTORISTAS],
+        queryFn: motoristaService.getAll,
+    });
 }
 
-// Hook para buscar motorista por ID
-export function useMotoristaById(id: string) {
-    const [motorista, setMotorista] = useState<Motorista | undefined>(undefined);
-    const [loading, setLoading] = useState(false);
-
-    const loadMotorista = useCallback(async () => {
-        if (!id) return;
-        setLoading(true);
-        const data = await motoristaService.getById(id);
-        setMotorista(data);
-        setLoading(false);
-    }, [id]);
-
-    useEffect(() => {
-        loadMotorista();
-    }, [loadMotorista]);
-
-    return {
-        motorista,
-        loading,
-        reload: loadMotorista,
-    };
-}
-
-// Hook para criar, atualizar e deletar motoristas
 export function useMotoristaMutations() {
-    const [loading, setLoading] = useState(false);
+    const queryClient = useQueryClient();
 
-    const createMotorista = useCallback(async (data: CreateMotoristaDto) => {
-        setLoading(true);
-        const newMotorista = await motoristaService.create(data);
-        setLoading(false);
-        return newMotorista;
-    }, []);
+    const createMotorista = useMutation({
+        mutationFn: (data: CreateMotoristaDto) => motoristaService.create(data),
+        onSuccess: (newMotorista) => {
+            queryClient.setQueryData<Motorista[]>([MOTORISTAS], (old = []) => [
+                ...old,
+                newMotorista,
+            ]);
+        },
+    });
 
-    const updateMotorista = useCallback(async (id: string, data: UpdateMotoristaDto) => {
-        setLoading(true);
-        const updatedMotorista = await motoristaService.update(id, data);
-        setLoading(false);
-        return updatedMotorista;
-    }, []);
+    const updateMotorista = useMutation({
+        mutationFn: (vars: { id: string; data: UpdateMotoristaDto }) =>
+            motoristaService.update(vars.id, vars.data),
+        onSuccess: (updatedMotorista) => {
+            queryClient.setQueryData<Motorista[]>([MOTORISTAS], (old = []) =>
+                old.map((m) => (m.id === updatedMotorista.id ? updatedMotorista : m)),
+            );
+        },
+    });
 
-    const deleteMotorista = useCallback(async (id: string) => {
-        setLoading(true);
-        await motoristaService.deleteById(id);
-        setLoading(false);
-    }, []);
+    const deleteMotorista = useMutation({
+        mutationFn: (id: string) => motoristaService.deleteById(id),
+        onSuccess: (_, deletedId) => {
+            queryClient.setQueryData<Motorista[]>([MOTORISTAS], (old = []) =>
+                old.filter((m) => m.id !== deletedId),
+            );
+        },
+    });
 
     return {
-        loading,
         createMotorista,
         updateMotorista,
         deleteMotorista,
+    };
+}
+
+export function useMotoristaById(id?: string) {
+    const { data: motoristas, isLoading } = useMotoristas();
+
+    const motorista = motoristas?.find((m) => m.id === id);
+
+    return {
+        motorista,
+        isLoading,
     };
 }

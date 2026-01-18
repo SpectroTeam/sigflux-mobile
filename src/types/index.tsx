@@ -103,6 +103,7 @@ export type CasaApoioStackParamList = {
 export type MotoristaStackParamList = {
     ListMotoristas: undefined;
     EditCreateMotorista: { motoristaId?: string } | undefined;
+    MotoristaDetails: { motoristaId: string };
 };
 
 export type AuthStackParamList = {

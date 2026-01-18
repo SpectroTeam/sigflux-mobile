@@ -7,7 +7,7 @@ import { CustomButton } from "../../components/common/CustomButton";
 import CustomInput from "../../components/common/CustomInput";
 import { useEffect } from "react";
 import { useSnackbar } from "../../contexts/SnackBarContext";
-import { CreateMotoristaDto, UpdateMotoristaDto} from "../../types";
+import { CreateMotoristaDto, UpdateMotoristaDto } from "../../types";
 import { useMotoristaById, useMotoristaMutations } from "../../hooks/useMotoristas";
 
 type MotoristaForm = {
@@ -23,8 +23,11 @@ type MotoristaStackParamList = {
 type Props = NativeStackScreenProps<MotoristaStackParamList, "EditCreateMotorista">;
 
 export default function EditCreateMotoristaScreen({ navigation, route }: Props) {
-    const { createMotorista, updateMotorista, loading } = useMotoristaMutations();
-    const { motorista } = useMotoristaById(route.params?.motoristaId || "");
+    const motoristaId = route.params?.motoristaId;
+
+    // Mutations do React Query
+    const { createMotorista, updateMotorista } = useMotoristaMutations();
+    const { motorista, isLoading } = useMotoristaById(motoristaId);
     const { showSnackbar } = useSnackbar();
 
     const {
@@ -41,6 +44,7 @@ export default function EditCreateMotoristaScreen({ navigation, route }: Props) 
         },
     });
 
+    // Preenche formulário se estivermos editando
     useEffect(() => {
         if (!motorista) return;
 
@@ -51,16 +55,16 @@ export default function EditCreateMotoristaScreen({ navigation, route }: Props) 
         });
     }, [motorista, reset]);
 
+    // Função para salvar motorista
     async function onSubmit(data: MotoristaForm) {
         try {
-            let response;
             if (motorista) {
-                response = await updateMotorista(motorista.id, data as UpdateMotoristaDto);
+                // update usando mutateAsync
+                await updateMotorista.mutateAsync({ id: motorista.id, data: data as UpdateMotoristaDto });
             } else {
-                response = await createMotorista(data as CreateMotoristaDto);
+                // create usando mutateAsync
+                await createMotorista.mutateAsync(data as CreateMotoristaDto);
             }
-
-            if (!response) throw new Error("Erro ao salvar");
 
             showSnackbar("Motorista salvo!", "success", "short");
             navigation.goBack();
@@ -69,6 +73,17 @@ export default function EditCreateMotoristaScreen({ navigation, route }: Props) 
             showSnackbar("Erro ao salvar motorista.", "error", "short");
         }
     }
+
+    // Loading inicial
+    if (isLoading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <CustomButton loading title="Carregando..." disabled />
+            </View>
+        );
+    }
+
+    const mutationLoading = createMotorista.isPending || updateMotorista.isPending;
 
     return (
         <View style={{ flex: 1, backgroundColor: COLORS.background }}>
@@ -129,8 +144,8 @@ export default function EditCreateMotoristaScreen({ navigation, route }: Props) 
                     <CustomButton
                         title={motorista ? "Atualizar" : "Adicionar"}
                         onPress={handleSubmit(onSubmit)}
-                        loading={loading}
-                        disabled={loading || (motorista ? !isDirty : false)}
+                        loading={mutationLoading}
+                        disabled={mutationLoading || (motorista ? !isDirty : false)}
                         style={styles.buttonStyle}
                     />
                 </ScrollView>
@@ -147,5 +162,10 @@ const styles = StyleSheet.create({
     },
     buttonStyle: {
         marginTop: SPACING.lg,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
     },
 });

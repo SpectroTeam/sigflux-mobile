@@ -9,20 +9,15 @@ import { CustomButton } from "../../components/common/CustomButton";
 import { ConfirmModal } from "../../components/common/Modal";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-import { Motorista } from "../../types";
-import { useMotoristas } from "../../hooks/useMotoristas";
-import * as motoristaService from "../../services/motorista_service";
+import { Motorista, MotoristaStackParamList } from "../../types";
+import { useMotoristas, useMotoristaMutations } from "../../hooks/useMotoristas";
 import { useSnackbar } from "../../contexts/SnackBarContext";
-
-type MotoristaStackParamList = {
-    ListMotoristas: undefined;
-    EditCreateMotorista: { motoristaId?: string } | undefined;
-};
 
 type Props = NativeStackScreenProps<MotoristaStackParamList, "ListMotoristas">;
 
 export default function ListMotoristasScreen({ navigation }: Props) {
-    const { motoristas, loading, reload } = useMotoristas();
+    const { data: motoristas = [], isLoading } = useMotoristas();
+    const { deleteMotorista } = useMotoristaMutations();
     const { showSnackbar } = useSnackbar();
 
     const [searchQuery, setSearchQuery] = useState("");
@@ -40,6 +35,10 @@ export default function ListMotoristasScreen({ navigation }: Props) {
         navigation.navigate("EditCreateMotorista");
     }
 
+    function handleMotoristaPress(motoristaId: string) {
+        navigation.navigate("MotoristaDetails", { motoristaId });
+    }
+
     function handleDeletePress(motorista: Motorista) {
         setSelectedMotorista({ id: motorista.id, nome: motorista.nome });
         setModalVisible(true);
@@ -47,11 +46,10 @@ export default function ListMotoristasScreen({ navigation }: Props) {
 
     async function confirmDeleteMotorista() {
         try {
-            await motoristaService.deleteById(selectedMotorista.id);
+            await deleteMotorista.mutateAsync(selectedMotorista.id);
             showSnackbar("Motorista excluído!", "success", "short");
             setModalVisible(false);
-            reload();
-        } catch (error) {
+        } catch {
             showSnackbar("Erro ao excluir motorista!", "error", "short");
         }
     }
@@ -88,10 +86,10 @@ export default function ListMotoristasScreen({ navigation }: Props) {
                     onPress={handleNewMotorista}
                 />
 
-                {loading ? (
+                {isLoading ? (
                     <View style={styles.loadContainer}>
                         <ActivityIndicator
-                            animating={true}
+                            animating
                             color={COLORS.primary}
                             size={AVATAR_SIZES.large}
                         />
@@ -106,6 +104,7 @@ export default function ListMotoristasScreen({ navigation }: Props) {
                                 fields={[
                                     { label: "Matrícula", value: item.matricula },
                                 ]}
+                                onPress={() => handleMotoristaPress(item.id)}
                                 editButton
                                 trashButton
                                 editButtonAction={() => handleEditMotorista(item.id)}
@@ -131,6 +130,7 @@ export default function ListMotoristasScreen({ navigation }: Props) {
                 )}
                 onConfirm={confirmDeleteMotorista}
                 onCancel={() => setModalVisible(false)}
+                loading={deleteMotorista.isPending}
                 confirmColor={COLORS.error}
             />
         </View>
