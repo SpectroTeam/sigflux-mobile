@@ -49,7 +49,7 @@ export default function HomeScreen({ navigation }: Props) {
                     <MenuOption
                         title="Casas de Apoio"
                         icon={<Ionicons name="home" size={80} color={COLORS.surface} />}
-                        onPress={() => console.log("Casas de Apoio pressed")}
+                        onPress={() => navigation.navigate("CasaApoioStack")}
                     />
 
                     <MenuOption

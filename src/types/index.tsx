@@ -53,6 +53,17 @@ export type PacienteForm = Omit<CreatePacienteDto, "birthDate"> & {
     birthDate: Date;
 };
 
+export type CasaApoio = {
+    id: string;
+    nome: string;
+    endereco: string;
+    capacidadeMaxima: number;
+    lotacaoAtual: number;
+};
+
+export type CreateCasaApoioDto = Omit<CasaApoio, "id">;
+export type UpdateCasaApoioDto = CreateCasaApoioDto;
+
 export type AuthCredentials = {
     matricula: string;
     password: string;
@@ -73,6 +84,10 @@ export type PacienteStackParamList = {
     EditCreateAcompanhante: { pacienteId: string; acompanhanteId?: string };
 };
 
+export type CasaApoioStackParamList = {
+    ListCasasApoio: undefined;
+};
+
 export type AuthStackParamList = {
     Login: undefined;
     ForgotPassword: undefined;
@@ -81,6 +96,7 @@ export type AuthStackParamList = {
 export type MainStackParamList = {
     Home: undefined;
     PacienteStack: undefined;
+    CasaApoioStack: undefined;
 };
 
 // navigation types

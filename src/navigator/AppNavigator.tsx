@@ -2,7 +2,8 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { AuthStackParamList, MainStackParamList, PacienteStackParamList, RootStackParamList } from "../types";
+import { AuthStackParamList, MainStackParamList, PacienteStackParamList, RootStackParamList} from "../types";
+import { CasaApoioStackParamList } from "../types";
 import { COLORS } from "../themes/tokens";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -15,11 +16,13 @@ import PacienteHistoricoViagensScreen from "../screens/Pacientes/PacienteHistori
 import PacienteDocumentosAnexadosScreen from "../screens/Pacientes/PacienteDocumentosAnexadosScreen";
 import ListAcompanhantesScreen from "../screens/Pacientes/ListAcompanhantesScreen";
 import EditCreateAcompanhanteScreen from "../screens/Pacientes/EditCreateAcompanhantes";
+import ListCasasApoioScreen from "../screens/CasasApoio/ListCasasApoioScreen";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const HomeStack = createNativeStackNavigator<MainStackParamList>();
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 const PacienteStack = createNativeStackNavigator<PacienteStackParamList>();
+const CasaApoioStack = createNativeStackNavigator<CasaApoioStackParamList>();
 
 // stack de navegação para funcionalidade Pacientes
 function PacienteNavigator() {
@@ -38,6 +41,20 @@ function PacienteNavigator() {
             <PacienteStack.Screen name="ListAcompanhantes" component={ListAcompanhantesScreen} />
             <PacienteStack.Screen name="EditCreateAcompanhante" component={EditCreateAcompanhanteScreen} />
         </PacienteStack.Navigator>
+    );
+}
+
+// stack de navegação para Casas de Apoio
+function CasaApoioNavigator() {
+    return (
+        <CasaApoioStack.Navigator
+            screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: COLORS.background },
+            }}
+        >
+            <CasaApoioStack.Screen name="ListCasasApoio" component={ListCasasApoioScreen} />
+        </CasaApoioStack.Navigator>
     );
 }
 
@@ -66,6 +83,7 @@ function HomeNavigator() {
         >
             <HomeStack.Screen name="Home" component={HomeScreen} />
             <HomeStack.Screen name="PacienteStack" component={PacienteNavigator} />
+            <HomeStack.Screen name="CasaApoioStack" component={CasaApoioNavigator} />
         </HomeStack.Navigator>
     );
 }
