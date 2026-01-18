@@ -37,7 +37,7 @@ export default function ListCasasApoioScreen({ navigation }: Props) {
     );
 
     function handleNewCasaApoio() {
-        navigation.navigate("EditCreateCasaApoio");
+        navigation.navigate("EditCreateCasaApoio", { casaApoioId: undefined });
     }
 
     function handleDeletePress(casa: CasaApoio) {

@@ -86,6 +86,7 @@ export type PacienteStackParamList = {
 
 export type CasaApoioStackParamList = {
     ListCasasApoio: undefined;
+    EditCreateCasaApoio: { casaApoioId?: string } | undefined;
 };
 
 export type AuthStackParamList = {

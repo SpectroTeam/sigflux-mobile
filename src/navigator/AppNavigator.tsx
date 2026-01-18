@@ -17,6 +17,7 @@ import PacienteDocumentosAnexadosScreen from "../screens/Pacientes/PacienteDocum
 import ListAcompanhantesScreen from "../screens/Pacientes/ListAcompanhantesScreen";
 import EditCreateAcompanhanteScreen from "../screens/Pacientes/EditCreateAcompanhantes";
 import ListCasasApoioScreen from "../screens/CasasApoio/ListCasasApoioScreen";
+import EditCreateCasaApoioScreen from "../screens/CasasApoio/EditCreateCasaApoioScreen";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const HomeStack = createNativeStackNavigator<MainStackParamList>();
@@ -54,6 +55,7 @@ function CasaApoioNavigator() {
             }}
         >
             <CasaApoioStack.Screen name="ListCasasApoio" component={ListCasasApoioScreen} />
+            <CasaApoioStack.Screen name="EditCreateCasaApoio" component={EditCreateCasaApoioScreen} /> 
         </CasaApoioStack.Navigator>
     );
 }
