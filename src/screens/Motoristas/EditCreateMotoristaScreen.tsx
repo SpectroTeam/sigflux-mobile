@@ -24,8 +24,6 @@ type Props = NativeStackScreenProps<MotoristaStackParamList, "EditCreateMotorist
 
 export default function EditCreateMotoristaScreen({ navigation, route }: Props) {
     const motoristaId = route.params?.motoristaId;
-
-    // Mutations do React Query
     const { createMotorista, updateMotorista } = useMotoristaMutations();
     const { motorista, isLoading } = useMotoristaById(motoristaId);
     const { showSnackbar } = useSnackbar();
@@ -44,7 +42,6 @@ export default function EditCreateMotoristaScreen({ navigation, route }: Props) 
         },
     });
 
-    // Preenche formulário se estivermos editando
     useEffect(() => {
         if (!motorista) return;
 
@@ -55,14 +52,11 @@ export default function EditCreateMotoristaScreen({ navigation, route }: Props) 
         });
     }, [motorista, reset]);
 
-    // Função para salvar motorista
     async function onSubmit(data: MotoristaForm) {
         try {
             if (motorista) {
-                // update usando mutateAsync
                 await updateMotorista.mutateAsync({ id: motorista.id, data: data as UpdateMotoristaDto });
             } else {
-                // create usando mutateAsync
                 await createMotorista.mutateAsync(data as CreateMotoristaDto);
             }
 
@@ -74,7 +68,6 @@ export default function EditCreateMotoristaScreen({ navigation, route }: Props) 
         }
     }
 
-    // Loading inicial
     if (isLoading) {
         return (
             <View style={styles.loadingContainer}>

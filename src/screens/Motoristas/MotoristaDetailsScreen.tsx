@@ -62,7 +62,7 @@ export default function MotoristaDetailsScreen({ navigation, route }: Props) {
                             <List.Icon {...props} icon="chevron-right" />
                         )}
                         onPress={() =>
-                            console.log("Documentos Anexados pressed")
+                            navigation.navigate("MotoristaDocumentosAnexados", { motoristaId: motorista.id })
                         }
                         style={styles.listItem}
                         titleStyle={styles.listItemTitle}

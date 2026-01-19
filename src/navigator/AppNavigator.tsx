@@ -20,6 +20,7 @@ import EditCreateCasaApoioScreen from "../screens/CasasApoio/EditCreateCasaApoio
 import ListMotoristasScreen from "../screens/Motoristas/ListMotoristasScreen";
 import EditCreateMotoristaScreen from "../screens/Motoristas/EditCreateMotoristaScreen";
 import MotoristaDetailsScreen from "../screens/Motoristas/MotoristaDetailsScreen";
+import MotoristaDocumentosAnexadosScreen from "../screens/Motoristas/MotoristaDocumentosAnexadosScreen";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const HomeStack = createNativeStackNavigator<MainStackParamList>();
@@ -75,6 +76,7 @@ function MotoristaNavigator() {
             <MotoristaStack.Screen name="ListMotoristas" component={ListMotoristasScreen} />
             <MotoristaStack.Screen name="EditCreateMotorista" component={EditCreateMotoristaScreen} />
             <MotoristaStack.Screen name="MotoristaDetails" component={MotoristaDetailsScreen} />
+            <MotoristaStack.Screen name="MotoristaDocumentosAnexados" component={MotoristaDocumentosAnexadosScreen} />
         </MotoristaStack.Navigator>
     );
 }

@@ -104,6 +104,7 @@ export type MotoristaStackParamList = {
     ListMotoristas: undefined;
     EditCreateMotorista: { motoristaId?: string } | undefined;
     MotoristaDetails: { motoristaId: string };
+    MotoristaDocumentosAnexados: { motoristaId: string };
 };
 
 export type AuthStackParamList = {
