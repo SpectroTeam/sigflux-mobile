@@ -97,7 +97,7 @@ export default function EditCreateVeiculoScreen({ navigation, route }: Props) {
                                 placeholder="ABC1D23"
                                 value={field.value}
                                 onChangeText={field.onChange}
-                                onSubmitEditing={() => setFocus("placa")}
+                                onSubmitEditing={() => setFocus("chassi")}
                                 returnKeyType="next"
                                 submitBehavior="submit"
                                 errorStr={errors.placa?.message}
@@ -117,7 +117,7 @@ export default function EditCreateVeiculoScreen({ navigation, route }: Props) {
                                 value={field.value}
                                 onChangeText={field.onChange}
                                 errorStr={errors.chassi?.message}
-                                onSubmitEditing={() => setFocus("chassi")}
+                                onSubmitEditing={() => setFocus("modelo")}
                                 maxLength={17}
                                 returnKeyType="next"
                                 submitBehavior="submit"
@@ -137,7 +137,7 @@ export default function EditCreateVeiculoScreen({ navigation, route }: Props) {
                                 placeholder="Doblo"
                                 value={field.value}
                                 onChangeText={field.onChange}
-                                onSubmitEditing={() => setFocus("modelo")}
+                                onSubmitEditing={() => setFocus("ano")}
                                 returnKeyType="next"
                                 submitBehavior="submit"
                                 errorStr={errors.modelo?.message}
@@ -157,7 +157,7 @@ export default function EditCreateVeiculoScreen({ navigation, route }: Props) {
                                 placeholder="2025"
                                 value={field.value.toString()}
                                 onChangeText={field.onChange}
-                                onSubmitEditing={() => setFocus("ano")}
+                                onSubmitEditing={() => setFocus("cor")}
                                 returnKeyType="next"
                                 submitBehavior="submit"
                                 inputMode="numeric"
@@ -176,7 +176,7 @@ export default function EditCreateVeiculoScreen({ navigation, route }: Props) {
                                 label="Cor"
                                 placeholder="Vermelho"
                                 onChangeText={field.onChange}
-                                onSubmitEditing={() => setFocus("cor")}
+                                onSubmitEditing={() => setFocus("capacidade")}
                                 returnKeyType="next"
                                 submitBehavior="submit"
                                 errorStr={errors.cor?.message}
@@ -197,7 +197,6 @@ export default function EditCreateVeiculoScreen({ navigation, route }: Props) {
                                 placeholder="0"
                                 onChangeText={field.onChange}
                                 inputMode="numeric"
-                                onSubmitEditing={() => setFocus("capacidade")}
                                 returnKeyType="next"
                                 submitBehavior="blurAndSubmit"
                                 errorStr={errors.capacidade?.message}
