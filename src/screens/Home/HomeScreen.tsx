@@ -55,7 +55,7 @@ export default function HomeScreen({ navigation }: Props) {
                     <MenuOption
                         title="Veículos"
                         icon={<MaterialCommunityIcons name="car" size={80} color={COLORS.surface} />}
-                        onPress={() => console.log("Veículos pressed")}
+                        onPress={() => navigation.navigate("VeiculoStack")}
                     />
 
                     <MenuOption

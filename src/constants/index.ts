@@ -11,6 +11,7 @@ export const REACT_QUERY_DEFAULTS = {
 export const REACT_QUERY_KEYS = {
     PACIENTES: "pacientes",
     MOTORISTAS: "motoristas",
+    VEICULOS: "veiculos",
 };
 
 export const PACIENTE_STATUS = {
@@ -23,6 +24,16 @@ export const PACIENTE_STATUS_OPTIONS = [
     { label: "Inativo", value: PACIENTE_STATUS.INATIVO },
     { label: "Em viagem", value: PACIENTE_STATUS.EM_VIAGEM },
     { label: "Hospedado", value: PACIENTE_STATUS.HOSPEDADO },
+] as const;
+
+export const VEICULOS_STATUS = {
+    INATIVO: "inativo",
+    EM_VIAGEM: "em viagem",
+} as const;
+
+export const VEICULOS_STATUS_OPTIONS = [
+    { label: "Inativo", value: VEICULOS_STATUS.INATIVO },
+    { label: "Em viagem", value: VEICULOS_STATUS.EM_VIAGEM },
 ] as const;
 
 export const SNACKBAR_DURATION = {

@@ -1,4 +1,4 @@
-import { PACIENTE_STATUS, SNACKBAR_DURATION } from "../constants";
+import { PACIENTE_STATUS, VEICULOS_STATUS, SNACKBAR_DURATION } from "../constants";
 
 export type User = {
     nome_completo: string;
@@ -31,6 +31,8 @@ export type CreateAcompanhanteDto = Omit<Acompanhante, "id">;
 export type UpdateAcompanhanteDto = CreateAcompanhanteDto;
 
 export type PacienteStatus = typeof PACIENTE_STATUS[keyof typeof PACIENTE_STATUS];
+
+export type VeiculoStatus = typeof VEICULOS_STATUS[keyof typeof VEICULOS_STATUS];
 
 export type Paciente = {
     id: string;
@@ -75,6 +77,29 @@ export type Motorista = {
 export type CreateMotoristaDto = Omit<Motorista, "id">;
 export type UpdateMotoristaDto = CreateMotoristaDto;
 
+export type Veiculo = {
+    id: string;
+    placa: string;
+    chassi: string;
+    modelo: string; 
+    ano: number;
+    cor: string;
+    capacidade: number;
+    status: VeiculoStatus;
+    documentosAnexados?: string[];
+};
+
+export type CreateVeiculoDto = Omit<Veiculo, "id">;
+export type UpdateVeiculoDto = CreateVeiculoDto;
+
+export type VeiculoStackParamList = {
+    ListVeiculos: undefined;
+    EditCreateVeiculo: { veiculoId?: string } | undefined;
+    VeiculoDetails: { veiculoId: string };
+    VeiculoDocumentosAnexados: { veiculoId: string };
+};
+
+
 export type AuthCredentials = {
     matricula: string;
     password: string;
@@ -117,6 +142,7 @@ export type MainStackParamList = {
     PacienteStack: undefined;
     CasaApoioStack: undefined;
     MotoristaStack: undefined;
+    VeiculoStack: undefined;
 };
 
 // navigation types

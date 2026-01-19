@@ -2,7 +2,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { AuthStackParamList, MainStackParamList, PacienteStackParamList, RootStackParamList, CasaApoioStackParamList, MotoristaStackParamList} from "../types";
+import { AuthStackParamList, MainStackParamList, PacienteStackParamList, RootStackParamList, CasaApoioStackParamList, MotoristaStackParamList, VeiculoStackParamList} from "../types";
 import { COLORS } from "../themes/tokens";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -21,6 +21,10 @@ import ListMotoristasScreen from "../screens/Motoristas/ListMotoristasScreen";
 import EditCreateMotoristaScreen from "../screens/Motoristas/EditCreateMotoristaScreen";
 import MotoristaDetailsScreen from "../screens/Motoristas/MotoristaDetailsScreen";
 import MotoristaDocumentosAnexadosScreen from "../screens/Motoristas/MotoristaDocumentosAnexadosScreen";
+import ListVeiculoScreen from "../screens/Veiculos/ListVeiculoScreen";
+import EditCreateVeiculoScreen from "../screens/Veiculos/EditCreateVeiculoScreen";
+import VeiculoDetailsScreen from "../screens/Veiculos/VeiculoDetailsScreen";
+import VeiculoDocumentosAnexadosScreen from "../screens/Veiculos/VeiculoDocumentosAnexadosScreen";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const HomeStack = createNativeStackNavigator<MainStackParamList>();
@@ -28,6 +32,7 @@ const RootStack = createNativeStackNavigator<RootStackParamList>();
 const PacienteStack = createNativeStackNavigator<PacienteStackParamList>();
 const CasaApoioStack = createNativeStackNavigator<CasaApoioStackParamList>();
 const MotoristaStack = createNativeStackNavigator<MotoristaStackParamList>();
+const VeiculoStack = createNativeStackNavigator<VeiculoStackParamList>();
 
 // stack de navegação para funcionalidade Pacientes
 function PacienteNavigator() {
@@ -81,6 +86,23 @@ function MotoristaNavigator() {
     );
 }
 
+// stack de navegação para Veiculos
+function VeiculoNavigator() {
+    return (
+        <VeiculoStack.Navigator
+            screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: COLORS.background },
+            }}
+        >
+            <VeiculoStack.Screen name="ListVeiculos" component={ListVeiculoScreen} />
+            <VeiculoStack.Screen name="EditCreateVeiculo" component={EditCreateVeiculoScreen} />
+            <VeiculoStack.Screen name="VeiculoDetails" component={VeiculoDetailsScreen} />
+            <VeiculoStack.Screen name="VeiculoDocumentosAnexados" component={VeiculoDocumentosAnexadosScreen} />
+        </VeiculoStack.Navigator>
+    );
+}
+
 // stack de navegação para autenticação
 function AuthNavigator() {
     return (
@@ -108,6 +130,7 @@ function HomeNavigator() {
             <HomeStack.Screen name="PacienteStack" component={PacienteNavigator} />
             <HomeStack.Screen name="CasaApoioStack" component={CasaApoioNavigator} />
             <HomeStack.Screen name="MotoristaStack" component={MotoristaNavigator} />
+            <HomeStack.Screen name="VeiculoStack" component={VeiculoNavigator} />
         </HomeStack.Navigator>
     );
 }
