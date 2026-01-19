@@ -1,14 +1,15 @@
-import { AuthCredentials, AuthResponse, Paciente, CreatePacienteDto, User, Acompanhante, CreateAcompanhanteDto } from "../types";
+import { AuthCredentials, AuthResponse, Paciente, CreatePacienteDto, User, Acompanhante, CreateAcompanhanteDto, CreateUserDto } from "../types";
 
 // tempo maximo de delay em milisegundos
 const MAX_DELAY_MS = 1000;
 
 // dados mockados porque os responsaveis pelo backend são lerdos demais
 
-type UserWithPassword = User & { password: string };
+let users_key = 3;
 
-const mockedUsers: UserWithPassword[] = [
+const mockedUsers: User[] = [
     {
+        id: "1",
         nome_completo: "Erick",
         cpf: "123.456.789-00",
         email: "erick.gg@email.com",
@@ -18,6 +19,7 @@ const mockedUsers: UserWithPassword[] = [
         password: "password123",
     },
     {
+        id: "2",
         nome_completo: "Heloisa",
         cpf: "234.567.890-11",
         email: "heloisa.lise@email.com",
@@ -27,6 +29,7 @@ const mockedUsers: UserWithPassword[] = [
         password: "securepass",
     },
     {
+        id: "3",
         nome_completo: "Tatiane",
         cpf: "345.678.901-22",
         email: "tatiane.tt@email.com",
@@ -180,6 +183,57 @@ const mockedPacientes: Paciente[] = [
         acompanhantes: [],
     },
 ];
+
+export async function getUsers(): Promise<User[]> {
+    await delay();
+    return deepCopy(mockedUsers);
+}
+
+export async function getUserById(userId: string): Promise<User> {
+    await delay();
+    const user = mockedUsers[parseInt(userId) % mockedUsers.length];
+    if (!user) {
+        throw new Error("User not found");
+    }
+    return deepCopy(user);
+}
+
+export async function insertUser(user: CreateUserDto): Promise<User> {
+    await delay();
+
+    const newUser = {
+        ...user,
+        id: (users_key++).toString(),
+    };
+    mockedUsers.push(newUser);
+
+    return deepCopy(newUser);
+}
+
+export async function deleteUser(userId: string): Promise<void> {
+    await delay();
+    const index = mockedUsers.findIndex((u) => u.id === userId);
+    if (index === -1) {
+        throw new Error("User not found");
+    }
+    mockedUsers.splice(index, 1);
+}
+
+export async function updateUser(userId: string, userData: CreateUserDto): Promise<User> {
+    await delay();
+    const index = mockedUsers.findIndex((u) => u.id === userId);
+
+    if (index === -1) {
+        throw new Error("User not found");
+    }
+
+    mockedUsers[index] = {
+        ...mockedUsers[index],
+        ...userData,
+    };
+
+    return deepCopy(mockedUsers[index]);
+}
 
 export async function findUserByCredentials(credentials: AuthCredentials): Promise<AuthResponse> {
     await delay();

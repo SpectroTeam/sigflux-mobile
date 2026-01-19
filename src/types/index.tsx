@@ -1,12 +1,14 @@
 import { PACIENTE_STATUS, VEICULOS_STATUS, SNACKBAR_DURATION } from "../constants";
 
 export type User = {
+    id: string;
     nome_completo: string;
     cpf: string;
     email: string;
     matricula: string;
     telefone: string;
     cargo: string;
+    password: string;
 };
 
 export type ViagemPaciente = {
@@ -29,6 +31,9 @@ export type Acompanhante = {
 
 export type CreateAcompanhanteDto = Omit<Acompanhante, "id">;
 export type UpdateAcompanhanteDto = CreateAcompanhanteDto;
+
+export type CreateUserDto = Omit<User, "id">;
+export type UpdateUserDto = CreateUserDto;
 
 export type PacienteStatus = typeof PACIENTE_STATUS[keyof typeof PACIENTE_STATUS];
 
@@ -99,7 +104,6 @@ export type VeiculoStackParamList = {
     VeiculoDocumentosAnexados: { veiculoId: string };
 };
 
-
 export type AuthCredentials = {
     matricula: string;
     password: string;
@@ -132,6 +136,12 @@ export type MotoristaStackParamList = {
     MotoristaDocumentosAnexados: { motoristaId: string };
 };
 
+export type UserStackParamList = {
+    ListGestores: undefined;
+    EditCreateGestor: { gestorId?: string } | undefined;
+    GestorDetails: { gestorId: string };
+};
+
 export type AuthStackParamList = {
     Login: undefined;
     ForgotPassword: undefined;
@@ -143,6 +153,7 @@ export type MainStackParamList = {
     CasaApoioStack: undefined;
     MotoristaStack: undefined;
     VeiculoStack: undefined;
+    GestorStack: undefined;
 };
 
 // navigation types

@@ -43,7 +43,7 @@ export default function HomeScreen({ navigation }: Props) {
                     <MenuOption
                         title="Gestores"
                         icon={<MaterialIcons name="person" size={80} color={COLORS.surface} />}
-                        onPress={() => console.log("Gestores pressed")}
+                        onPress={() => navigation.navigate("GestorStack")}
                     />
 
                     <MenuOption

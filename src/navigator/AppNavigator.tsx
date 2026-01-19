@@ -2,7 +2,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { AuthStackParamList, MainStackParamList, PacienteStackParamList, RootStackParamList, CasaApoioStackParamList, MotoristaStackParamList, VeiculoStackParamList} from "../types";
+import { AuthStackParamList, MainStackParamList, PacienteStackParamList, RootStackParamList, CasaApoioStackParamList, MotoristaStackParamList, VeiculoStackParamList, UserStackParamList} from "../types";
 import { COLORS } from "../themes/tokens";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -25,6 +25,9 @@ import ListVeiculoScreen from "../screens/Veiculos/ListVeiculoScreen";
 import EditCreateVeiculoScreen from "../screens/Veiculos/EditCreateVeiculoScreen";
 import VeiculoDetailsScreen from "../screens/Veiculos/VeiculoDetailsScreen";
 import VeiculoDocumentosAnexadosScreen from "../screens/Veiculos/VeiculoDocumentosAnexadosScreen";
+import ListGestoresScreen from "../screens/Gestores/ListGestoresScreen";
+import EditCreateGestorScreen from "../screens/Gestores/EditCreateGestorScreen";
+import GestorDetailsScreen from "../screens/Gestores/GestorDetailsScreen";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const HomeStack = createNativeStackNavigator<MainStackParamList>();
@@ -33,6 +36,7 @@ const PacienteStack = createNativeStackNavigator<PacienteStackParamList>();
 const CasaApoioStack = createNativeStackNavigator<CasaApoioStackParamList>();
 const MotoristaStack = createNativeStackNavigator<MotoristaStackParamList>();
 const VeiculoStack = createNativeStackNavigator<VeiculoStackParamList>();
+const GestorStack = createNativeStackNavigator<UserStackParamList>();
 
 // stack de navegação para funcionalidade Pacientes
 function PacienteNavigator() {
@@ -103,6 +107,22 @@ function VeiculoNavigator() {
     );
 }
 
+// stack de navegação para Gestores
+function GestorNavigator() {
+    return (
+        <GestorStack.Navigator
+            screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: COLORS.background },
+            }}
+        >
+            <GestorStack.Screen name="ListGestores" component={ListGestoresScreen} />
+            <GestorStack.Screen name="EditCreateGestor" component={EditCreateGestorScreen} />
+            <GestorStack.Screen name="GestorDetails" component={GestorDetailsScreen} />
+        </GestorStack.Navigator>
+    );
+}
+
 // stack de navegação para autenticação
 function AuthNavigator() {
     return (
@@ -131,6 +151,7 @@ function HomeNavigator() {
             <HomeStack.Screen name="CasaApoioStack" component={CasaApoioNavigator} />
             <HomeStack.Screen name="MotoristaStack" component={MotoristaNavigator} />
             <HomeStack.Screen name="VeiculoStack" component={VeiculoNavigator} />
+            <HomeStack.Screen name="GestorStack" component={GestorNavigator} />
         </HomeStack.Navigator>
     );
 }
