@@ -67,7 +67,7 @@ export default function HomeScreen({ navigation }: Props) {
                     <MenuOption
                         title="Viagens"
                         icon={<MaterialCommunityIcons name="road-variant" size={80} color={COLORS.surface} />}
-                        onPress={() => console.log("Viagens pressed")}
+                        onPress={() => navigation.navigate("ViagemStack")}
                     />
                 </View>
             </ScrollView>

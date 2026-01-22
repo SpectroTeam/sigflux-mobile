@@ -21,7 +21,7 @@ const DateInput = forwardRef<any, DateInputProps>((props, ref) => {
         placeholder = "01/01/01",
         value,
         onChange,
-        maximumDate = new Date(),
+        maximumDate,
         minimumDate,
         containerStyle,
         inputStyle,

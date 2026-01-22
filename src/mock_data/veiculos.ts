@@ -14,7 +14,7 @@ const mockedVeiculos: Veiculo[] = [
         "ano": 2020,
         "cor": "prata",
         "capacidade": 7,
-        "status": "inativo",
+        "status": "Inativo",
         "documentosAnexados": [ 
             "https://exemplo.com/documentos/crlv-doblo.pdf", 
             "https://exemplo.com/documentos/seguro-doblo.pdf" 
@@ -28,7 +28,7 @@ const mockedVeiculos: Veiculo[] = [
         "ano": 2021,
         "cor": "branco",
         "capacidade": 7,
-        "status": "inativo",
+        "status": "Inativo",
         "documentosAnexados": [
             "https://exemplo.com/documentos/ipva-spin.pdf",
             "https://exemplo.com/documentos/seguro-spin.pdf"
@@ -42,7 +42,7 @@ const mockedVeiculos: Veiculo[] = [
         "ano": 2018,
         "cor": "azul",
         "capacidade": 7,
-        "status": "em viagem",
+        "status": "Em viagem",
         "documentosAnexados": [
             "https://exemplo.com/documentos/renavam-journey.pdf", 
             "https://exemplo.com/documentos/laudo-vistoria-journey.pdf"
@@ -56,7 +56,7 @@ const mockedVeiculos: Veiculo[] = [
         "ano": 2022,
         "cor": "vermelho",
         "capacidade": 7,
-        "status": "inativo",
+        "status": "Inativo",
         "documentosAnexados": [
             "https://exemplo.com/documentos/seguro-hilux.pdf", 
             "https://exemplo.com/documentos/contrato-financiamento-hilux.pdf"

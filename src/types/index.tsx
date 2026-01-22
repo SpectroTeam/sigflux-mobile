@@ -1,4 +1,10 @@
-import { PACIENTE_STATUS, VEICULOS_STATUS, SNACKBAR_DURATION } from "../constants";
+import { PACIENTE_STATUS, VEICULOS_STATUS, SNACKBAR_DURATION, VIAGEM_STATUS } from "../constants";
+
+export type PacienteStatus = typeof PACIENTE_STATUS[keyof typeof PACIENTE_STATUS];
+
+export type VeiculoStatus = typeof VEICULOS_STATUS[keyof typeof VEICULOS_STATUS];
+
+export type ViagemStatus = typeof VIAGEM_STATUS[keyof typeof VIAGEM_STATUS];
 
 export type User = {
     id: string;
@@ -11,6 +17,9 @@ export type User = {
     password: string;
 };
 
+export type CreateUserDto = Omit<User, "id">;
+export type UpdateUserDto = CreateUserDto;
+
 export type ViagemPaciente = {
     id: string;
     dataIda: string;
@@ -18,7 +27,7 @@ export type ViagemPaciente = {
     origem: string;
     destino: string;
     isPresente?: boolean;
-    status: "planejada" | "em andamento" | "concluída" | "cancelada";
+    status: ViagemStatus;
 };
 
 export type Acompanhante = {
@@ -32,12 +41,30 @@ export type Acompanhante = {
 export type CreateAcompanhanteDto = Omit<Acompanhante, "id">;
 export type UpdateAcompanhanteDto = CreateAcompanhanteDto;
 
-export type CreateUserDto = Omit<User, "id">;
-export type UpdateUserDto = CreateUserDto;
+export type Viagem = {
+    id: string;
+    tipo: "Ida" | "Volta";
+    cidade_destino: string;
+    data_hora: string;
+    veiculo: Veiculo[];
+    motorista: Motorista[];
+    passageiros: (Paciente | Acompanhante)[];
+    paradas: CasaApoio[];
+    status: ViagemStatus;
+}
 
-export type PacienteStatus = typeof PACIENTE_STATUS[keyof typeof PACIENTE_STATUS];
+export type ViagemForm = {
+    cidade_destino: string;
+    tipo: "Ida" | "Volta";
+    data_hora: Date | undefined;
+    veiculoId: string;
+    motoristaId: string;
+    passageiros: { cpf: string }[];
+    paradas: { casaId: string }[];
+};
 
-export type VeiculoStatus = typeof VEICULOS_STATUS[keyof typeof VEICULOS_STATUS];
+export type CreateViagemDto = Omit<Viagem, "id">;
+export type updateViagemDto = CreateViagemDto;
 
 export type Paciente = {
     id: string;
@@ -86,7 +113,7 @@ export type Veiculo = {
     id: string;
     placa: string;
     chassi: string;
-    modelo: string; 
+    modelo: string;
     ano: number;
     cor: string;
     capacidade: number;
@@ -97,13 +124,6 @@ export type Veiculo = {
 export type CreateVeiculoDto = Omit<Veiculo, "id">;
 export type UpdateVeiculoDto = CreateVeiculoDto;
 
-export type VeiculoStackParamList = {
-    ListVeiculos: undefined;
-    EditCreateVeiculo: { veiculoId?: string } | undefined;
-    VeiculoDetails: { veiculoId: string };
-    VeiculoDocumentosAnexados: { veiculoId: string };
-};
-
 export type AuthCredentials = {
     matricula: string;
     password: string;
@@ -112,6 +132,19 @@ export type AuthCredentials = {
 export type AuthResponse = {
     token: string;
     user: User;
+};
+
+export type VeiculoStackParamList = {
+    ListVeiculos: undefined;
+    EditCreateVeiculo: { veiculoId?: string } | undefined;
+    VeiculoDetails: { veiculoId: string };
+    VeiculoDocumentosAnexados: { veiculoId: string };
+};
+
+export type ViagemStackParamList = {
+    ListViagens: undefined;
+    EditCreateViagens: { viagemId?: string } | undefined;
+    ViagemDetails: { viagemId: string };
 };
 
 export type PacienteStackParamList = {
@@ -154,6 +187,7 @@ export type MainStackParamList = {
     MotoristaStack: undefined;
     VeiculoStack: undefined;
     GestorStack: undefined;
+    ViagemStack: undefined;
 };
 
 // navigation types

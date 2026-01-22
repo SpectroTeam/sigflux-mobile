@@ -7,7 +7,7 @@ type Variant = "primary" | "secondary" | "outline" | "danger";
 type Size = "small" | "medium" | "large";
 
 interface CustomButtonProps extends Omit<PaperButtonProps, "children"> {
-    title: string;
+    title?: string;
     variant?: Variant;
     size?: Size;
     fullWidth?: boolean;

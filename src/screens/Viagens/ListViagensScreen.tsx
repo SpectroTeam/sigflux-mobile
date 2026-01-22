@@ -8,110 +8,102 @@ import { GenericCard } from "../../components/common/GenericCard";
 import { CustomButton } from "../../components/common/CustomButton";
 import { ConfirmModal } from "../../components/common/Modal";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-
-import { CasaApoio } from "../../types";
-import { useCasasApoio } from "../../hooks/useCasasApoio";
-import * as casaApoioService from "../../services/casa_apoio_service";
+import { Viagem, ViagemStackParamList } from "../../types";
 import { useSnackbar } from "../../contexts/SnackBarContext";
+import { useViagem, useViagemMutations } from "../../hooks/useViagens";
 
-type CasaApoioStackParamList = {
-    ListCasasApoio: undefined;
-    EditCreateCasaApoio: { casaApoioId?: string } | undefined;
-};
+type Props = NativeStackScreenProps<ViagemStackParamList, "ListViagens">;
 
-type Props = NativeStackScreenProps<CasaApoioStackParamList, "ListCasasApoio">;
-
-export default function ListCasasApoioScreen({ navigation }: Props) {
-    const { data: casasApoio =[], isLoading } = useCasasApoio();
+export default function ListViagemSreen({ navigation }: Props) {
+    const { data: viagens = [], isLoading } = useViagem();
+    const { deleteViagem } = useViagemMutations();
     const { showSnackbar } = useSnackbar();
 
     const [searchQuery, setSearchQuery] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedCasa, setSelectedCasa] = useState({
+    const [selectedViagem, setSelectedViagem] = useState({
         id: "",
-        nome: "",
+        cidade_destino: "",
+        data_hora: new Date()
     });
 
-    const filteredCasas = casasApoio.filter((casa) =>
-        casa.nome.toLowerCase().includes(searchQuery.toLowerCase()),
+    const filteredViagens = viagens.filter(
+        (viagem) =>
+            viagem.cidade_destino.includes(searchQuery) || viagem.id,
     );
 
-    function handleNewCasaApoio() {
-        navigation.navigate("EditCreateCasaApoio", { casaApoioId: undefined });
+    function handleNewViagem() {
+        navigation.navigate("EditCreateViagens");
     }
 
-    function handleDeletePress(casa: CasaApoio) {
-        setSelectedCasa({ id: casa.id, nome: casa.nome });
+    function handleViagemPress(viagemId: string) {
+        navigation.navigate("ViagemDetails", { viagemId });
+    }
+
+    function handleDeletePress(viagem: Viagem) {
+        setSelectedViagem(() => ({
+            id: viagem.id,
+            cidade_destino: viagem.cidade_destino,
+            data_hora: new Date(),
+        }));
         setModalVisible(true);
     }
 
-    async function confirmDeleteCasa() {
+    async function confirmDeleteViagem() {
         try {
-            await casaApoioService.deleteById(selectedCasa.id);
-            showSnackbar("Casa de apoio excluída!", "success", "short");
+            await deleteViagem.mutateAsync(selectedViagem.id);
+            showSnackbar("Viagem excluída!", "success", "short")
             setModalVisible(false);
         } catch (error) {
-            showSnackbar("Erro ao excluir casa de apoio!", "error", "short");
+            showSnackbar("Erro ao excluir viagem!", "error", "short")
         }
     }
 
-    function handleEditCasa(casaApoioId: string) {
-        navigation.navigate("EditCreateCasaApoio", { casaApoioId });
+    function handleEditViagem(viagemId: string) {
+        navigation.navigate("EditCreateViagens", { viagemId });
     }
 
     return (
         <View style={styles.container}>
-            <Header title="Casas de Apoio" onBack={() => navigation.goBack()} />
+            <Header title="Viagens" onBack={() => navigation.goBack()} />
 
             <View style={styles.content}>
-                <SearchBar
-                    value={searchQuery}
-                    onChangeText={setSearchQuery}
-                    placeholder="Pesquisar..."
-                />
+                <SearchBar value={searchQuery} onChangeText={setSearchQuery} placeholder="Pesquisar..." />
 
                 <CustomButton
                     size="small"
-                    title="Nova casa de apoio"
+                    title="Nova viagem"
                     style={styles.button_style}
                     contentStyle={styles.button_padding}
                     labelStyle={styles.button_padding}
                     icon={() => (
-                        <FontAwesome
-                            name="plus"
-                            size={16}
-                            color={COLORS.surface}
-                            style={{ marginRight: SPACING.sm }}
-                        />
+                        <FontAwesome name="plus" size={16} color={COLORS.surface} style={{ marginRight: SPACING.sm }} />
                     )}
-                    onPress={handleNewCasaApoio}
+                    onPress={handleNewViagem}
                 />
 
                 {isLoading ? (
                     <View style={styles.loadContainer}>
-                        <ActivityIndicator
-                            animating={true}
-                            color={COLORS.primary}
-                            size={AVATAR_SIZES.large}
-                        />
+                        <ActivityIndicator animating={true} color={COLORS.primary} size={AVATAR_SIZES.large} />
                     </View>
                 ) : (
                     <FlatList
-                        data={filteredCasas}
+                        data={filteredViagens}
                         keyExtractor={(item) => item.id}
                         renderItem={({ item }) => (
                             <GenericCard
-                                title={item.nome}
                                 fields={[
-                                    { label: "Endereço", value: item.endereco },
                                     {
-                                        label: "Lotação",
-                                        value: `${item.lotacaoAtual} / ${item.capacidadeMaxima}`,
+                                        label: "Data",
+                                        value: new Date(item.data_hora).toLocaleDateString("pt-BR"),
                                     },
+                                    { label: "Status", value: item.status },
                                 ]}
-                                editButton
-                                trashButton
-                                editButtonAction={() => handleEditCasa(item.id)}
+                                title={item.cidade_destino}
+                                onPress={() => handleViagemPress(item.id)}
+                                editButton={true}
+                                trashButton={true}
+                                editButtonAction={() => handleEditViagem(item.id)}
                                 trashButtonAction={() => handleDeletePress(item)}
                             />
                         )}
@@ -123,7 +115,7 @@ export default function ListCasasApoioScreen({ navigation }: Props) {
 
             <ConfirmModal
                 visible={modalVisible}
-                message={`Tem certeza de que deseja excluir a casa de apoio ${selectedCasa.nome}? Esta ação não pode ser desfeita.`}
+                message={`Tem certeza de que deseja excluir a viagem ${selectedViagem.cidade_destino} - ${selectedViagem.data_hora}? Esta ação não pode ser desfeita.`}
                 confirmText="Excluir"
                 icon={() => (
                     <MaterialCommunityIcons
@@ -132,8 +124,9 @@ export default function ListCasasApoioScreen({ navigation }: Props) {
                         style={{ color: COLORS.error }}
                     />
                 )}
-                onConfirm={confirmDeleteCasa}
+                onConfirm={confirmDeleteViagem}
                 onCancel={() => setModalVisible(false)}
+                loading={deleteViagem.isPending}
                 confirmColor={COLORS.error}
             />
         </View>

@@ -2,7 +2,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { AuthStackParamList, MainStackParamList, PacienteStackParamList, RootStackParamList, CasaApoioStackParamList, MotoristaStackParamList, VeiculoStackParamList, UserStackParamList} from "../types";
+import { AuthStackParamList, MainStackParamList, PacienteStackParamList, RootStackParamList, CasaApoioStackParamList, MotoristaStackParamList, VeiculoStackParamList, UserStackParamList, ViagemStackParamList} from "../types";
 import { COLORS } from "../themes/tokens";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -28,6 +28,8 @@ import VeiculoDocumentosAnexadosScreen from "../screens/Veiculos/VeiculoDocument
 import ListGestoresScreen from "../screens/Gestores/ListGestoresScreen";
 import EditCreateGestorScreen from "../screens/Gestores/EditCreateGestorScreen";
 import GestorDetailsScreen from "../screens/Gestores/GestorDetailsScreen";
+import ListViagensScreen from "../screens/Viagens/ListViagensScreen";
+import EditCreateViagemScreen from "../screens/Viagens/EditCreateViagemScreen";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const HomeStack = createNativeStackNavigator<MainStackParamList>();
@@ -37,6 +39,7 @@ const CasaApoioStack = createNativeStackNavigator<CasaApoioStackParamList>();
 const MotoristaStack = createNativeStackNavigator<MotoristaStackParamList>();
 const VeiculoStack = createNativeStackNavigator<VeiculoStackParamList>();
 const GestorStack = createNativeStackNavigator<UserStackParamList>();
+const ViagemStack = createNativeStackNavigator<ViagemStackParamList>();
 
 // stack de navegação para funcionalidade Pacientes
 function PacienteNavigator() {
@@ -123,6 +126,22 @@ function GestorNavigator() {
     );
 }
 
+// stack de navegação para Viagens
+function ViagemNavigator() {
+    return (
+        <ViagemStack.Navigator
+            screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: COLORS.background },
+            }}
+        >
+            <ViagemStack.Screen name="ListViagens" component={ListViagensScreen} />
+            <ViagemStack.Screen name="EditCreateViagens" component={EditCreateViagemScreen} />
+            {/* <ViagemStack.Screen name="ViagemDetails" component={ViagemDetailsScreen} /> */}
+        </ViagemStack.Navigator>
+    );
+}
+
 // stack de navegação para autenticação
 function AuthNavigator() {
     return (
@@ -152,6 +171,7 @@ function HomeNavigator() {
             <HomeStack.Screen name="MotoristaStack" component={MotoristaNavigator} />
             <HomeStack.Screen name="VeiculoStack" component={VeiculoNavigator} />
             <HomeStack.Screen name="GestorStack" component={GestorNavigator} />
+            <HomeStack.Screen name="ViagemStack" component={ViagemNavigator} />
         </HomeStack.Navigator>
     );
 }

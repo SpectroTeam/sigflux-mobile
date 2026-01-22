@@ -13,6 +13,8 @@ export const REACT_QUERY_KEYS = {
     MOTORISTAS: "motoristas",
     VEICULOS: "veiculos",
     USUARIO: "usuario",
+    VIAGEM: "viagens",
+    CASA_APOIO: "casa_apoio"
 };
 
 export const PACIENTE_STATUS = {
@@ -28,14 +30,29 @@ export const PACIENTE_STATUS_OPTIONS = [
 ] as const;
 
 export const VEICULOS_STATUS = {
-    INATIVO: "inativo",
-    EM_VIAGEM: "em viagem",
+    INATIVO: "Inativo",
+    EM_VIAGEM: "Em viagem",
 } as const;
 
 export const VEICULOS_STATUS_OPTIONS = [
     { label: "Inativo", value: VEICULOS_STATUS.INATIVO },
     { label: "Em viagem", value: VEICULOS_STATUS.EM_VIAGEM },
 ] as const;
+
+export const VIAGEM_STATUS = {
+    PLANEJADA: "Planejada",
+    EM_ANDAMENTO: "Em andamento",
+    CONCLUIDA: "Concluída",
+    CANCELADA: "Cancelada",
+} as const;
+
+export const VIAGEM_STATUS_OPTIONS = [
+    { label: "Planejada", value: VIAGEM_STATUS.PLANEJADA },
+    { label: "Em viagem", value: VIAGEM_STATUS.EM_ANDAMENTO },
+    { label: "Concluída", value: VIAGEM_STATUS.CONCLUIDA },
+    { label: "Cancelada", value: VIAGEM_STATUS.CANCELADA },
+] as const;
+
 
 export const SNACKBAR_DURATION = {
     short: 500,

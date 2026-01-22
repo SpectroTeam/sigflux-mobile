@@ -64,14 +64,14 @@ const mockedPacientes: Paciente[] = [
                 dataVolta: new Date(2023, 0, 20).toISOString(),
                 origem: "Cidade X",
                 destino: "Cidade Y",
-                status: "concluída",
+                status: "Concluída",
             },
             {
                 id: "v2",
                 dataIda: new Date(2023, 2, 5).toISOString(),
                 origem: "Cidade Y",
                 destino: "Cidade Z",
-                status: "em andamento",
+                status: "Em andamento",
             },
             {
                 id: "v3",
@@ -79,7 +79,7 @@ const mockedPacientes: Paciente[] = [
                 dataVolta: new Date(2023, 4, 25).toISOString(),
                 origem: "Cidade Z",
                 destino: "Cidade X",
-                status: "planejada",
+                status: "Planejada",
             },
             {
                 id: "v4",
@@ -87,7 +87,7 @@ const mockedPacientes: Paciente[] = [
                 dataVolta: new Date(2022, 10, 10).toISOString(),
                 origem: "Cidade X",
                 destino: "Cidade W",
-                status: "concluída",
+                status: "Concluída",
             },
             {
                 id: "v5",
@@ -95,7 +95,7 @@ const mockedPacientes: Paciente[] = [
                 dataVolta: new Date(2022, 7, 30).toISOString(),
                 origem: "Cidade W",
                 destino: "Cidade Y",
-                status: "concluída",
+                status: "Concluída",
             },
         ],
         acompanhantes: [
@@ -149,7 +149,7 @@ const mockedPacientes: Paciente[] = [
                 dataVolta: new Date(2023, 1, 25).toISOString(),
                 origem: "Cidade Y",
                 destino: "Cidade Z",
-                status: "concluída",
+                status: "Concluída",
             },
         ],
         acompanhantes: [
