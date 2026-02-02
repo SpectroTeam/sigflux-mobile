@@ -31,11 +31,6 @@ export default function LoginScreen({}: Props) {
         }
     }
 
-    function handleForgotPassword() {
-        console.log("Forgot password pressed");
-        // Implementar lógica de recuperação de senha
-    }
-
     function handleUpdateText(text: string, setter: (value: string) => void) {
         setter(text);
         if (error) {
@@ -83,11 +78,6 @@ export default function LoginScreen({}: Props) {
                             error={error}
                         />
                     </View>
-
-                    {/* Forgot Password Link */}
-                    <TouchableOpacity onPress={handleForgotPassword}>
-                        <Text style={styles.forgotPassword}>Esqueceu a senha?</Text>
-                    </TouchableOpacity>
 
                     {/* Login Button */}
                     <View style={styles.buttonContainer}>

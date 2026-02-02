@@ -1,22 +1,22 @@
-import * as mockFunctions from "../mock_data/motoristas";
+import { api } from "../lib/api";
 import { Motorista, CreateMotoristaDto, UpdateMotoristaDto } from "../types";
 
 export async function getAll(): Promise<Motorista[]> {
-    return mockFunctions.getMotoristas();
+    return api.get<Motorista[]>("/motoristas");
 }
 
 export async function getById(id: string): Promise<Motorista> {
-    return mockFunctions.getMotoristaById(id);
+    return api.get<Motorista>(`/motoristas/${id}`);
 }
 
 export async function create(data: CreateMotoristaDto): Promise<Motorista> {
-    return mockFunctions.insertMotorista(data);
+    return api.post<Motorista>("/motoristas", data);
 }
 
 export async function update(id: string, data: UpdateMotoristaDto): Promise<Motorista> {
-    return mockFunctions.updateMotorista(id, data);
+    return api.put<Motorista>(`/motoristas/${id}`, data);
 }
 
 export async function deleteById(id: string): Promise<void> {
-    return mockFunctions.deleteMotorista(id);
+    return api.delete(`/motoristas/${id}`);
 }

@@ -44,10 +44,21 @@ export function useUsuarioMutations() {
         },
     });
 
+    const changePassword = useMutation({
+        mutationFn: (vars: { userId: string; currentPassword: string; newPassword: string }) =>
+            userService.changePassword(vars.userId, vars.currentPassword, vars.newPassword),
+        onSuccess: (updatedUser) => {
+            queryClient.setQueryData<User[]>([USUARIO], (old = []) =>
+                old.map((u) => (u.id === updatedUser.id ? updatedUser : u)),
+            );
+        },
+    });
+
     return {
         createUsuario,
         updateUsuario,
         deleteUsuario,
+        changePassword,
     };
 }
 

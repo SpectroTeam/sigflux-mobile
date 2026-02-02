@@ -73,12 +73,34 @@ export function useViagemMutations() {
         },
     });
 
+    const iniciarViagem = useMutation({
+        mutationFn: (viagemId: string) => viagemService.iniciarViagem(viagemId),
+        onSuccess: (updatedViagem) => {
+            queryClient.setQueryData<Viagem[]>([VIAGEM], (old = []) =>
+                old.map((v) => (v.id === updatedViagem.id ? updatedViagem : v)),
+            );
+            invalidateAllRelated();
+        },
+    });
+
+    const concluirViagem = useMutation({
+        mutationFn: (viagemId: string) => viagemService.concluirViagem(viagemId),
+        onSuccess: (updatedViagem) => {
+            queryClient.setQueryData<Viagem[]>([VIAGEM], (old = []) =>
+                old.map((v) => (v.id === updatedViagem.id ? updatedViagem : v)),
+            );
+            invalidateAllRelated();
+        },
+    });
+
     return {
         craeteViagem,
         updateViagem,
         deleteViagem,
         addParada,
         removeParada,
+        iniciarViagem,
+        concluirViagem,
     };
 }
 

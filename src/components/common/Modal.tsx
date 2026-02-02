@@ -15,9 +15,10 @@ type Props = {
     confirmColor?: string;
     loading?: boolean;
     cancelText?: string;
+    children?: React.ReactNode;
 };
 
-export function ConfirmModal({
+export function CustomModal({
     visible,
     title,
     message,
@@ -28,6 +29,7 @@ export function ConfirmModal({
     confirmColor = COLORS.primary,
     loading = false,
     icon,
+    children,
 }: Props) {
     return (
         <Portal>
@@ -42,6 +44,8 @@ export function ConfirmModal({
 
                     {title && <Text style={styles.title}>{title}</Text>}
                     {message && <Text style={styles.message}>{message}</Text>}
+                    
+                    {children}
 
                     <View style={styles.actions}>
                         <CustomButton

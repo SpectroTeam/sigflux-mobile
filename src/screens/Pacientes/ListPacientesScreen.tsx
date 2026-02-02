@@ -6,7 +6,7 @@ import { Header } from "../../components/common/Header";
 import { SearchBar } from "../../components/common/SearchBar";
 import { GenericCard } from "../../components/common/GenericCard";
 import { CustomButton } from "../../components/common/CustomButton";
-import { ConfirmModal } from "../../components/common/Modal";
+import { CustomModal } from "../../components/common/Modal";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Paciente, PacienteStackParamList } from "../../types";
 import { usePacienteMutations, usePacientes } from "../../hooks/usePacientes";
@@ -28,7 +28,7 @@ export default function ListPacientesSreen({ navigation }: Props) {
 
     const filteredPatients = pacientes.filter(
         (paciente) =>
-            paciente.nome.toLowerCase().includes(searchQuery.toLowerCase()) || paciente.cpf.includes(searchQuery),
+            paciente.nomeCompleto.toLowerCase().includes(searchQuery.toLowerCase()) || paciente.cpf.includes(searchQuery),
     );
 
     function handleNewPaciente() {
@@ -42,7 +42,7 @@ export default function ListPacientesSreen({ navigation }: Props) {
     function handleDeletePress(paciente: Paciente) {
         setSelectedPatient(() => ({
             id: paciente.id,
-            nome: paciente.nome,
+            nome: paciente.nomeCompleto,
         }));
         setModalVisible(true);
     }
@@ -94,7 +94,7 @@ export default function ListPacientesSreen({ navigation }: Props) {
                                     { label: "CPF", value: item.cpf },
                                     { label: "Status", value: item.status },
                                 ]}
-                                title={item.nome}
+                                title={item.nomeCompleto}
                                 onPress={() => handlePacientePress(item.id)}
                                 editButton={true}
                                 trashButton={true}
@@ -108,7 +108,7 @@ export default function ListPacientesSreen({ navigation }: Props) {
                 )}
             </View>
 
-            <ConfirmModal
+            <CustomModal
                 visible={modalVisible}
                 message={`Tem certeza de que deseja excluir o paciente ${selectedPatient.nome}? Esta ação não pode ser desfeita.`}
                 confirmText="Excluir"

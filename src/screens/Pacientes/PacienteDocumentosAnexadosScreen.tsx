@@ -63,7 +63,7 @@ export default function PacienteDocumentosAnexadosScreen({ navigation, route }: 
 
             <View style={{ paddingHorizontal: SPACING.xl }}>
                 <View style={styles.headerInfo}>
-                    <Text style={styles.title}>{paciente.nome}</Text>
+                    <Text style={styles.title}>{paciente.nomeCompleto}</Text>
                     <Text style={styles.subtitle}>CPF: {paciente.cpf}</Text>
                 </View>
 

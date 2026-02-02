@@ -33,7 +33,7 @@ export default function PacienteHistoricoViagensScreen({ navigation, route }: Pr
             <Header title="Historico de Viagens" onBack={() => navigation.goBack()} />
 
             <View style={styles.headerInfo}>
-                <Text style={styles.title}>{paciente.nome}</Text>
+                <Text style={styles.title}>{paciente.nomeCompleto}</Text>
                 <Text style={styles.subtitle}>CPF: {paciente.cpf}</Text>
             </View>
             <FlatList

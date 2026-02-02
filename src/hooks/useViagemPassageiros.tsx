@@ -22,7 +22,7 @@ export function useViagemPassageiros({ passageiros, viagemId }: Params & { viage
             const notPassenger = !passageiros.some((p) => p.paciente.id === paciente.id);
             const notInOtherTrip = paciente.status !== PACIENTE_STATUS.EM_VIAGEM;
             const matchesSearch =
-                paciente.nome.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                paciente.nomeCompleto.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 paciente.cpf.includes(searchQuery.replace(/\D/g, ""));
             return notPassenger && notInOtherTrip && matchesSearch;
         });

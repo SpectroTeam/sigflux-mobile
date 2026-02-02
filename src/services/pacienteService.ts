@@ -1,36 +1,30 @@
-import * as mockFunctions from "../mock_data";
+import { api } from "../lib/api";
 import { Acompanhante, CreateAcompanhanteDto, CreatePacienteDto, Paciente, UpdatePacienteDto, UpdateAcompanhanteDto } from "../types";
 
-export async function getAll() {
-    const response = await mockFunctions.getPacientes();
-    return response;
+export async function getAll(): Promise<Paciente[]> {
+    return api.get<Paciente[]>("/pacientes");
 }
 
-export async function getById(pacienteId: string) {
-    const paciente = await mockFunctions.getPacienteById(pacienteId);
-    return paciente;
+export async function getById(pacienteId: string): Promise<Paciente> {
+    return api.get<Paciente>(`/pacientes/${pacienteId}`);
 }
 
 export async function create(data: CreatePacienteDto): Promise<Paciente> {
-    const response = await mockFunctions.insertPaciente(data);
-    return response;
+    return api.post<Paciente>("/pacientes", data);
 }
 
 export async function update(pacienteId: string, data: UpdatePacienteDto): Promise<Paciente> {
-    const response = await mockFunctions.updatePaciente(pacienteId, data);
-    return response;
+    return api.put<Paciente>(`/pacientes/${pacienteId}`, data);
 }
 
-export async function deleteById(pacienteId: string) {
-    await mockFunctions.deletePaciente(pacienteId);
-    return;
+export async function deleteById(pacienteId: string): Promise<void> {
+    return api.delete(`/pacientes/${pacienteId}`);
 }
 
 // acompanhantes related functions
 
 export async function addAcompanhante(pacienteId: string, acompanhante: CreateAcompanhanteDto): Promise<Acompanhante> {
-    const response = await mockFunctions.addAcompanhante(pacienteId, acompanhante);
-    return response;
+    return api.post<Acompanhante>(`/pacientes/${pacienteId}/acompanhantes`, acompanhante);
 }
 
 export async function updateAcompanhante(
@@ -38,11 +32,9 @@ export async function updateAcompanhante(
     acompanhanteId: string,
     acompanhanteData: UpdateAcompanhanteDto,
 ): Promise<Acompanhante> {
-    const response = await mockFunctions.updateAcompanhante(pacienteId, acompanhanteId, acompanhanteData);
-    return response;
+    return api.put<Acompanhante>(`/pacientes/${pacienteId}/acompanhantes/${acompanhanteId}`, acompanhanteData);
 }
 
 export async function deleteAcompanhante(pacienteId: string, acompanhanteId: string): Promise<void> {
-    await mockFunctions.deleteAcompanhante(pacienteId, acompanhanteId);
-    return;
+    return api.delete(`/pacientes/${pacienteId}/acompanhantes/${acompanhanteId}`);
 }

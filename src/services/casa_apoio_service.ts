@@ -1,22 +1,26 @@
-import * as mockFunctions from "../mock_data/casasApoio";
+import { api } from "../lib/api";
 import { CasaApoio, CreateCasaApoioDto, UpdateCasaApoioDto } from "../types";
 
 export async function getAll(): Promise<CasaApoio[]> {
-    return mockFunctions.getCasasApoio();
+    return api.get<CasaApoio[]>("/casas-apoio");
 }
 
 export async function getById(id: string): Promise<CasaApoio | undefined> {
-    return mockFunctions.getCasaApoioById(id);
+    try {
+        return await api.get<CasaApoio>(`/casas-apoio/${id}`);
+    } catch {
+        return undefined;
+    }
 }
 
 export async function create(data: CreateCasaApoioDto): Promise<CasaApoio> {
-    return mockFunctions.insertCasaApoio(data);
+    return api.post<CasaApoio>("/casas-apoio", data);
 }
 
 export async function update(id: string, data: UpdateCasaApoioDto): Promise<CasaApoio> {
-    return mockFunctions.updateCasaApoio(id, data);
+    return api.put<CasaApoio>(`/casas-apoio/${id}`, data);
 }
 
 export async function deleteById(id: string): Promise<void> {
-    return mockFunctions.deleteCasaApoio(id);
+    return api.delete(`/casas-apoio/${id}`);
 }

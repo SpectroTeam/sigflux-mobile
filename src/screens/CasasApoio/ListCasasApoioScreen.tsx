@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { AVATAR_SIZES, BORDER_RADIUS, COLORS, SPACING } from "../../themes/tokens";
@@ -6,13 +6,14 @@ import { Header } from "../../components/common/Header";
 import { SearchBar } from "../../components/common/SearchBar";
 import { GenericCard } from "../../components/common/GenericCard";
 import { CustomButton } from "../../components/common/CustomButton";
-import { ConfirmModal } from "../../components/common/Modal";
+import { CustomModal } from "../../components/common/Modal";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { CasaApoio } from "../../types";
 import { useCasasApoio } from "../../hooks/useCasasApoio";
 import * as casaApoioService from "../../services/casa_apoio_service";
 import { useSnackbar } from "../../contexts/SnackBarContext";
+import { useFocusEffect } from "@react-navigation/native";
 
 type CasaApoioStackParamList = {
     ListCasasApoio: undefined;
@@ -22,8 +23,14 @@ type CasaApoioStackParamList = {
 type Props = NativeStackScreenProps<CasaApoioStackParamList, "ListCasasApoio">;
 
 export default function ListCasasApoioScreen({ navigation }: Props) {
-    const { data: casasApoio =[], isLoading } = useCasasApoio();
+    const { data: casasApoio = [], refetch, isLoading } = useCasasApoio();
     const { showSnackbar } = useSnackbar();
+
+    useFocusEffect(
+        useCallback(() => {
+            refetch();
+        }, [refetch]),
+    );
 
     const [searchQuery, setSearchQuery] = useState("");
     const [modalVisible, setModalVisible] = useState(false);
@@ -32,9 +39,7 @@ export default function ListCasasApoioScreen({ navigation }: Props) {
         nome: "",
     });
 
-    const filteredCasas = casasApoio.filter((casa) =>
-        casa.nome.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+    const filteredCasas = casasApoio.filter((casa) => casa.nome.toLowerCase().includes(searchQuery.toLowerCase()));
 
     function handleNewCasaApoio() {
         navigation.navigate("EditCreateCasaApoio", { casaApoioId: undefined });
@@ -50,6 +55,7 @@ export default function ListCasasApoioScreen({ navigation }: Props) {
             await casaApoioService.deleteById(selectedCasa.id);
             showSnackbar("Casa de apoio excluída!", "success", "short");
             setModalVisible(false);
+            refetch();
         } catch (error) {
             showSnackbar("Erro ao excluir casa de apoio!", "error", "short");
         }
@@ -64,11 +70,7 @@ export default function ListCasasApoioScreen({ navigation }: Props) {
             <Header title="Casas de Apoio" onBack={() => navigation.goBack()} />
 
             <View style={styles.content}>
-                <SearchBar
-                    value={searchQuery}
-                    onChangeText={setSearchQuery}
-                    placeholder="Pesquisar..."
-                />
+                <SearchBar value={searchQuery} onChangeText={setSearchQuery} placeholder="Pesquisar..." />
 
                 <CustomButton
                     size="small"
@@ -77,23 +79,14 @@ export default function ListCasasApoioScreen({ navigation }: Props) {
                     contentStyle={styles.button_padding}
                     labelStyle={styles.button_padding}
                     icon={() => (
-                        <FontAwesome
-                            name="plus"
-                            size={16}
-                            color={COLORS.surface}
-                            style={{ marginRight: SPACING.sm }}
-                        />
+                        <FontAwesome name="plus" size={16} color={COLORS.surface} style={{ marginRight: SPACING.sm }} />
                     )}
                     onPress={handleNewCasaApoio}
                 />
 
                 {isLoading ? (
                     <View style={styles.loadContainer}>
-                        <ActivityIndicator
-                            animating={true}
-                            color={COLORS.primary}
-                            size={AVATAR_SIZES.large}
-                        />
+                        <ActivityIndicator animating={true} color={COLORS.primary} size={AVATAR_SIZES.large} />
                     </View>
                 ) : (
                     <FlatList
@@ -121,7 +114,7 @@ export default function ListCasasApoioScreen({ navigation }: Props) {
                 )}
             </View>
 
-            <ConfirmModal
+            <CustomModal
                 visible={modalVisible}
                 message={`Tem certeza de que deseja excluir a casa de apoio ${selectedCasa.nome}? Esta ação não pode ser desfeita.`}
                 confirmText="Excluir"

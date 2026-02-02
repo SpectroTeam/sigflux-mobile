@@ -67,7 +67,7 @@ export default function MotoristaDocumentosAnexadosScreen({ navigation, route }:
 
             <View style={{ paddingHorizontal: SPACING.xl }}>
                 <View style={styles.headerInfo}>
-                    <Text style={styles.title}>{motorista.nome}</Text>
+                    <Text style={styles.title}>{motorista.nomeCompleto}</Text>
                     <Text style={styles.subtitle}>Matrícula: {motorista.matricula}</Text>
                 </View>
 

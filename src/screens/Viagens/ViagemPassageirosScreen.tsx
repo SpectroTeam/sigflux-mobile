@@ -65,7 +65,7 @@ export default function ViagemPassageirosScreen({ navigation, route }: Props) {
             <Header title="Passageiros da Viagem" onBack={navigation.goBack} />
 
             <View style={styles.container}>
-                <Text style={styles.subtitle}>Viagem para {viagem.cidade_destino}</Text>
+                <Text style={styles.subtitle}>Viagem para {viagem.enderecoDestino}</Text>
                 
                 {/* Info de capacidade */}
                 <View style={styles.capacityContainer}>

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { COLORS, SPACING, SHADOWS, LOGO_SIZES, FONT_SIZES, BORDER_RADIUS, AVATAR_SIZES } from "../../themes/tokens";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useAuth } from "../../contexts/AuthContext";
-import { ConfirmModal } from "../common/Modal";
+import { CustomModal } from "../common/Modal";
 
 export function HomeHeader() {
     const [open, setOpen] = useState(false);
@@ -26,16 +26,21 @@ export function HomeHeader() {
             <View style={styles.bottom_styles}>
                 <View style={styles.greetingsContainer}>
                     <Text style={styles.greetingsText}>Olá,</Text>
-                    <Text style={styles.userNameText}>{user?.nome_completo}</Text>
+                    <Text style={styles.userNameText}>{user?.nomeCompleto}</Text>
                 </View>
                 <TouchableOpacity>
-                    <MaterialIcons name="logout" size={AVATAR_SIZES.sm} color={COLORS.error} onPress={() => setOpen(true)} />
+                    <MaterialIcons
+                        name="logout"
+                        size={AVATAR_SIZES.sm}
+                        color={COLORS.error}
+                        onPress={() => setOpen(true)}
+                    />
                 </TouchableOpacity>
             </View>
 
-            <ConfirmModal
+            <CustomModal
                 visible={open}
-                icon={() => <MaterialIcons name="logout" size={AVATAR_SIZES.md} color={COLORS.error}/>}
+                icon={() => <MaterialIcons name="logout" size={AVATAR_SIZES.md} color={COLORS.error} />}
                 title="Sair da conta ?"
                 confirmText="Sair"
                 cancelText="Cancelar"

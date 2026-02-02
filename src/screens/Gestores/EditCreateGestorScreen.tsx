@@ -28,7 +28,7 @@ export default function EditCreateGestorScreen({ navigation, route }: Props) {
         formState: { errors, isDirty },
     } = useForm<User>({
         defaultValues: {
-            nome_completo: "",
+            nomeCompleto: "",
             cpf: "",
             matricula: "",
             email: "",
@@ -42,7 +42,7 @@ export default function EditCreateGestorScreen({ navigation, route }: Props) {
         if (!usuario) return;
 
         reset({
-            nome_completo: usuario.nome_completo,
+            nomeCompleto: usuario.nomeCompleto,
             cpf: usuario.cpf,
             matricula: usuario.matricula,
             email: usuario.email,
@@ -87,7 +87,7 @@ export default function EditCreateGestorScreen({ navigation, route }: Props) {
                 <ScrollView contentContainerStyle={styles.formContainer}>
                     <Controller
                         control={control}
-                        name="nome_completo"
+                        name="nomeCompleto"
                         rules={{ required: "Nome é obrigatório" }}
                         render={({ field }) => (
                             <CustomInput
@@ -99,7 +99,7 @@ export default function EditCreateGestorScreen({ navigation, route }: Props) {
                                 onSubmitEditing={() => setFocus("cpf")}
                                 returnKeyType="next"
                                 submitBehavior="submit"
-                                errorStr={errors.nome_completo?.message}
+                                errorStr={errors.nomeCompleto?.message}
                             />
                         )}
                     />

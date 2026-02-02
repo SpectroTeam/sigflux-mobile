@@ -58,7 +58,7 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
 
     const MOTORISTA_OPTIONS = useMemo(() => (
         (motoristas ?? []).map(m => ({
-            label: `${m.nome} - ${m.matricula}`,
+            label: `${m.nomeCompleto} - ${m.matricula}`,
             value: m.id,
         }))
     ), [motoristas]);
@@ -72,8 +72,9 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
     } = useForm<ViagemFormExtended>({
         defaultValues: {
             tipo: "Ida",
-            cidade_destino: "",
-            data_hora: new Date(),
+            enderecoDestino: "",
+            localSaida: "",
+            dataHora: new Date(),
             veiculoId: "",
             motoristaId: "",
             status: VIAGEM_STATUS.PLANEJADA,
@@ -85,9 +86,9 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
 
         reset({
             tipo: viagem.tipo,
-            cidade_destino: viagem.cidade_destino,
-            data_hora: viagem.data_hora
-                ? new Date(viagem.data_hora)
+            enderecoDestino: viagem.enderecoDestino,
+            dataHora: viagem.dataHora
+                ? new Date(viagem.dataHora)
                 : undefined,
             veiculoId: viagem.veiculo[0]?.id ?? "",
             motoristaId: viagem.motorista[0]?.id ?? "",
@@ -109,7 +110,7 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
             if (!form.veiculoId) throw new Error("Selecione um veículo");
             if (!form.motoristaId) throw new Error("Selecione um motorista");
 
-            if (!form.data_hora) {
+            if (!form.dataHora) {
                 throw new Error("Data da viagem obrigatória");
             }
 
@@ -121,8 +122,9 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
 
             const payload: CreateViagemDto = {
                 tipo: form.tipo,
-                cidade_destino: form.cidade_destino,
-                data_hora: form.data_hora.toISOString(),
+                enderecoDestino: form.enderecoDestino,
+                dataHora: form.dataHora.toISOString(),
+                localSaida: form.localSaida,
                 veiculo: [veiculo],
                 motorista: [motorista],
                 passageiros: viagem?.passageiros ?? [],
@@ -177,16 +179,33 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
                     />
                     <Controller
                         control={control}
-                        name="cidade_destino"
-                        rules={{ required: "Cidade de destino é obrigatório" }}
+                        name="enderecoDestino"
+                        rules={{ required: "Endereço de destino é obrigatório" }}
                         render={({ field: { value, onChange, onBlur } }) => (
                             <CustomInput
                                 value={value}
                                 onChangeText={onChange}
                                 style={styles.input}
-                                label="Cidade de destino"
+                                label="Endereço de destino"
                                 placeholder="João Pessoa"
-                                errorStr={errors.cidade_destino?.message}
+                                errorStr={errors.enderecoDestino?.message}
+                                editable={!isViagemConcluida}
+                            />
+                        )}
+                    />
+
+                    <Controller 
+                        control={control}
+                        name="localSaida"
+                        rules={{ required: "Local de saída é obrigatório" }}
+                        render={({ field: { value, onChange, onBlur } }) => (
+                            <CustomInput
+                                value={value}
+                                onChangeText={onChange}
+                                style={styles.input}
+                                label="Local de saída"
+                                placeholder="Centro"
+                                errorStr={errors.localSaida?.message}
                                 editable={!isViagemConcluida}
                             />
                         )}
@@ -194,7 +213,7 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
 
                     <Controller
                         control={control}
-                        name="data_hora"
+                        name="dataHora"
                         rules={{ required: "Data obrigatória" }}
                         render={({ field: { value, onChange } }) => (
                             <DateInput
@@ -207,9 +226,9 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
                         )}
                     />
 
-                    {errors.data_hora && (
+                    {errors.dataHora && (
                         <Text style={{ color: "red" }}>
-                            {errors.data_hora.message}
+                            {errors.dataHora.message}
                         </Text>
                     )}
 
@@ -253,7 +272,7 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
                             render={({ field }) => (
                                 <DropdownComponent
                                     label="Status"
-                                    value={field.value}
+                                    value={field.value || "N/A"}
                                     data={VIAGEM_STATUS_OPTIONS.map(opt => ({ 
                                         label: opt.label, 
                                         value: opt.value 

@@ -36,7 +36,7 @@ export function AvailablePacienteCard({ paciente, lugaresDisponiveis, onAdd }: P
 
     return (
         <GenericCardTest
-            title={paciente.nome}
+            title={paciente.nomeCompleto}
             fields={[{ label: "CPF", value: paciente.cpf }]}
             primaryButton={{
                 title: "Adicionar",

@@ -54,7 +54,7 @@ export default function EditCreateAcompanhanteScreen({ navigation, route }: Prop
         reset,
     } = useForm<CreateAcompanhanteDto>({
         defaultValues: {
-            nome: "",
+            nomeCompleto: "",
             cpf: "",
             telefone: "",
             parentesco: "",
@@ -84,7 +84,7 @@ export default function EditCreateAcompanhanteScreen({ navigation, route }: Prop
         acompanhanteIdRef.current = acompanhante.id;
 
         reset({
-            nome: acompanhante.nome,
+            nomeCompleto: acompanhante.nomeCompleto,
             cpf: acompanhante.cpf,
             telefone: acompanhante.telefone,
             parentesco: acompanhante.parentesco,
@@ -131,7 +131,7 @@ export default function EditCreateAcompanhanteScreen({ navigation, route }: Prop
 
             <View style={styles.container}>
                 <View style={styles.headerInfo}>
-                    <Text style={styles.title}>{paciente.nome}</Text>
+                    <Text style={styles.title}>{paciente.nomeCompleto}</Text>
                     <Text style={styles.subtitle}>CPF: {paciente.cpf}</Text>
                 </View>
 
@@ -143,7 +143,7 @@ export default function EditCreateAcompanhanteScreen({ navigation, route }: Prop
                     <ScrollView contentContainerStyle={styles.formContainer}>
                         <Controller
                             control={control}
-                            name="nome"
+                            name="nomeCompleto"
                             rules={{ required: "Nome é obrigatório" }}
                             render={({ field: { value, onChange, onBlur } }) => (
                                 <CustomInput
@@ -156,7 +156,7 @@ export default function EditCreateAcompanhanteScreen({ navigation, route }: Prop
                                     onSubmitEditing={() => setFocus("cpf")}
                                     returnKeyType="next"
                                     submitBehavior="submit"
-                                    errorStr={errors.nome?.message}
+                                    errorStr={errors.nomeCompleto?.message}
                                 />
                             )}
                         />
@@ -230,7 +230,7 @@ export default function EditCreateAcompanhanteScreen({ navigation, route }: Prop
                         <CustomButton
                             title={isEditMode ? "Salvar" : "Adicionar"}
                             style={styles.button}
-                            onPress={handleSubmit(submitAcompanhante)}
+                            onPress={handleSubmit((data) => submitAcompanhante(data))}
                             loading={addAcompanhante.isPending || updateAcompanhante.isPending}
                             disabled={addAcompanhante.isPending || updateAcompanhante.isPending}
                         />

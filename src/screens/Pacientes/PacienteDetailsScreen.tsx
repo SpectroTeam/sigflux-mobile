@@ -37,13 +37,13 @@ export default function PacienteDetailsScreen({ navigation, route }: Props) {
                 <Text style={styles.title}>Dados pessoais</Text>
 
                 <View style={styles.textContainer}>
-                    <LabelValue label="Nome: " value={paciente.nome} />
+                    <LabelValue label="Nome: " value={paciente.nomeCompleto} />
                     <View style={styles.cpfrgContainer}>
                         <LabelValue label="CPF: " value={paciente.cpf} />
                         <LabelValue label="RG: " value={paciente.rg} />
                     </View>
                     <LabelValue label="Endereço: " value={paciente.endereco} />
-                    <LabelValue label="Data de Nascimento: " value={formatDateBR(paciente.birthDate)} />
+                    <LabelValue label="Data de Nascimento: " value={formatDateBR(paciente.dataNascimento)} />
                     <LabelValue label="Telefone: " value={paciente.telefone} />
                     <LabelValue label="Status: " value={paciente.status} />
                 </View>

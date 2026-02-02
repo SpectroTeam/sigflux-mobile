@@ -6,7 +6,7 @@ import { Header } from "../../components/common/Header";
 import { SearchBar } from "../../components/common/SearchBar";
 import { GenericCard } from "../../components/common/GenericCard";
 import { CustomButton } from "../../components/common/CustomButton";
-import { ConfirmModal } from "../../components/common/Modal";
+import { CustomModal } from "../../components/common/Modal";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Veiculo, VeiculoStackParamList } from "../../types";
 import { useSnackbar } from "../../contexts/SnackBarContext";
@@ -108,7 +108,7 @@ export default function ListVeiculoSreen({ navigation }: Props) {
                 )}
             </View>
 
-            <ConfirmModal
+            <CustomModal
                 visible={modalVisible}
                 message={`Tem certeza de que deseja excluir o veículo ${selectedVeiculo.placa}? Esta ação não pode ser desfeita.`}
                 confirmText="Excluir"

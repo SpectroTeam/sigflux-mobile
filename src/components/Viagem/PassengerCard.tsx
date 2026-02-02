@@ -23,10 +23,12 @@ export function PassengerCard({ passageiro, isEditing, onEdit, onSave, onRemove,
         { label: "CPF", value: passageiro.paciente.cpf },
     ];
 
+    console.log("Passageiro:", passageiro);
+
     if (!isEditing && passageiro.acompanhante) {
         fields.push({
             label: "Acompanhante",
-            value: `${passageiro.acompanhante.nome} (${passageiro.acompanhante.parentesco})`,
+            value: `${passageiro.acompanhante.nomeCompleto} (${passageiro.acompanhante.parentesco})`,
         });
     }
 
@@ -36,7 +38,7 @@ export function PassengerCard({ passageiro, isEditing, onEdit, onSave, onRemove,
 
     return (
         <GenericCardTest
-            title={passageiro.paciente.nome}
+            title={passageiro.paciente.nomeCompleto}
             fields={fields}
             primaryButton={!disabled ? {
                 title: isEditing ? "Salvar" : "Editar",

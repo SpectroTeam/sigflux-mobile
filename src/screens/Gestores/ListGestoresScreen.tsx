@@ -6,7 +6,7 @@ import { Header } from "../../components/common/Header";
 import { SearchBar } from "../../components/common/SearchBar";
 import { GenericCard } from "../../components/common/GenericCard";
 import { CustomButton } from "../../components/common/CustomButton";
-import { ConfirmModal } from "../../components/common/Modal";
+import { CustomModal } from "../../components/common/Modal";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { User, UserStackParamList} from "../../types";
 import { useSnackbar } from "../../contexts/SnackBarContext";
@@ -28,7 +28,7 @@ export default function ListGestoresScreen({ navigation }: Props) {
 
     const filteredUsuarios = usuarios.filter(
         (usuario) =>
-            usuario.nome_completo.toLowerCase().includes(searchQuery.toLowerCase()) || usuario.cpf.includes(searchQuery),
+            usuario.nomeCompleto.toLowerCase().includes(searchQuery.toLowerCase()) || usuario.cpf.includes(searchQuery),
     );
 
     function handleNewGestor() {
@@ -42,7 +42,7 @@ export default function ListGestoresScreen({ navigation }: Props) {
     function handleDeletePress(usuario: User) {
         setSelectedUsuario(() => ({
             id: usuario.id,
-            nome: usuario.nome_completo,
+            nome: usuario.nomeCompleto,
         }));
         setModalVisible(true);
     }
@@ -94,7 +94,7 @@ export default function ListGestoresScreen({ navigation }: Props) {
                                     { label: "CPF", value: item.cpf },
                                     { label: "Matrícula", value: item.matricula },
                                 ]}
-                                title={item.nome_completo}
+                                title={item.nomeCompleto}
                                 onPress={() => handleGestorPress(item.id)}
                                 editButton={true}
                                 trashButton={true}
@@ -108,7 +108,7 @@ export default function ListGestoresScreen({ navigation }: Props) {
                 )}
             </View>
 
-            <ConfirmModal
+            <CustomModal
                 visible={modalVisible}
                 message={`Tem certeza de que deseja excluir o gestor ${selectedUsuario.nome}? Esta ação não pode ser desfeita.`}
                 confirmText="Excluir"

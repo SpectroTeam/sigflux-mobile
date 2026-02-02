@@ -33,12 +33,12 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
         formState: { errors, isDirty },
     } = useForm<PacienteForm>({
         defaultValues: {
-            nome: "",
+            nomeCompleto: "",
             cpf: "",
             rg: "",
             endereco: "",
             telefone: "",
-            birthDate: new Date(2000, 0, 1),
+            dataNascimento: new Date(2000, 0, 1),
         },
     });
 
@@ -46,12 +46,12 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
         if (!paciente) return;
 
         reset({
-            nome: paciente.nome,
+            nomeCompleto: paciente.nomeCompleto,
             cpf: paciente.cpf,
             rg: paciente.rg,
             endereco: paciente.endereco,
             telefone: paciente.telefone,
-            birthDate: new Date(paciente.birthDate),
+            dataNascimento: new Date(paciente.dataNascimento),
             status: paciente.status,
         });
     }, [paciente, reset]);
@@ -72,7 +72,7 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
         try {
             const formattedData = {
                 ...data,
-                birthDate: data.birthDate.toISOString(),
+                dataNascimento: data.dataNascimento.toISOString(),
             };
 
             const response = await operation(formattedData);
@@ -101,7 +101,7 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
                 <ScrollView contentContainerStyle={styles.formContainer}>
                     <Controller
                         control={control}
-                        name="nome"
+                        name="nomeCompleto"
                         rules={{ required: "Nome é obrigatório" }}
                         render={({ field: { ref, onChange, value } }) => (
                             <CustomInput
@@ -114,7 +114,7 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
                                 onSubmitEditing={() => setFocus("cpf")}
                                 returnKeyType="next"
                                 submitBehavior="submit"
-                                errorStr={errors.nome?.message}
+                                errorStr={errors.nomeCompleto?.message}
                             />
                         )}
                     />
@@ -211,7 +211,7 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
                                 onChangeText={(value) => cleanChange(value, formatPhone, onChange)}
                                 inputMode="tel"
                                 autoComplete="tel"
-                                onSubmitEditing={() => setFocus("birthDate")}
+                                onSubmitEditing={() => setFocus("dataNascimento")}
                                 returnKeyType="next"
                                 submitBehavior="blurAndSubmit"
                                 errorStr={errors.telefone?.message}
@@ -224,7 +224,7 @@ export default function EditCreatePacienteScreen({ navigation, route }: Props) {
                         <View style={styles.half}>
                             <Controller
                                 control={control}
-                                name="birthDate"
+                                name="dataNascimento"
                                 render={({ field: { value, onChange } }) => (
                                     <DateInput
                                         label="Data Nascimento"

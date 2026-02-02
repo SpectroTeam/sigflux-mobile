@@ -11,7 +11,7 @@ import {
     CreateCasaApoioDto,
     UpdateCasaApoioDto,
 } from "../../types";
-import { useCasaApoioById, useCasaApoioMutations } from "../../hooks/useCasasApoio";
+import { useCasaDeAPoioeById, useCasaApoioMutations } from "../../hooks/useCasasApoio";
 
 type CasaApoioForm = {
     nome: string;
@@ -31,7 +31,7 @@ type Props = NativeStackScreenProps<
 
 export default function EditCreateCasaApoioScreen({ navigation, route }: Props) {
     const { createCasaApoio, updateCasaApoio, loading } = useCasaApoioMutations();
-    const { casaApoio } = useCasaApoioById(route.params?.casaApoioId || "");
+    const { data: casaApoio } = useCasaDeAPoioeById(route.params?.casaApoioId || "");
     const { showSnackbar } = useSnackbar();
 
     const {
@@ -64,7 +64,7 @@ export default function EditCreateCasaApoioScreen({ navigation, route }: Props) 
         try {
             let response;
             if (casaApoio) {
-                response = await updateCasaApoio(casaApoio.id, data as UpdateCasaApoioDto);
+                response = await updateCasaApoio({id: casaApoio.id, data: data as UpdateCasaApoioDto});
             } else {
                 response = await createCasaApoio(data as CreateCasaApoioDto);
             }

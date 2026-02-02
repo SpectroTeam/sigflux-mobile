@@ -13,7 +13,7 @@ export function AcompanhanteDropdown({ value, onSelect, pacienteId }: Acompanhan
 
     const acompanhantesData =
         paciente?.acompanhantes?.map((acompanhante) => ({
-            label: `${acompanhante.nome} (${acompanhante.parentesco})`,
+            label: `${acompanhante.nomeCompleto} (${acompanhante.parentesco})`,
             value: acompanhante.id,
         })) || [];
 

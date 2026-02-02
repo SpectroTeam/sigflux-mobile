@@ -16,10 +16,10 @@ type Props = NativeStackScreenProps<VeiculoStackParamList, "EditCreateVeiculo">;
 type VeiculoForm = {
     placa: string;
     chassi: string;
-    modelo: string,
-    ano: number,
-    cor: string,
-    capacidade: number
+    modelo: string;
+    ano: number;
+    cor: string;
+    capacidade: number;
 };
 
 export default function EditCreateVeiculoScreen({ navigation, route }: Props) {
@@ -101,7 +101,6 @@ export default function EditCreateVeiculoScreen({ navigation, route }: Props) {
                                 returnKeyType="next"
                                 submitBehavior="submit"
                                 errorStr={errors.placa?.message}
-                                
                             />
                         )}
                     />
@@ -156,7 +155,7 @@ export default function EditCreateVeiculoScreen({ navigation, route }: Props) {
                                 label="Ano"
                                 placeholder="2025"
                                 value={field.value.toString()}
-                                onChangeText={field.onChange}
+                                onChangeText={(text) => field.onChange(text.replace(/[^0-9]/g, ""))}
                                 onSubmitEditing={() => setFocus("cor")}
                                 returnKeyType="next"
                                 submitBehavior="submit"
@@ -209,9 +208,7 @@ export default function EditCreateVeiculoScreen({ navigation, route }: Props) {
                         title={!!veiculo ? "Atualizar" : "Adicionar"}
                         onPress={handleSubmit((data) => onSubmit(data))}
                         loading={createVeiculo.isPending}
-                        disabled={
-                            createVeiculo.isPending || updateVeiculo.isPending || (!!veiculo ? !isDirty : false)
-                        }
+                        disabled={createVeiculo.isPending || updateVeiculo.isPending || (!!veiculo ? !isDirty : false)}
                     />
                 </ScrollView>
             </KeyboardAvoidingView>

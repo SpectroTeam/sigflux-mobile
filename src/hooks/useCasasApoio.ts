@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as casaApoioService from "../services/casa_apoio_service";
 import { CasaApoio, CreateCasaApoioDto, UpdateCasaApoioDto } from "../types";
 import { REACT_QUERY_KEYS } from "../constants";
@@ -58,45 +58,95 @@ export function useCasasApoio() {
 //     };
 // }
 
-// Hook para criar, atualizar e deletar casas de apoio
 export function useCasaApoioMutations() {
-    const [loading, setLoading] = useState(false);
+    const queryClient = useQueryClient();
 
-    const createCasaApoio = useCallback(async (data: CreateCasaApoioDto) => {
-        setLoading(true);
-        const newCasa = await casaApoioService.create(data);
-        setLoading(false);
-        return newCasa;
-    }, []);
+    const createMutation = useMutation({
+        mutationFn: (data: CreateCasaApoioDto) =>
+            casaApoioService.create(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [CASA_APOIO] });
+        },
+    });
 
-    const updateCasaApoio = useCallback(async (id: string, data: UpdateCasaApoioDto) => {
-        setLoading(true);
-        const updatedCasa = await casaApoioService.update(id, data);
-        setLoading(false);
-        return updatedCasa;
-    }, []);
+    const updateMutation = useMutation({
+        mutationFn: ({ id, data }: { id: string; data: UpdateCasaApoioDto }) =>
+            casaApoioService.update(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [CASA_APOIO] });
+        },
+    });
 
-    const deleteCasaApoio = useCallback(async (id: string) => {
-        setLoading(true);
-        await casaApoioService.deleteById(id);
-        setLoading(false);
-    }, []);
+    const deleteMutation = useMutation({
+        mutationFn: (id: string) =>
+            casaApoioService.deleteById(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [CASA_APOIO] });
+        },
+    });
 
     return {
-        loading,
-        createCasaApoio,
-        updateCasaApoio,
-        deleteCasaApoio,
+        createCasaApoio: createMutation.mutateAsync,
+        updateCasaApoio: updateMutation.mutateAsync,
+        deleteCasaApoio: deleteMutation.mutateAsync,
+
+        loading:
+            createMutation.isPending ||
+            updateMutation.isPending ||
+            deleteMutation.isPending,
     };
 }
 
-export function useCasaApoioById(id?: string) {
-    const { data: casasApoio, isLoading } = useCasasApoio();
-
-    const casaApoio = casasApoio?.find((c) => c.id === id);
+export function useCasaDeAPoioeById(id?: string) {
+    const { data: pacientes } = useCasasApoio();
+    const paciente = pacientes?.find((p) => p.id === id);
 
     return {
-        casaApoio,
-        isLoading,
+        data: paciente,
+        isLoading: !pacientes,
     };
 }
+
+
+// // Hook para criar, atualizar e deletar casas de apoio
+// export function useCasaApoioMutations() {
+//     const [loading, setLoading] = useState(false);
+//
+//     const createCasaApoio = useCallback(async (data: CreateCasaApoioDto) => {
+//         setLoading(true);
+//         const newCasa = await casaApoioService.create(data);
+//         setLoading(false);
+//         return newCasa;
+//     }, []);
+//
+//     const updateCasaApoio = useCallback(async (id: string, data: UpdateCasaApoioDto) => {
+//         setLoading(true);
+//         const updatedCasa = await casaApoioService.update(id, data);
+//         setLoading(false);
+//         return updatedCasa;
+//     }, []);
+//
+//     const deleteCasaApoio = useCallback(async (id: string) => {
+//         setLoading(true);
+//         await casaApoioService.deleteById(id);
+//         setLoading(false);
+//     }, []);
+//
+//     return {
+//         loading,
+//         createCasaApoio,
+//         updateCasaApoio,
+//         deleteCasaApoio,
+//     };
+// }
+//
+// export function useCasaApoioById(id?: string) {
+//     const { data: casasApoio, isLoading } = useCasasApoio();
+//
+//     const casaApoio = casasApoio?.find((c) => c.id === id);
+//
+//     return {
+//         casaApoio,
+//         isLoading,
+//     };
+// }

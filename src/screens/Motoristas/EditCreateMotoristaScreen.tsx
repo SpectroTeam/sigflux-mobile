@@ -11,7 +11,7 @@ import { CreateMotoristaDto, UpdateMotoristaDto } from "../../types";
 import { useMotoristaById, useMotoristaMutations } from "../../hooks/useMotoristas";
 
 type MotoristaForm = {
-    nome: string;
+    nomeCompleto: string;
     telefone: string;
     matricula: string;
 };
@@ -36,7 +36,7 @@ export default function EditCreateMotoristaScreen({ navigation, route }: Props) 
         formState: { errors, isDirty },
     } = useForm<MotoristaForm>({
         defaultValues: {
-            nome: "",
+            nomeCompleto: "",
             telefone: "",
             matricula: "",
         },
@@ -46,7 +46,7 @@ export default function EditCreateMotoristaScreen({ navigation, route }: Props) 
         if (!motorista) return;
 
         reset({
-            nome: motorista.nome,
+            nomeCompleto: motorista.nomeCompleto,
             telefone: motorista.telefone,
             matricula: motorista.matricula,
         });
@@ -92,14 +92,14 @@ export default function EditCreateMotoristaScreen({ navigation, route }: Props) 
                 <ScrollView contentContainerStyle={styles.formContainer}>
                     <Controller
                         control={control}
-                        name="nome"
+                        name="nomeCompleto"
                         rules={{ required: "Nome é obrigatório" }}
                         render={({ field }) => (
                             <CustomInput
                                 label="Nome"
                                 value={field.value}
                                 onChangeText={field.onChange}
-                                errorStr={errors.nome?.message}
+                                errorStr={errors.nomeCompleto?.message}
                                 onSubmitEditing={() => setFocus("telefone")}
                             />
                         )}

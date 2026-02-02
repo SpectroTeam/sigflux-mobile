@@ -5,11 +5,13 @@ export const COLORS = {
     inputBackground: "#F1F1F1",
     link: "#0003c6",
     surface: "#FFFFFF",
+    white: "#FFFFFF",
     text: {
         primary: "#1A1A1A",
         secondary: "#6A4C4C",
         light: "#9CA3AF",
     },
+    textSecondary: "#6A4C4C",
     border: "#ccc",
     error: "#EF4444",
     success: "#00C684",

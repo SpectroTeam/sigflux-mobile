@@ -6,7 +6,7 @@ import { Header } from "../../components/common/Header";
 import { SearchBar } from "../../components/common/SearchBar";
 import { GenericCard } from "../../components/common/GenericCard";
 import { CustomButton } from "../../components/common/CustomButton";
-import { ConfirmModal } from "../../components/common/Modal";
+import { CustomModal } from "../../components/common/Modal";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { Motorista, MotoristaStackParamList } from "../../types";
@@ -28,7 +28,7 @@ export default function ListMotoristasScreen({ navigation }: Props) {
     });
 
     const filteredMotoristas = motoristas.filter((m) =>
-        m.nome.toLowerCase().includes(searchQuery.toLowerCase()),
+        m.nomeCompleto.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
     function handleNewMotorista() {
@@ -40,7 +40,7 @@ export default function ListMotoristasScreen({ navigation }: Props) {
     }
 
     function handleDeletePress(motorista: Motorista) {
-        setSelectedMotorista({ id: motorista.id, nome: motorista.nome });
+        setSelectedMotorista({ id: motorista.id, nome: motorista.nomeCompleto });
         setModalVisible(true);
     }
 
@@ -100,7 +100,7 @@ export default function ListMotoristasScreen({ navigation }: Props) {
                         keyExtractor={(item) => item.id}
                         renderItem={({ item }) => (
                             <GenericCard
-                                title={item.nome}
+                                title={item.nomeCompleto}
                                 fields={[
                                     { label: "Matrícula", value: item.matricula },
                                 ]}
@@ -117,7 +117,7 @@ export default function ListMotoristasScreen({ navigation }: Props) {
                 )}
             </View>
 
-            <ConfirmModal
+            <CustomModal
                 visible={modalVisible}
                 message={`Tem certeza de que deseja excluir o motorista ${selectedMotorista.nome}? Esta ação não pode ser desfeita.`}
                 confirmText="Excluir"

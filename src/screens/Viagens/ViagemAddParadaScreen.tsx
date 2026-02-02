@@ -108,7 +108,7 @@ export default function ViagemAddParadaScreen({ navigation, route }: Props) {
 
             <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : "height"}>
                 <ScrollView contentContainerStyle={styles.formContainer}>
-                    <Text style={styles.subtitle}>Viagem para {viagem.cidade_destino}</Text>
+                    <Text style={styles.subtitle}>Viagem para {viagem.enderecoDestino}</Text>
 
                     <Text style={styles.paradasInfo}>Paradas atuais: {viagem.paradas.length}</Text>
 

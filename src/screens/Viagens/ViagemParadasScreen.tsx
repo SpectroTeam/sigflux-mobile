@@ -97,7 +97,7 @@ export default function ViagemParadasScreen({ navigation, route }: Props) {
             <Header title="Paradas da Viagem" onBack={() => navigation.goBack()} />
 
             <View style={styles.container}>
-                <Text style={styles.subtitle}>Viagem para {viagem.cidade_destino}</Text>
+                <Text style={styles.subtitle}>Viagem para {viagem.enderecoDestino}</Text>
 
                 {isViagemConcluida && (
                     <View style={styles.warningContainer}>

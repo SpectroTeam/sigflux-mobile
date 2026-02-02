@@ -3,7 +3,7 @@ import { StyleSheet, ViewStyle, TextStyle } from "react-native";
 import { Button, ButtonProps as PaperButtonProps } from "react-native-paper";
 import { COLORS, SPACING, FONT_SIZES, BORDER_RADIUS } from "../../themes/tokens";
 
-type Variant = "primary" | "secondary" | "outline" | "danger";
+type Variant = "primary" | "secondary" | "outline" | "danger" | "success";
 type Size = "small" | "medium" | "large";
 
 interface CustomButtonProps extends Omit<PaperButtonProps, "children"> {
@@ -60,6 +60,11 @@ function getColors(variant: Variant) {
         case "danger":
             return {
                 background: COLORS.error,
+                text: COLORS.surface,
+            };
+        case "success":
+            return {
+                background: COLORS.success,
                 text: COLORS.surface,
             };
         // case "secondary":

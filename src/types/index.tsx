@@ -8,7 +8,7 @@ export type ViagemStatus = (typeof VIAGEM_STATUS)[keyof typeof VIAGEM_STATUS];
 
 export type User = {
     id: string;
-    nome_completo: string;
+    nomeCompleto: string;
     cpf: string;
     email: string;
     matricula: string;
@@ -32,7 +32,7 @@ export type ViagemPaciente = {
 
 export type Acompanhante = {
     id: string;
-    nome: string;
+    nomeCompleto: string;
     cpf: string;
     telefone: string;
     parentesco: string;
@@ -44,8 +44,9 @@ export type UpdateAcompanhanteDto = CreateAcompanhanteDto;
 export type Viagem = {
     id: string;
     tipo: "Ida" | "Volta";
-    cidade_destino: string;
-    data_hora: string;
+    enderecoDestino: string;
+    localSaida: string;
+    dataHora: string;
     veiculo: Veiculo[];
     motorista: Motorista[];
     passageiros: PacienteViagem[];
@@ -54,9 +55,10 @@ export type Viagem = {
 };
 
 export type ViagemForm = {
-    cidade_destino: string;
+    localSaida: string;
+    enderecoDestino: string;
     tipo: "Ida" | "Volta";
-    data_hora: Date | undefined;
+    dataHora: Date | undefined;
     veiculoId: string;
     motoristaId: string;
     passageiros: { cpf: string }[];
@@ -68,12 +70,12 @@ export type updateViagemDto = CreateViagemDto;
 
 export type Paciente = {
     id: string;
-    nome: string;
+    nomeCompleto: string;
     cpf: string;
     rg: string;
     endereco: string;
     telefone: string;
-    birthDate: string;
+    dataNascimento: string;
     status: PacienteStatus;
     historicoViagens?: ViagemPaciente[];
     documentosAnexados?: string[];
@@ -88,8 +90,8 @@ export type PacienteViagem = {
 export type CreatePacienteDto = Omit<Paciente, "id" | "historicoViagens" | "documentosAnexados">;
 export type UpdatePacienteDto = CreatePacienteDto;
 
-export type PacienteForm = Omit<CreatePacienteDto, "birthDate"> & {
-    birthDate: Date;
+export type PacienteForm = Omit<CreatePacienteDto, "dataNascimento"> & {
+    dataNascimento: Date;
 };
 
 export type Acomodacao = {
@@ -115,7 +117,7 @@ export type UpdateCasaApoioDto = CreateCasaApoioDto;
 
 export type Motorista = {
     id: string;
-    nome: string;
+    nomeCompleto: string;
     telefone: string;
     matricula: string;
     documentosAnexados?: string[];

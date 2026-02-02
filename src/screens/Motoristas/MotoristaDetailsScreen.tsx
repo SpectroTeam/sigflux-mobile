@@ -45,7 +45,7 @@ export default function MotoristaDetailsScreen({ navigation, route }: Props) {
                 <Text style={styles.title}>Dados do motorista</Text>
 
                 <View style={styles.textContainer}>
-                    <LabelValue label="Nome: " value={motorista.nome} />
+                    <LabelValue label="Nome: " value={motorista.nomeCompleto} />
                     <LabelValue label="Matrícula: " value={motorista.matricula} />
                     <LabelValue label="Telefone: " value={motorista.telefone} />
                 </View>

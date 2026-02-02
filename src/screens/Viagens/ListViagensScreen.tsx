@@ -5,7 +5,7 @@ import { AVATAR_SIZES, BORDER_RADIUS, COLORS, SPACING } from "../../themes/token
 import { Header } from "../../components/common/Header";
 import { SearchBar } from "../../components/common/SearchBar";
 import { CustomButton } from "../../components/common/CustomButton";
-import { ConfirmModal } from "../../components/common/Modal";
+import { CustomModal } from "../../components/common/Modal";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Viagem, ViagemStackParamList } from "../../types";
 import { useSnackbar } from "../../contexts/SnackBarContext";
@@ -31,14 +31,15 @@ export default function ListViagemSreen({ navigation }: Props) {
     const filteredViagens = viagens.filter((viagem) => {
         const query = searchQuery.toLowerCase().trim();
         if (!query) return true;
-        
-        const matchesCidade = viagem.cidade_destino.toLowerCase().includes(query);
+
+        const matchesCidade = viagem.enderecoDestino.toLowerCase().includes(query);
         const matchesStatus = viagem.status.toLowerCase().includes(query);
-        const matchesData = new Date(viagem.data_hora).toLocaleDateString("pt-BR").includes(query);
-        const matchesMotorista = viagem.motorista[0]?.nome.toLowerCase().includes(query);
-        const matchesVeiculo = viagem.veiculo[0]?.modelo.toLowerCase().includes(query) ||
+        const matchesData = new Date(viagem.dataHora).toLocaleDateString("pt-BR").includes(query);
+        const matchesMotorista = viagem.motorista[0]?.nomeCompleto.toLowerCase().includes(query);
+        const matchesVeiculo =
+            viagem.veiculo[0]?.modelo.toLowerCase().includes(query) ||
             viagem.veiculo[0]?.placa.toLowerCase().includes(query);
-        
+
         return matchesCidade || matchesStatus || matchesData || matchesMotorista || matchesVeiculo;
     });
 
@@ -56,11 +57,11 @@ export default function ListViagemSreen({ navigation }: Props) {
             showSnackbar("Não é possível excluir uma viagem concluída", "error", "short");
             return;
         }
-        
+
         setSelectedViagem(() => ({
             id: viagem.id,
-            cidade_destino: viagem.cidade_destino,
-            data_hora: new Date(viagem.data_hora),
+            cidade_destino: viagem.enderecoDestino,
+            data_hora: new Date(viagem.dataHora),
         }));
         setModalVisible(true);
     }
@@ -84,7 +85,11 @@ export default function ListViagemSreen({ navigation }: Props) {
             <Header title="Viagens" onBack={() => navigation.goBack()} />
 
             <View style={styles.content}>
-                <SearchBar value={searchQuery} onChangeText={setSearchQuery} placeholder="Pesquisar por cidade, status, data..." />
+                <SearchBar
+                    value={searchQuery}
+                    onChangeText={setSearchQuery}
+                    placeholder="Pesquisar por cidade, status, data..."
+                />
 
                 <CustomButton
                     size="small"
@@ -111,11 +116,11 @@ export default function ListViagemSreen({ navigation }: Props) {
                                 fields={[
                                     {
                                         label: "Data",
-                                        value: new Date(item.data_hora).toLocaleDateString("pt-BR"),
+                                        value: new Date(item.dataHora).toLocaleDateString("pt-BR"),
                                     },
                                     { label: "Status", value: item.status },
                                 ]}
-                                title={item.cidade_destino}
+                                title={item.enderecoDestino}
                                 primaryButton={{
                                     title: "Detalhes",
                                     icon: () => (
@@ -152,7 +157,7 @@ export default function ListViagemSreen({ navigation }: Props) {
                 )}
             </View>
 
-            <ConfirmModal
+            <CustomModal
                 visible={modalVisible}
                 message={`Tem certeza de que deseja excluir a viagem ${selectedViagem.cidade_destino} - ${selectedViagem.data_hora}? Esta ação não pode ser desfeita.`}
                 confirmText="Excluir"

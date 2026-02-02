@@ -5,7 +5,7 @@ import { SPACING, COLORS, FONT_SIZES, BORDER_RADIUS, AVATAR_SIZES } from "../../
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { CustomButton } from "../../components/common/CustomButton";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
-import { ConfirmModal } from "../../components/common/Modal";
+import { CustomModal } from "../../components/common/Modal";
 import { useEffect, useState } from "react";
 import { Acompanhante, PacienteStackParamList } from "../../types";
 import { usePacienteById, usePacienteMutations } from "../../hooks/usePacientes";
@@ -45,7 +45,7 @@ export default function ListAcompanhantesScreen({ navigation, route }: Props) {
     function handleDeletePress(paciente: Acompanhante) {
         setSelectedAcompanhante(() => ({
             id: paciente.id,
-            nome: paciente.nome,
+            nome: paciente.nomeCompleto,
         }));
         setModalVisible(true);
     }
@@ -70,7 +70,7 @@ export default function ListAcompanhantesScreen({ navigation, route }: Props) {
 
             <View style={{ flex: 1, paddingHorizontal: SPACING.xl }}>
                 <View style={styles.headerInfo}>
-                    <Text style={styles.title}>{paciente.nome}</Text>
+                    <Text style={styles.title}>{paciente.nomeCompleto}</Text>
                     <Text style={styles.subtitle}>CPF: {paciente.cpf}</Text>
                 </View>
 
@@ -91,7 +91,7 @@ export default function ListAcompanhantesScreen({ navigation, route }: Props) {
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <GenericCard
-                            title={item.nome}
+                            title={item.nomeCompleto}
                             fields={[
                                 { label: "CPF", value: item.cpf },
                                 { label: "Telefone", value: item.telefone },
@@ -113,7 +113,7 @@ export default function ListAcompanhantesScreen({ navigation, route }: Props) {
                 />
             </View>
 
-            <ConfirmModal
+            <CustomModal
                 visible={modalVisible}
                 message={`Tem certeza de que deseja excluir o acompanhante ${selectedAcompanhante.nome}? Esta ação não pode ser desfeita.`}
                 confirmText="Excluir"
