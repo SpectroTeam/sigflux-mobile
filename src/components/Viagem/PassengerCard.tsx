@@ -1,39 +1,61 @@
 import { Feather } from "@expo/vector-icons";
 import { COLORS } from "../../themes/tokens";
-import { Paciente } from "../../types";
+import { PacienteViagem } from "../../types";
 import { GenericCardTest } from "../common/GenericCardTest";
 import { AcompanhanteDropdown } from "./AcompanhanteDropdown";
+import { useState } from "react";
 
 type PassengerCardProps = {
-    paciente: Paciente;
+    passageiro: PacienteViagem;
     isEditing: boolean;
     onEdit(): void;
-    onSave(): void;
+    onSave(acompanhanteId?: string): void;
     onRemove(): void;
+    disabled?: boolean;
 };
 
-export function PassengerCard({ paciente, isEditing, onEdit, onSave, onRemove }: PassengerCardProps) {
+export function PassengerCard({ passageiro, isEditing, onEdit, onSave, onRemove, disabled = false }: PassengerCardProps) {
+    const [selectedAcompanhanteId, setSelectedAcompanhanteId] = useState<string>(
+        passageiro.acompanhante?.id || ""
+    );
+
     const fields = [
-        { label: "CPF", value: paciente.cpf },
-        !isEditing && { label: "Acompanhante", value: "Jose Mari Marin" },
-    ].filter(Boolean);
+        { label: "CPF", value: passageiro.paciente.cpf },
+    ];
+
+    if (!isEditing && passageiro.acompanhante) {
+        fields.push({
+            label: "Acompanhante",
+            value: `${passageiro.acompanhante.nome} (${passageiro.acompanhante.parentesco})`,
+        });
+    }
+
+    const handleSave = () => {
+        onSave(selectedAcompanhanteId || undefined);
+    };
 
     return (
         <GenericCardTest
-            title={paciente.nome}
+            title={passageiro.paciente.nome}
             fields={fields}
-            primaryButton={{
+            primaryButton={!disabled ? {
                 title: isEditing ? "Salvar" : "Editar",
                 icon: () => <Feather name="edit" size={20} color={COLORS.success} />,
-                action: isEditing ? onSave : onEdit,
-            }}
-            secondaryButton={{
+                action: isEditing ? handleSave : onEdit,
+            } : undefined}
+            secondaryButton={!disabled ? {
                 title: "Remover",
                 icon: () => <Feather name="trash-2" size={20} color={COLORS.error} />,
                 action: onRemove,
-            }}
+            } : undefined}
         >
-            {isEditing && <AcompanhanteDropdown />}
+            {isEditing && !disabled && (
+                <AcompanhanteDropdown
+                    value={selectedAcompanhanteId}
+                    onSelect={setSelectedAcompanhanteId}
+                    pacienteId={passageiro.paciente.id}
+                />
+            )}
         </GenericCardTest>
     );
 }

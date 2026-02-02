@@ -1,6 +1,6 @@
 import { ScrollView, Text, StyleSheet, View, KeyboardAvoidingView, Platform, Button } from "react-native";
 import { Header } from "../../components/common/Header";
-import { CreateViagemDto, ViagemForm, ViagemStackParamList } from "../../types";
+import { CreateViagemDto, ViagemForm, ViagemStackParamList, ViagemStatus } from "../../types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AVATAR_SIZES, COLORS, SPACING } from "../../themes/tokens";
 import { useForm, Controller } from "react-hook-form";
@@ -13,8 +13,13 @@ import DropdownComponent from "../../components/common/DropdownComponent";
 import { useMotoristas } from "../../hooks/useMotoristas";
 import CustomInput from "../../components/common/CustomInput";
 import DateInput from "../../components/common/DateInput";
+import { VIAGEM_STATUS, VIAGEM_STATUS_OPTIONS, VEICULOS_STATUS } from "../../constants";
 
 type Props = NativeStackScreenProps<ViagemStackParamList, "EditCreateViagens">;
+
+type ViagemFormExtended = ViagemForm & {
+    status?: ViagemStatus;
+};
 
 const TIPO_DE_VIAGEM = [
     { label: "Ida", value: "Ida" },
@@ -25,12 +30,31 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
     const { data: veiculos } = useVeiculos();
     const { data: motoristas } = useMotoristas();
 
-    const VEICULO_OPTIONS = useMemo(() => (
-        (veiculos ?? []).map(v => ({
-            label: `${v.modelo} - ${v.placa}`,
+    const viagemId = route.params?.viagemId;
+    const { viagem } = useViagemById(viagemId);
+    const { craeteViagem, updateViagem } = useViagemMutations();
+    const { showSnackbar } = useSnackbar();
+
+    const isViagemConcluida = viagem?.status === VIAGEM_STATUS.CONCLUIDA;
+
+    // Filtrar veículos disponíveis (inativos) ou incluir o veículo atual da viagem
+    const VEICULO_OPTIONS = useMemo(() => {
+        if (!veiculos) return [];
+        
+        const availableVeiculos = veiculos.filter(v => {
+            // Se estamos editando, incluir o veículo atual mesmo que esteja em viagem
+            if (viagem && v.id === viagem.veiculo[0]?.id) {
+                return true;
+            }
+            // Caso contrário, mostrar apenas veículos inativos
+            return v.status === VEICULOS_STATUS.INATIVO;
+        });
+        
+        return availableVeiculos.map(v => ({
+            label: `${v.modelo} - ${v.placa} (Cap: ${v.capacidade})`,
             value: v.id,
-        }))
-    ), [veiculos]);
+        }));
+    }, [veiculos, viagem]);
 
     const MOTORISTA_OPTIONS = useMemo(() => (
         (motoristas ?? []).map(m => ({
@@ -39,24 +63,20 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
         }))
     ), [motoristas]);
 
-    const viagemId = route.params?.viagemId;
-    const { viagem } = useViagemById(viagemId);
-    const { craeteViagem, updateViagem } = useViagemMutations();
-    const { showSnackbar } = useSnackbar();
-
     const {
         control,
         handleSubmit,
         watch,
         reset,
         formState: { errors, isDirty },
-    } = useForm<ViagemForm>({
+    } = useForm<ViagemFormExtended>({
         defaultValues: {
             tipo: "Ida",
             cidade_destino: "",
             data_hora: new Date(),
             veiculoId: "",
             motoristaId: "",
+            status: VIAGEM_STATUS.PLANEJADA,
         },
     });
 
@@ -65,11 +85,13 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
 
         reset({
             tipo: viagem.tipo,
+            cidade_destino: viagem.cidade_destino,
             data_hora: viagem.data_hora
                 ? new Date(viagem.data_hora)
                 : undefined,
             veiculoId: viagem.veiculo[0]?.id ?? "",
             motoristaId: viagem.motorista[0]?.id ?? "",
+            status: viagem.status,
         });
     }, [viagem, reset]);
 
@@ -78,7 +100,7 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
         onChange(cleanedValue);
     }
 
-    async function onSubmit(form: ViagemForm) {
+    async function onSubmit(form: ViagemFormExtended) {
         try {
             if (!veiculos || !motoristas) {
                 throw new Error("Dados não carregados");
@@ -103,9 +125,9 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
                 data_hora: form.data_hora.toISOString(),
                 veiculo: [veiculo],
                 motorista: [motorista],
-                passageiros: [],
-                paradas: [],
-                status: "Planejada",
+                passageiros: viagem?.passageiros ?? [],
+                paradas: viagem?.paradas ?? [],
+                status: form.status || VIAGEM_STATUS.PLANEJADA,
             };
 
             if (viagem) {
@@ -149,6 +171,7 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
                                 placeholder="Selecione o tipo de viagem"
                                 onSelect={field.onChange}
                                 errorStr={errors.tipo?.message}
+                                disabled={isViagemConcluida}
                             />
                         )}
                     />
@@ -164,6 +187,7 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
                                 label="Cidade de destino"
                                 placeholder="João Pessoa"
                                 errorStr={errors.cidade_destino?.message}
+                                editable={!isViagemConcluida}
                             />
                         )}
                     />
@@ -178,6 +202,7 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
                                 value={value}
                                 onChange={onChange}
                                 minimumDate={new Date()}
+                                disabled={isViagemConcluida}
                             />
                         )}
                     />
@@ -200,6 +225,7 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
                                 onSelect={field.onChange}
                                 placeholder="Selecione o veículo"
                                 errorStr={errors.veiculoId?.message}
+                                disabled={isViagemConcluida}
                             />
                         )}
                     />
@@ -215,17 +241,46 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
                                 onSelect={field.onChange}
                                 placeholder="Selecione o motorista"
                                 errorStr={errors.motoristaId?.message}
+                                disabled={isViagemConcluida}
                             />
                         )}
                     />
 
-                    <CustomButton
-                        title={viagem ? "Atualizar" : "Adicionar"}
-                        onPress={handleSubmit(onSubmit)}
-                        loading={craeteViagem.isPending || updateViagem.isPending}
-                        disabled={viagem ? !isDirty : false}
-                        style={styles.buttonStyle}
-                    />
+                    {viagem && (
+                        <Controller
+                            control={control}
+                            name="status"
+                            render={({ field }) => (
+                                <DropdownComponent
+                                    label="Status"
+                                    value={field.value}
+                                    data={VIAGEM_STATUS_OPTIONS.map(opt => ({ 
+                                        label: opt.label, 
+                                        value: opt.value 
+                                    }))}
+                                    onSelect={field.onChange}
+                                    placeholder="Selecione o status"
+                                    disabled={isViagemConcluida}
+                                />
+                            )}
+                        />
+                    )}
+
+                    {!isViagemConcluida && (
+                        <CustomButton
+                            title={viagem ? "Atualizar" : "Adicionar"}
+                            onPress={handleSubmit(onSubmit)}
+                            loading={craeteViagem.isPending || updateViagem.isPending}
+                            disabled={viagem ? !isDirty : false}
+                            style={styles.buttonStyle}
+                        />
+                    )}
+
+                    {isViagemConcluida && (
+                        <Text style={styles.warningText}>
+                            Esta viagem foi concluída e não pode ser editada.
+                        </Text>
+                    )}
                 </ScrollView>
             </KeyboardAvoidingView>
         </View>
@@ -264,5 +319,11 @@ const styles = StyleSheet.create({
     },
     half: {
         flex: 1,
+    },
+    warningText: {
+        fontFamily: "Josefin Sans",
+        color: COLORS.error,
+        textAlign: "center",
+        marginTop: SPACING.lg,
     },
 });

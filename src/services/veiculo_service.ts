@@ -20,3 +20,7 @@ export async function update(id: string, data: UpdateVeiculoDto): Promise<Veicul
 export async function deleteById(id: string): Promise<void> {
     return mockFunctions.deleteVeiculo(id);
 }
+
+export function getAvailableVeiculos(): Veiculo[] {
+    return mockFunctions.getAvailableVeiculos();
+}

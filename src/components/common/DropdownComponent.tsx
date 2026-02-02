@@ -27,6 +27,7 @@ type DropdownComponentProps = {
     placeholder?: string;
     value: string;
     errorStr?: string;
+    disabled?: boolean;
 
     containerStyle?: StyleProp<ViewStyle>;
     dropdownStyle?: StyleProp<ViewStyle>;
@@ -42,6 +43,7 @@ export default function DropdownComponent({
     placeholder = "Select Item",
     value,
     errorStr,
+    disabled = false,
     containerStyle,
     dropdownStyle,
     labelStyle,
@@ -49,14 +51,15 @@ export default function DropdownComponent({
     textStyle,
 }: DropdownComponentProps) {
     function handleSelect(item: DropdownItem) {
+        if (disabled) return;
         onSelect?.(item.value);
     }
 
     return (
-        <View style={containerStyle}>
+        <View style={[containerStyle, disabled && styles.disabledContainer]}>
             <View style={styles.labelContainer}>
                 {label && (
-                    <Text style={[styles.label, labelStyle]}>
+                    <Text style={[styles.label, labelStyle, disabled && styles.disabledText]}>
                         {label}
                     </Text>
                 )}
@@ -73,9 +76,9 @@ export default function DropdownComponent({
             </View>
 
             <Dropdown
-                style={[styles.dropdown, dropdownStyle]}
+                style={[styles.dropdown, dropdownStyle, disabled && styles.disabledDropdown]}
                 placeholderStyle={[styles.placeholderStyle, textStyle]}
-                selectedTextStyle={[styles.selectedTextStyle, textStyle]}
+                selectedTextStyle={[styles.selectedTextStyle, textStyle, disabled && styles.disabledText]}
                 itemTextStyle={[styles.selectedTextStyle, textStyle]}
                 data={data}
                 maxHeight={250}
@@ -84,6 +87,7 @@ export default function DropdownComponent({
                 placeholder={placeholder}
                 value={value}
                 onChange={handleSelect}
+                disable={disabled}
             />
         </View>
     );
@@ -130,5 +134,14 @@ const styles = StyleSheet.create({
         paddingVertical: SPACING.xs / 2,
         textAlign: "left",
         alignSelf: "flex-end",
+    },
+    disabledContainer: {
+        opacity: 0.6,
+    },
+    disabledDropdown: {
+        backgroundColor: COLORS.inputBackground,
+    },
+    disabledText: {
+        color: COLORS.text.light,
     },
 });

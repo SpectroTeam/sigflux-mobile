@@ -20,3 +20,35 @@ export async function update(id: string, data: updateViagemDto): Promise<Viagem>
 export async function deleteById(id: string): Promise<void> {
     return mockFunctions.deleteViagem(id);
 }
+
+export async function addPacienteToViagem(
+    viagemId: string,
+    pacienteId: string,
+    acompanhanteId?: string
+): Promise<Viagem> {
+    return mockFunctions.addPacienteToViagem(viagemId, pacienteId, acompanhanteId);
+}
+
+export async function removePacienteFromViagem(viagemId: string, pacienteId: string): Promise<Viagem> {
+    return mockFunctions.removePacienteFromViagem(viagemId, pacienteId);
+}
+
+export async function updatePacienteAcompanhante(
+    viagemId: string,
+    pacienteId: string,
+    acompanhanteId?: string
+): Promise<Viagem> {
+    return mockFunctions.updatePacienteAcompanhante(viagemId, pacienteId, acompanhanteId);
+}
+
+export async function addParadaToViagem(viagemId: string, casaApoioId: string): Promise<Viagem> {
+    return mockFunctions.addParadaToViagem(viagemId, casaApoioId);
+}
+
+export async function removeParadaFromViagem(viagemId: string, casaApoioId: string): Promise<Viagem> {
+    return mockFunctions.removeParadaFromViagem(viagemId, casaApoioId);
+}
+
+export function getCapacidadeDisponivel(viagemId: string): number {
+    return mockFunctions.getCapacidadeDisponivel(viagemId);
+}

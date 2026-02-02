@@ -1,4 +1,5 @@
-import { Veiculo, CreateVeiculoDto } from "../types";
+import { Veiculo, CreateVeiculoDto, VeiculoStatus } from "../types";
+import { VEICULOS_STATUS } from "../constants";
 
 // tempo maximo de delay em milisegundos
 const MAX_DELAY_MS = 1000;
@@ -70,15 +71,6 @@ export async function getVeiculos(): Promise<Veiculo[]> {
     return deepCopy(mockedVeiculos);
 }
 
-export async function getVeiculoById(veiculoId: string): Promise<Veiculo> {
-    await delay();
-    const veiculo = mockedVeiculos.find((v) => v.id === veiculoId);
-    if (!veiculo) {
-        throw new Error("Veiculo not found");
-    }
-    return deepCopy(veiculo);
-}
-
 export async function insertVeiculo(veiculo: CreateVeiculoDto): Promise<Veiculo> {
     await delay();
 
@@ -114,6 +106,23 @@ export async function updateVeiculo(VeiculoId: string, veiculoData: CreateVeicul
     };
 
     return deepCopy(mockedVeiculos[index]);
+}
+
+export function updateVeiculoStatus(veiculoId: string, status: VeiculoStatus): Veiculo {
+    const index = mockedVeiculos.findIndex((v) => v.id === veiculoId);
+    if (index === -1) {
+        throw new Error("Veiculo not found");
+    }
+    mockedVeiculos[index].status = status;
+    return deepCopy(mockedVeiculos[index]);
+}
+
+export function getAvailableVeiculos(): Veiculo[] {
+    return deepCopy(mockedVeiculos.filter((v) => v.status === VEICULOS_STATUS.INATIVO));
+}
+
+export function getVeiculoById(veiculoId: string): Veiculo | undefined {
+    return mockedVeiculos.find((v) => v.id === veiculoId);
 }
 
 async function delay(): Promise<void> {

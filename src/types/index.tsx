@@ -1,10 +1,10 @@
 import { PACIENTE_STATUS, VEICULOS_STATUS, SNACKBAR_DURATION, VIAGEM_STATUS } from "../constants";
 
-export type PacienteStatus = typeof PACIENTE_STATUS[keyof typeof PACIENTE_STATUS];
+export type PacienteStatus = (typeof PACIENTE_STATUS)[keyof typeof PACIENTE_STATUS];
 
-export type VeiculoStatus = typeof VEICULOS_STATUS[keyof typeof VEICULOS_STATUS];
+export type VeiculoStatus = (typeof VEICULOS_STATUS)[keyof typeof VEICULOS_STATUS];
 
-export type ViagemStatus = typeof VIAGEM_STATUS[keyof typeof VIAGEM_STATUS];
+export type ViagemStatus = (typeof VIAGEM_STATUS)[keyof typeof VIAGEM_STATUS];
 
 export type User = {
     id: string;
@@ -48,10 +48,10 @@ export type Viagem = {
     data_hora: string;
     veiculo: Veiculo[];
     motorista: Motorista[];
-    passageiros: Paciente[];
+    passageiros: PacienteViagem[];
     paradas: CasaApoio[];
     status: ViagemStatus;
-}
+};
 
 export type ViagemForm = {
     cidade_destino: string;
@@ -80,6 +80,11 @@ export type Paciente = {
     acompanhantes?: Acompanhante[];
 };
 
+export type PacienteViagem = {
+    paciente: Paciente;
+    acompanhante?: Acompanhante;
+};
+
 export type CreatePacienteDto = Omit<Paciente, "id" | "historicoViagens" | "documentosAnexados">;
 export type UpdatePacienteDto = CreatePacienteDto;
 
@@ -94,7 +99,7 @@ export type Acomodacao = {
     checkIn: string;
     checkOut?: string;
     disponibilidade: boolean;
-}
+};
 
 export type CasaApoio = {
     id: string;

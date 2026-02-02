@@ -10,6 +10,7 @@ interface DateInputProps {
     onChange: (date: Date | undefined) => void;
     maximumDate?: Date;
     minimumDate?: Date;
+    disabled?: boolean;
     containerStyle?: StyleProp<ViewStyle>;
     inputStyle?: StyleProp<ViewStyle>;
     textStyle?: StyleProp<TextStyle>;
@@ -23,12 +24,15 @@ const DateInput = forwardRef<any, DateInputProps>((props, ref) => {
         onChange,
         maximumDate,
         minimumDate,
+        disabled = false,
         containerStyle,
         inputStyle,
         textStyle,
     } = props;
 
     function openPicker() {
+        if (disabled) return;
+        
         DateTimePickerAndroid.open({
             value: value ?? new Date(),
             mode: "date",
@@ -46,11 +50,18 @@ const DateInput = forwardRef<any, DateInputProps>((props, ref) => {
     const displayValue = value ? value.toLocaleDateString("pt-BR") : placeholder;
 
     return (
-        <View style={containerStyle}>
-            {label && <Text style={styles.label}>{label}</Text>}
+        <View style={[containerStyle, disabled && styles.disabledContainer]}>
+            {label && <Text style={[styles.label, disabled && styles.disabledText]}>{label}</Text>}
 
-            <Pressable ref={ref} onPress={openPicker} style={[styles.input, inputStyle]}>
-                <Text style={[styles.value, !value && styles.placeholder, textStyle]}>{displayValue}</Text>
+            <Pressable 
+                ref={ref} 
+                onPress={openPicker} 
+                style={[styles.input, inputStyle, disabled && styles.disabledInput]}
+                disabled={disabled}
+            >
+                <Text style={[styles.value, !value && styles.placeholder, textStyle, disabled && styles.disabledText]}>
+                    {displayValue}
+                </Text>
             </Pressable>
         </View>
     );
@@ -81,6 +92,15 @@ const styles = StyleSheet.create({
         fontSize: FONT_SIZES.md,
     },
     placeholder: {
+        color: COLORS.text.light,
+    },
+    disabledContainer: {
+        opacity: 0.6,
+    },
+    disabledInput: {
+        backgroundColor: COLORS.inputBackground,
+    },
+    disabledText: {
         color: COLORS.text.light,
     },
 });

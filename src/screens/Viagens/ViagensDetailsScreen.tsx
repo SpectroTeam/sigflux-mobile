@@ -92,7 +92,7 @@ export default function ViagemDetailsScreen({ navigation, route }: Props) {
                         description={`${viagem.paradas.length} parada(s)`}
                         left={(props) => <List.Icon {...props} icon="map-marker-multiple-outline" />}
                         right={(props) => <List.Icon {...props} icon="chevron-right" />}
-                        onPress={() => console.log("navegar para paradas")}
+                        onPress={() => navigation.navigate("ViagemParadas", { viagemId })}
                         style={styles.listItem}
                         titleStyle={styles.listItemTitle}
                     />

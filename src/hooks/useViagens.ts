@@ -3,7 +3,7 @@ import * as viagemService from "../services/viagemService";
 import { Viagem, CreateViagemDto, updateViagemDto } from "../types";
 import { REACT_QUERY_KEYS } from "../constants";
 
-const { VIAGEM } = REACT_QUERY_KEYS;
+const { VIAGEM, VEICULOS, PACIENTES } = REACT_QUERY_KEYS;
 
 export function useViagem() {
     return useQuery<Viagem[]>({
@@ -15,6 +15,12 @@ export function useViagem() {
 export function useViagemMutations() {
     const queryClient = useQueryClient();
 
+    const invalidateAllRelated = () => {
+        queryClient.invalidateQueries({ queryKey: [VIAGEM] });
+        queryClient.invalidateQueries({ queryKey: [VEICULOS] });
+        queryClient.invalidateQueries({ queryKey: [PACIENTES] });
+    };
+
     const craeteViagem = useMutation({
         mutationFn: (data: CreateViagemDto) => viagemService.create(data),
         onSuccess: (newViagem) => {
@@ -22,6 +28,7 @@ export function useViagemMutations() {
                 ...old,
                 newViagem,
             ]);
+            invalidateAllRelated();
         },
     });
 
@@ -32,6 +39,7 @@ export function useViagemMutations() {
             queryClient.setQueryData<Viagem[]>([VIAGEM], (old = []) =>
                 old.map((v) => (v.id === updateViagem.id ? updateViagem : v)),
             );
+            invalidateAllRelated();
         },
     });
 
@@ -41,6 +49,27 @@ export function useViagemMutations() {
             queryClient.setQueryData<Viagem[]>([VIAGEM], (old = []) =>
                 old.filter((v) => v.id !== deletedId),
             );
+            invalidateAllRelated();
+        },
+    });
+
+    const addParada = useMutation({
+        mutationFn: (vars: { viagemId: string; casaApoioId: string }) =>
+            viagemService.addParadaToViagem(vars.viagemId, vars.casaApoioId),
+        onSuccess: (updatedViagem) => {
+            queryClient.setQueryData<Viagem[]>([VIAGEM], (old = []) =>
+                old.map((v) => (v.id === updatedViagem.id ? updatedViagem : v)),
+            );
+        },
+    });
+
+    const removeParada = useMutation({
+        mutationFn: (vars: { viagemId: string; casaApoioId: string }) =>
+            viagemService.removeParadaFromViagem(vars.viagemId, vars.casaApoioId),
+        onSuccess: (updatedViagem) => {
+            queryClient.setQueryData<Viagem[]>([VIAGEM], (old = []) =>
+                old.map((v) => (v.id === updatedViagem.id ? updatedViagem : v)),
+            );
         },
     });
 
@@ -48,6 +77,8 @@ export function useViagemMutations() {
         craeteViagem,
         updateViagem,
         deleteViagem,
+        addParada,
+        removeParada,
     };
 }
 

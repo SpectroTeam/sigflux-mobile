@@ -1,4 +1,5 @@
-import { AuthCredentials, AuthResponse, Paciente, CreatePacienteDto, User, Acompanhante, CreateAcompanhanteDto, CreateUserDto } from "../types";
+import { AuthCredentials, AuthResponse, Paciente, CreatePacienteDto, User, Acompanhante, CreateAcompanhanteDto, CreateUserDto, PacienteStatus } from "../types";
+import { PACIENTE_STATUS } from "../constants";
 
 // tempo maximo de delay em milisegundos
 const MAX_DELAY_MS = 1000;
@@ -299,6 +300,19 @@ export async function updatePaciente(pacienteId: string, pacienteData: CreatePac
     };
 
     return deepCopy(mockedPacientes[index]);
+}
+
+export function updatePacienteStatus(pacienteId: string, status: PacienteStatus): Paciente {
+    const index = mockedPacientes.findIndex((p) => p.id === pacienteId);
+    if (index === -1) {
+        throw new Error("Paciente not found");
+    }
+    mockedPacientes[index].status = status;
+    return deepCopy(mockedPacientes[index]);
+}
+
+export function getPacienteByIdSync(pacienteId: string): Paciente | undefined {
+    return mockedPacientes.find((p) => p.id === pacienteId);
 }
 
 export async function addAcompanhante(
