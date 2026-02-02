@@ -33,7 +33,6 @@ import EditCreateViagemScreen from "../screens/Viagens/EditCreateViagemScreen";
 import ViagemDetailsScreen from "../screens/Viagens/ViagensDetailsScreen";
 import ViagemPassageirosScreen from "../screens/Viagens/ViagemPassageirosScreen";
 import ViagemParadasScreen from "../screens/Viagens/ViagemParadasScreen";
-import ViagemAddPassageiroScreen from "../screens/Viagens/ViagemAddPassageiroScreen";
 import ViagemAddParadaScreen from "../screens/Viagens/ViagemAddParadaScreen";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
@@ -145,7 +144,6 @@ function ViagemNavigator() {
             <ViagemStack.Screen name="ViagemDetails" component={ViagemDetailsScreen} />
             <ViagemStack.Screen name="ViagemPassageiros" component={ViagemPassageirosScreen} />
             <ViagemStack.Screen name="ViagemParadas" component={ViagemParadasScreen} />
-            <ViagemStack.Screen name="ViagemAddPassageiro" component={ViagemAddPassageiroScreen} />
             <ViagemStack.Screen name="ViagemAddParada" component={ViagemAddParadaScreen} />
         </ViagemStack.Navigator>
     );

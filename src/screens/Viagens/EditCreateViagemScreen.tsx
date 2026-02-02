@@ -3,7 +3,7 @@ import { Header } from "../../components/common/Header";
 import { CreateViagemDto, ViagemForm, ViagemStackParamList } from "../../types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AVATAR_SIZES, COLORS, SPACING } from "../../themes/tokens";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { CustomButton } from "../../components/common/CustomButton";
 import { useEffect, useMemo } from "react";
 import { useSnackbar } from "../../contexts/SnackBarContext";
@@ -11,12 +11,8 @@ import { useVeiculos } from "../../hooks/useVeiculos";
 import { useViagemById, useViagemMutations } from "../../hooks/useViagens";
 import DropdownComponent from "../../components/common/DropdownComponent";
 import { useMotoristas } from "../../hooks/useMotoristas";
-import { useCasasApoio } from "../../hooks/useCasasApoio";
 import CustomInput from "../../components/common/CustomInput";
-import { usePacientes } from "../../hooks/usePacientes";
-import Ionicons from '@expo/vector-icons/Ionicons';
 import DateInput from "../../components/common/DateInput";
-import { formatCPF } from "../../utils/masks";
 
 type Props = NativeStackScreenProps<ViagemStackParamList, "EditCreateViagens">;
 
@@ -28,11 +24,6 @@ const TIPO_DE_VIAGEM = [
 export default function EditCreateViagemScreen({ navigation, route }: Props) {
     const { data: veiculos } = useVeiculos();
     const { data: motoristas } = useMotoristas();
-    const { data: pacientes } = usePacientes();
-    const { data: casasApoio } = useCasasApoio();
-
-    const acompanhantes =
-        pacientes?.flatMap(p => p.acompanhantes ?? []) ?? [];
 
     const VEICULO_OPTIONS = useMemo(() => (
         (veiculos ?? []).map(v => ({
@@ -48,13 +39,6 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
         }))
     ), [motoristas]);
 
-    const PARADAS_OPTIONS = useMemo(() => (
-        (casasApoio ?? []).map(c => ({
-            label: c.nome,
-            value: c.id,
-        }))
-    ), [casasApoio]);
-
     const viagemId = route.params?.viagemId;
     const { viagem } = useViagemById(viagemId);
     const { craeteViagem, updateViagem } = useViagemMutations();
@@ -65,7 +49,6 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
         handleSubmit,
         watch,
         reset,
-        setFocus,
         formState: { errors, isDirty },
     } = useForm<ViagemForm>({
         defaultValues: {
@@ -74,35 +57,8 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
             data_hora: new Date(),
             veiculoId: "",
             motoristaId: "",
-            passageiros: [{ cpf: "" }],
-            paradas: [{ casaId: "" }],
         },
     });
-
-    const {
-        fields: passageirosFields,
-        append: appendPassageiro,
-        remove: removePassageiro,
-    } = useFieldArray({
-        control,
-        name: "passageiros",
-    });
-
-    const {
-        fields: paradasFields,
-        append: appendParada,
-        remove: removeParada,
-    } = useFieldArray({
-        control,
-        name: "paradas",
-    });
-
-    const veiculoId = watch("veiculoId");
-    const veiculoSelecionado = veiculos?.find(v => v.id === veiculoId);
-    const capacidade = veiculoSelecionado?.capacidade ?? 0;
-
-    const podeAdicionarPassageiro =
-        passageirosFields.length < capacidade;
 
     useEffect(() => {
         if (!viagem) return;
@@ -114,8 +70,6 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
                 : undefined,
             veiculoId: viagem.veiculo[0]?.id ?? "",
             motoristaId: viagem.motorista[0]?.id ?? "",
-            passageiros: viagem.passageiros.map(p => ({ cpf: p.cpf })),
-            paradas: viagem.paradas.map(p => ({ casaId: p.id })),
         });
     }, [viagem, reset]);
 
@@ -126,7 +80,7 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
 
     async function onSubmit(form: ViagemForm) {
         try {
-            if (!veiculos || !motoristas || !pacientes || !casasApoio) {
+            if (!veiculos || !motoristas) {
                 throw new Error("Dados não carregados");
             }
 
@@ -143,39 +97,14 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
             if (!veiculo) throw new Error("Veículo inválido");
             if (!motorista) throw new Error("Motorista inválido");
 
-            const passageirosResolvidos = form.passageiros.map(p => {
-                const cpfLimpo = p.cpf.replace(/\D/g, "");
-
-                const paciente = pacientes.find(
-                    x => x.cpf.replace(/\D/g, "") === cpfLimpo
-                );
-                if (paciente) return paciente;
-
-                const acompanhante = acompanhantes.find(
-                    x => x.cpf.replace(/\D/g, "") === cpfLimpo
-                );
-                if (acompanhante) return acompanhante;
-
-                throw new Error(`CPF não encontrado: ${p.cpf}`);
-            });
-
-            const paradasResolvidas = form.paradas.map(p => {
-                if (!p.casaId) throw new Error("Casa de apoio não selecionada");
-
-                const casa = casasApoio.find(c => c.id === p.casaId);
-                if (!casa) throw new Error("Casa de apoio inválida");
-
-                return casa;
-            });
-
             const payload: CreateViagemDto = {
                 tipo: form.tipo,
                 cidade_destino: form.cidade_destino,
                 data_hora: form.data_hora.toISOString(),
                 veiculo: [veiculo],
                 motorista: [motorista],
-                passageiros: passageirosResolvidos,
-                paradas: paradasResolvidas,
+                passageiros: [],
+                paradas: [],
                 status: "Planejada",
             };
 
@@ -288,76 +217,6 @@ export default function EditCreateViagemScreen({ navigation, route }: Props) {
                                 errorStr={errors.motoristaId?.message}
                             />
                         )}
-                    />
-                    {passageirosFields.map((field, index) => (
-                        <View key={field.id}>
-                            <Controller
-                                control={control}
-                                name={`passageiros.${index}.cpf`}
-                                rules={{
-                                    required: "CPF obrigatório",
-                                    minLength: { value: 14, message: "CPF inválido" }
-                                }}
-                                render={({ field: { value, onChange } }) => (
-                                    <CustomInput
-                                        placeholder="CPF do passageiro"
-                                        label={`Passageiro ${index + 1}`}
-                                        value={value}
-                                        onChangeText={(value) => cleanChange(value, formatCPF, onChange)}
-                                        style={styles.input}
-                                        onSubmitEditing={() => setFocus("paradas")}
-                                        inputMode="numeric"
-                                        maxLength={14}
-                                        errorStr={errors.passageiros?.message}
-                                        rightIcon={index > 0 ? "trash-can-outline" : undefined}
-                                        onRightIconPress={() => removePassageiro(index)}
-                                    />
-                                )}
-                            />
-                        </View>
-                    ))}
-
-                    <CustomButton
-                        size="small"
-                        buttonColor={COLORS.success}
-                        title="Adicionar novo passageiro"
-                        disabled={!podeAdicionarPassageiro}
-                        onPress={() => appendPassageiro({ cpf: "" })}
-                    />
-
-                    {!podeAdicionarPassageiro && (
-                        <Text>Capacidade máxima do veículo atingida</Text>
-                    )}
-                    {paradasFields.map((field, index) => (
-                        <View key={field.id} style={[styles.row, { alignItems: "flex-end" }]}>
-                            <View style={{ flex: 1 }}>
-                                <Controller
-                                    control={control}
-                                    name={`paradas.${index}.casaId`}
-                                    rules={{ required: "Casa de apoio obrigatória" }}
-                                    render={({ field }) => (
-                                        <DropdownComponent
-                                            label={`Parada ${index + 1}`}
-                                            placeholder="Selecione o tipo de viagem"
-                                            value={field.value ?? ""}
-                                            data={PARADAS_OPTIONS}
-                                            onSelect={field.onChange}
-                                            errorStr={errors.paradas?.[index]?.casaId?.message}
-                                        />
-                                    )}
-                                />
-                            </View>
-                            {index > 0 && (  
-                                <CustomButton  size="small" icon="trash-can-outline" onPress={() => removeParada(index)} /> 
-                            )}
-                        </View>
-                    ))}
-
-                    <CustomButton
-                        size="small"
-                        buttonColor={COLORS.success}
-                        title="Adicionar nova parada"
-                        onPress={() => appendParada({ casaId: "" })}
                     />
 
                     <CustomButton

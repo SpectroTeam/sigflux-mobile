@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
-import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Entypo, FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { AVATAR_SIZES, BORDER_RADIUS, COLORS, SPACING } from "../../themes/tokens";
 import { Header } from "../../components/common/Header";
 import { SearchBar } from "../../components/common/SearchBar";
-import { GenericCard } from "../../components/common/GenericCard";
 import { CustomButton } from "../../components/common/CustomButton";
 import { ConfirmModal } from "../../components/common/Modal";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Viagem, ViagemStackParamList } from "../../types";
 import { useSnackbar } from "../../contexts/SnackBarContext";
 import { useViagem, useViagemMutations } from "../../hooks/useViagens";
+import { GenericCardTest } from "../../components/common/GenericCardTest";
 
 type Props = NativeStackScreenProps<ViagemStackParamList, "ListViagens">;
 
@@ -24,13 +24,10 @@ export default function ListViagemSreen({ navigation }: Props) {
     const [selectedViagem, setSelectedViagem] = useState({
         id: "",
         cidade_destino: "",
-        data_hora: new Date()
+        data_hora: new Date(),
     });
 
-    const filteredViagens = viagens.filter(
-        (viagem) =>
-            viagem.cidade_destino.includes(searchQuery) || viagem.id,
-    );
+    const filteredViagens = viagens.filter((viagem) => viagem.cidade_destino.includes(searchQuery) || viagem.id);
 
     function handleNewViagem() {
         navigation.navigate("EditCreateViagens");
@@ -52,15 +49,11 @@ export default function ListViagemSreen({ navigation }: Props) {
     async function confirmDeleteViagem() {
         try {
             await deleteViagem.mutateAsync(selectedViagem.id);
-            showSnackbar("Viagem excluída!", "success", "short")
+            showSnackbar("Viagem excluída!", "success", "short");
             setModalVisible(false);
         } catch (error) {
-            showSnackbar("Erro ao excluir viagem!", "error", "short")
+            showSnackbar("Erro ao excluir viagem!", "error", "short");
         }
-    }
-
-    function handleEditViagem(viagemId: string) {
-        navigation.navigate("EditCreateViagens", { viagemId });
     }
 
     return (
@@ -91,7 +84,7 @@ export default function ListViagemSreen({ navigation }: Props) {
                         data={filteredViagens}
                         keyExtractor={(item) => item.id}
                         renderItem={({ item }) => (
-                            <GenericCard
+                            <GenericCardTest
                                 fields={[
                                     {
                                         label: "Data",
@@ -100,11 +93,30 @@ export default function ListViagemSreen({ navigation }: Props) {
                                     { label: "Status", value: item.status },
                                 ]}
                                 title={item.cidade_destino}
-                                onPress={() => handleViagemPress(item.id)}
-                                editButton={true}
-                                trashButton={true}
-                                editButtonAction={() => handleEditViagem(item.id)}
-                                trashButtonAction={() => handleDeletePress(item)}
+                                primaryButton={{
+                                    title: "Detalhes",
+                                    icon: () => (
+                                        <Entypo
+                                            name="list"
+                                            size={20}
+                                            color={COLORS.success}
+                                            style={{ marginBottom: 4 }}
+                                        />
+                                    ),
+                                    action: () => handleViagemPress(item.id),
+                                }}
+                                secondaryButton={{
+                                    title: "Excluir",
+                                    icon: () => (
+                                        <FontAwesome
+                                            name="trash"
+                                            size={20}
+                                            color={COLORS.secondary}
+                                            style={{ marginBottom: 4 }}
+                                        />
+                                    ),
+                                    action: () => handleDeletePress(item),
+                                }}
                             />
                         )}
                         showsVerticalScrollIndicator={false}
