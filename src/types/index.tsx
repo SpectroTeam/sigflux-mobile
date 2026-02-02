@@ -48,7 +48,7 @@ export type Viagem = {
     data_hora: string;
     veiculo: Veiculo[];
     motorista: Motorista[];
-    passageiros: (Paciente | Acompanhante)[];
+    passageiros: Paciente[];
     paradas: CasaApoio[];
     status: ViagemStatus;
 }
@@ -87,12 +87,22 @@ export type PacienteForm = Omit<CreatePacienteDto, "birthDate"> & {
     birthDate: Date;
 };
 
+export type Acomodacao = {
+    id: string;
+    paciente: Paciente;
+    acompanhante?: Acompanhante;
+    checkIn: string;
+    checkOut?: string;
+    disponibilidade: boolean;
+}
+
 export type CasaApoio = {
     id: string;
     nome: string;
     endereco: string;
     capacidadeMaxima: number;
     lotacaoAtual: number;
+    acomodacoes?: Acomodacao[];
 };
 
 export type CreateCasaApoioDto = Omit<CasaApoio, "id">;
@@ -145,6 +155,10 @@ export type ViagemStackParamList = {
     ListViagens: undefined;
     EditCreateViagens: { viagemId?: string } | undefined;
     ViagemDetails: { viagemId: string };
+    ViagemPassageiros: { viagemId: string };
+    ViagemParadas: { viagemId: string };
+    ViagemAddPassageiro: { viagemId: string };
+    ViagemAddParada: { viagemId: string };
 };
 
 export type PacienteStackParamList = {
