@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet, StyleProp, ViewStyle } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { COLORS, FONT_SIZES, SPACING, BORDER_RADIUS } from "../../themes/tokens";
 
@@ -7,11 +7,12 @@ interface SearchBarProps {
     value: string;
     onChangeText: (text: string) => void;
     placeholder?: string;
+    containerStyle?: StyleProp<ViewStyle>;
 }
 
-export function SearchBar({ value, onChangeText, placeholder = "Pesquisar..." }: SearchBarProps) {
+export function SearchBar({ value, onChangeText, placeholder = "Pesquisar...", containerStyle }: SearchBarProps) {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, containerStyle]}>
             <MaterialIcons name="search" size={24} color={COLORS.text.secondary} />
             <TextInput
                 style={styles.input}
