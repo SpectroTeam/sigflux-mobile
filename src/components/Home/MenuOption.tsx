@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         ...SHADOWS.md,
+        elevation: 0.
     },
     iconContainer: {
         justifyContent: "center",
